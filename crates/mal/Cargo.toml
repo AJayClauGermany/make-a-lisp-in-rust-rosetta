@@ -16,12 +16,41 @@ path = "src/main.rs"
 
 [dependencies]
 mal-traits = { path = "../mal-traits" }
+mal-types = { path = "../mal-types" }
+# Comparison rows, selected at run time with `--<component> <name>`.
+reader-std = { path = "../../comparisons/reader/std" }
+reader-nom = { path = "../../comparisons/reader/nom" }
+reader-winnow = { path = "../../comparisons/reader/winnow" }
+reader-chumsky = { path = "../../comparisons/reader/chumsky" }
+reader-pest = { path = "../../comparisons/reader/pest" }
+reader-peg = { path = "../../comparisons/reader/peg" }
+reader-lalrpop = { path = "../../comparisons/reader/lalrpop" }
+reader-logos = { path = "../../comparisons/reader/logos" }
+reader-regex = { path = "../../comparisons/reader/regex" }
+printer-std = { path = "../../comparisons/printer/std" }
+printer-itoa = { path = "../../comparisons/printer/itoa" }
+printer-memchr = { path = "../../comparisons/printer/memchr" }
+printer-ufmt = { path = "../../comparisons/printer/ufmt" }
+env-std = { path = "../../comparisons/env/std" }
+env-hashbrown = { path = "../../comparisons/env/hashbrown" }
+env-indexmap = { path = "../../comparisons/env/indexmap" }
+env-rustc-hash = { path = "../../comparisons/env/rustc-hash" }
+env-ahash = { path = "../../comparisons/env/ahash" }
+env-foldhash = { path = "../../comparisons/env/foldhash" }
+env-imbl = { path = "../../comparisons/env/imbl" }
+env-rpds = { path = "../../comparisons/env/rpds" }
+eval-std = { path = "../../comparisons/eval/std" }
+core-std = { path = "../../comparisons/core/std" }
+line-editor-rustyline = { path = "../../comparisons/line-editor/rustyline" }
+line-editor-reedline = { path = "../../comparisons/line-editor/reedline" }
 
 # Benchmarks only. Dev-dependencies never reach the `mal` binary, so the size
 # and build-time columns are unaffected.
 [dev-dependencies]
 mal-bench = { path = "../mal-bench" }
 criterion = { version = "0.7", default-features = false, features = ["cargo_bench_support"] }
+# The conformance tests port the mal test runner's output matching.
+fancy-regex = "0.14"
 
 [[bench]]
 name = "components"

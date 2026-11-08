@@ -1,0 +1,18 @@
+[package]
+name = "env-std"
+description = "mal environment baseline: std HashMap behind Rc<RefCell<_>>"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+mal-traits = { path = "../../../crates/mal-traits" }
+
+[dev-dependencies]
+mal-types = { path = "../../../crates/mal-types" }
+mal-testkit = { path = "../../../crates/mal-testkit" }
+
+[lints]
+workspace = true

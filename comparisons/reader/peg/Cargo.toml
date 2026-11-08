@@ -1,0 +1,19 @@
+[package]
+name = "reader-peg"
+description = "mal reader row: peg"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+mal-traits = { path = "../../../crates/mal-traits" }
+mal-types = { path = "../../../crates/mal-types" }
+peg = "0.8.6"
+
+[dev-dependencies]
+mal-testkit = { path = "../../../crates/mal-testkit" }
+
+[lints]
+workspace = true

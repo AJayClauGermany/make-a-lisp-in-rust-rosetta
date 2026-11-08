@@ -1,0 +1,18 @@
+[package]
+name = "reader-std"
+description = "mal reader baseline: a hand-written recursive-descent parser over std"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+mal-traits = { path = "../../../crates/mal-traits" }
+mal-types = { path = "../../../crates/mal-types" }
+
+[dev-dependencies]
+mal-testkit = { path = "../../../crates/mal-testkit" }
+
+[lints]
+workspace = true

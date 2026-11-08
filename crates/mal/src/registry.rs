@@ -11,9 +11,43 @@ use mal_traits::{Component, Implementation};
 
 use crate::baseline;
 
-/// All known implementations, baselines first.
+/// Every comparison row, grouped by component with the `std` baseline
+/// first. The binary's `--<component> <name>` flags select from these (see
+/// [`crate::select`]).
+const ROWS: &[&Implementation] = &[
+    &reader_std::IMPLEMENTATION,
+    &reader_nom::IMPLEMENTATION,
+    &reader_winnow::IMPLEMENTATION,
+    &reader_chumsky::IMPLEMENTATION,
+    &reader_pest::IMPLEMENTATION,
+    &reader_peg::IMPLEMENTATION,
+    &reader_lalrpop::IMPLEMENTATION,
+    &reader_logos::IMPLEMENTATION,
+    &reader_regex::IMPLEMENTATION,
+    &printer_std::IMPLEMENTATION,
+    &printer_itoa::IMPLEMENTATION,
+    &printer_memchr::IMPLEMENTATION,
+    &printer_ufmt::IMPLEMENTATION,
+    &env_std::IMPLEMENTATION,
+    &env_hashbrown::IMPLEMENTATION,
+    &env_indexmap::IMPLEMENTATION,
+    &env_rustc_hash::IMPLEMENTATION,
+    &env_ahash::IMPLEMENTATION,
+    &env_foldhash::IMPLEMENTATION,
+    &env_imbl::IMPLEMENTATION,
+    &env_rpds::IMPLEMENTATION,
+    &eval_std::IMPLEMENTATION,
+    &core_std::IMPLEMENTATION,
+    &line_editor_rustyline::IMPLEMENTATION,
+    &line_editor_reedline::IMPLEMENTATION,
+];
+
+/// All known implementations, the binary's own baselines first.
 pub fn all() -> Vec<&'static Implementation> {
-    baseline::IMPLEMENTATIONS.iter().collect()
+    baseline::IMPLEMENTATIONS
+        .iter()
+        .chain(ROWS.iter().copied())
+        .collect()
 }
 
 /// Render the implementation list grouped by component.
@@ -64,6 +98,29 @@ mod tests {
                     "duplicate implementation {} for {}",
                     a.name,
                     a.component
+                );
+            }
+        }
+    }
+
+    /// The `Version` column comes from the `CrateRef`s, so they must name
+    /// the exact versions the workspace is locked to.
+    #[test]
+    fn crate_versions_match_the_lockfile() {
+        let lock = include_str!("../../../Cargo.lock");
+        for imp in all() {
+            for krate in imp.crates {
+                let entry = format!(
+                    "name = \"{}\"\nversion = \"{}\"\n",
+                    krate.name, krate.version
+                );
+                assert!(
+                    lock.contains(&entry),
+                    "{}/{}: {} {} is not in Cargo.lock",
+                    imp.component,
+                    imp.name,
+                    krate.name,
+                    krate.version
                 );
             }
         }

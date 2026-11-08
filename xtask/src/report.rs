@@ -429,7 +429,11 @@ mod tests {
         assert!(page.contains("No benchmark runs have been recorded yet."));
         assert!(page.contains("## Evaluator"));
         assert!(page.contains("- **echo**: reaches `step0_repl`; no third-party crates."));
-        assert!(page.contains("## Reader\n\nNo implementations registered yet."));
+        assert!(
+            page.contains("## Reader\n\n- **std**: reaches `stepA_mal`; no third-party crates.")
+        );
+        let empty = render(&[], &[]);
+        assert!(empty.contains("## Reader\n\nNo implementations registered yet."));
         assert!(page.contains("## Recorded runs\n\nNone yet.\n"));
     }
 

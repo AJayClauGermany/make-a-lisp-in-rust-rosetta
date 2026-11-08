@@ -83,6 +83,9 @@ impl<L: std::error::Error + 'static> std::error::Error for ReplError<L> {
 /// `Display` form prefixed with `Error: `, is written to `out`. This mirrors
 /// the behaviour the mal test runner expects, so every interpreter gets the
 /// same loop and the comparison stays about the components.
+///
+/// `I` may be unsized, so a binary that chooses its components at run time
+/// can pass a `Box<dyn Interpreter<Error = E>>`.
 pub fn run_repl<L, I, W>(
     editor: &mut L,
     interpreter: &mut I,
@@ -90,7 +93,7 @@ pub fn run_repl<L, I, W>(
 ) -> Result<ReplOutcome, ReplError<L::Error>>
 where
     L: LineEditor,
-    I: Interpreter,
+    I: Interpreter + ?Sized,
     W: std::io::Write,
 {
     loop {
@@ -149,5 +152,14 @@ mod tests {
         let outcome = run_repl(&mut editor, &mut Shout, &mut out).unwrap();
         assert_eq!(outcome, ReplOutcome::EndOfInput);
         assert_eq!(String::from_utf8(out).unwrap(), "HELLO\nError: boom\nBYE\n");
+    }
+
+    #[test]
+    fn loop_accepts_trait_objects() {
+        let mut editor = Scripted(VecDeque::from(["x"]));
+        let mut interpreter: Box<dyn Interpreter<Error = Boom>> = Box::new(Shout);
+        let mut out = Vec::new();
+        run_repl(&mut editor, interpreter.as_mut(), &mut out).unwrap();
+        assert_eq!(out, b"X\n");
     }
 }

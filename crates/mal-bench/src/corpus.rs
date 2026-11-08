@@ -51,6 +51,30 @@ pub const FORMS: &[Form] = &[
     },
 ];
 
+/// Programs that spend their time evaluating rather than parsing: deep
+/// non-tail recursion, a tail-call loop, and closures passed to built-ins.
+/// Each is one `do` form that defines what it needs, so it can be
+/// evaluated repeatedly in the same environment. They need the core
+/// namespace.
+///
+/// These are what the evaluator rows and, through the `std` evaluator, the
+/// environment rows are timed on: symbol lookup through nested scopes and
+/// binding parameters on every call is where an environment shows up.
+pub const PROGRAMS: &[Form] = &[
+    Form {
+        name: "fib",
+        source: "(do (def! fib (fn* (n) (if (< n 2) n (+ (fib (- n 1)) (fib (- n 2)))))) (fib 12))",
+    },
+    Form {
+        name: "sum-to",
+        source: "(do (def! sum-to (fn* (n acc) (if (= n 0) acc (sum-to (- n 1) (+ n acc))))) (sum-to 1000 0))",
+    },
+    Form {
+        name: "closures",
+        source: "(do (def! adder (fn* (k) (fn* (x) (+ x k)))) (let* (xs (list 1 2 3 4 5 6 7 8 9 10) a (adder 5) b (adder 7)) (count (map a (map b (concat xs xs xs xs))))))",
+    },
+];
+
 /// A program-sized form: roughly what one `load-file` of the mal test
 /// suite's helper definitions looks like.
 const PROGRAM: &str = r#"(do
@@ -111,9 +135,10 @@ mod tests {
 
     #[test]
     fn form_names_are_unique_and_id_safe() {
-        for (i, form) in FORMS.iter().enumerate() {
+        let all: Vec<&Form> = FORMS.iter().chain(PROGRAMS).collect();
+        for (i, form) in all.iter().enumerate() {
             assert!(
-                FORMS[..i].iter().all(|other| other.name != form.name),
+                all[..i].iter().all(|other| other.name != form.name),
                 "duplicate form name {}",
                 form.name
             );
@@ -132,7 +157,7 @@ mod tests {
     fn forms_are_balanced() {
         // A cheap sanity check that each form is one complete expression:
         // delimiters outside strings balance.
-        for form in FORMS {
+        for form in FORMS.iter().chain(PROGRAMS) {
             let mut depth = 0i32;
             let mut in_string = false;
             let mut escaped = false;

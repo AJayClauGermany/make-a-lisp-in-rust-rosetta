@@ -2,12 +2,39 @@
 resolver = "3"
 members = [
     "crates/mal-traits",
+    "crates/mal-types",
+    "crates/mal-testkit",
     "crates/mal",
     "crates/mal-bench",
     "xtask",
     # Comparison implementations live under `comparisons/<component>/<crate>/`.
     # Cargo rejects a glob that matches nothing, so members are listed here
     # explicitly as they are added. See CONTRIBUTING.md.
+    "comparisons/reader/std",
+    "comparisons/reader/nom",
+    "comparisons/reader/winnow",
+    "comparisons/reader/chumsky",
+    "comparisons/reader/pest",
+    "comparisons/reader/peg",
+    "comparisons/reader/lalrpop",
+    "comparisons/reader/logos",
+    "comparisons/reader/regex",
+    "comparisons/printer/std",
+    "comparisons/printer/itoa",
+    "comparisons/printer/memchr",
+    "comparisons/printer/ufmt",
+    "comparisons/env/std",
+    "comparisons/env/hashbrown",
+    "comparisons/env/indexmap",
+    "comparisons/env/rustc-hash",
+    "comparisons/env/ahash",
+    "comparisons/env/foldhash",
+    "comparisons/env/imbl",
+    "comparisons/env/rpds",
+    "comparisons/core/std",
+    "comparisons/line-editor/rustyline",
+    "comparisons/line-editor/reedline",
+    "comparisons/eval/std",
 ]
 
 [workspace.package]

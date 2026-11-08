@@ -1,0 +1,19 @@
+[package]
+name = "env-foldhash"
+description = "mal environment row: foldhash"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+mal-traits = { path = "../../../crates/mal-traits" }
+foldhash = "0.2"
+
+[dev-dependencies]
+mal-testkit = { path = "../../../crates/mal-testkit" }
+mal-types = { path = "../../../crates/mal-types" }
+
+[lints]
+workspace = true

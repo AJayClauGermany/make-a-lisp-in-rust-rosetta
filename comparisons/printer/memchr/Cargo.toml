@@ -1,0 +1,19 @@
+[package]
+name = "printer-memchr"
+description = "mal printer row: memchr"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+mal-traits = { path = "../../../crates/mal-traits" }
+mal-types = { path = "../../../crates/mal-types" }
+memchr = "2"
+
+[dev-dependencies]
+mal-testkit = { path = "../../../crates/mal-testkit" }
+
+[lints]
+workspace = true

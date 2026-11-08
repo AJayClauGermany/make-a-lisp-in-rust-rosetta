@@ -1,0 +1,22 @@
+[package]
+name = "reader-lalrpop"
+description = "mal reader row: lalrpop"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+lalrpop-util = { version = "0.22.2", features = ["lexer"] }
+mal-traits = { path = "../../../crates/mal-traits" }
+mal-types = { path = "../../../crates/mal-types" }
+
+[dev-dependencies]
+mal-testkit = { path = "../../../crates/mal-testkit" }
+
+[lints]
+workspace = true
+
+[build-dependencies]
+lalrpop = "0.22.2"
