@@ -124,7 +124,7 @@ mod tests {
                 "form name {} is not id safe",
                 form.name
             );
-            assert!(!form.source.is_empty());
+            assert_ne!(form.source, "", "{} has no source", form.name);
         }
     }
 
