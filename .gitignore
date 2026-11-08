@@ -1,0 +1,16 @@
+# Cargo
+/target/
+**/target/
+
+# oranda / mdbook output
+/public/
+/docs/book/
+
+# Benchmark runs are committed on purpose; scratch output is not.
+/runs/*.tmp
+
+# Editors
+.idea/
+.vscode/
+*.swp
+.DS_Store

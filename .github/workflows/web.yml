@@ -1,0 +1,59 @@
+# Build the documentation site with oranda (and mdbook) and deploy it to
+# GitHub Pages. Based on the output of `oranda generate ci`.
+name: Web
+
+permissions:
+  contents: write
+
+on:
+  # Check that a PR did not break the site. The deploy step is skipped.
+  pull_request:
+  # Publish on every push to main.
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  web:
+    name: Build and deploy site and docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+
+      # oranda bundles mdbook as a library, so mdbook itself is not installed.
+      # mdbook preprocessors/plugins would be installed here.
+      - name: Install and run oranda
+        run: |
+          curl --proto '=https' --tlsv1.2 -LsSf https://github.com/axodotdev/oranda/releases/download/v0.6.5/oranda-installer.sh | sh
+          oranda build
+
+      - name: Prepare HTML for link checking
+        # untitaker/hyperlink supports no site prefixes; move the site into a
+        # subfolder named after the path prefix so internal links resolve.
+        run: mkdir /tmp/public/ && cp -R public /tmp/public/make-a-lisp-in-rust-rosetta
+
+      - name: Check HTML for broken internal links
+        uses: untitaker/hyperlink@0.1.29
+        with:
+          args: /tmp/public/
+
+      # Deploy the "public" dir to the gh-pages branch, creating it if needed.
+      # Once the branch exists, set Settings > Pages > "deploy from branch:
+      # gh-pages" in the repository.
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          branch: gh-pages
+          folder: public
+          token: ${{ secrets.GITHUB_TOKEN }}
+          single-commit: true
