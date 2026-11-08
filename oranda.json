@@ -1,0 +1,25 @@
+{
+  "project": {
+    "name": "make-a-lisp-in-rust-rosetta",
+    "description": "Comparing Rust crates by implementing the components of a Make-a-Lisp interpreter",
+    "repository": "https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta",
+    "homepage": "https://ajayclaugermany.github.io/make-a-lisp-in-rust-rosetta/",
+    "license": "MPL-2.0",
+    "readme_path": "README.md"
+  },
+  "build": {
+    "dist_dir": "public",
+    "path_prefix": "make-a-lisp-in-rust-rosetta"
+  },
+  "styles": {
+    "theme": "axodark"
+  },
+  "components": {
+    "mdbook": {
+      "path": "./docs"
+    },
+    "changelog": false,
+    "artifacts": false,
+    "funding": false
+  }
+}

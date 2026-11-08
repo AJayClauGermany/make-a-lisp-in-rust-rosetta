@@ -1,0 +1,13 @@
+[book]
+title = "Make-a-Lisp in Rust: a rosetta comparison"
+description = "Comparing Rust crates by implementing the components of a Make-a-Lisp interpreter"
+authors = ["AJayClauGermany"]
+language = "en"
+src = "src"
+
+[build]
+build-dir = "book"
+
+[output.html]
+git-repository-url = "https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta"
+edit-url-template = "https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/edit/main/docs/{path}"

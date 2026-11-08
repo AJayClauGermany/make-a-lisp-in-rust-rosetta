@@ -1,0 +1,41 @@
+[workspace]
+resolver = "3"
+members = [
+    "crates/mal-traits",
+    "crates/mal",
+    # Comparison implementations live under `comparisons/<component>/<crate>/`.
+    # Cargo rejects a glob that matches nothing, so members are listed here
+    # explicitly as they are added. See CONTRIBUTING.md.
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+license = "MPL-2.0"
+repository = "https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta"
+homepage = "https://ajayclaugermany.github.io/make-a-lisp-in-rust-rosetta/"
+authors = ["AJayClauGermany"]
+publish = false
+
+# Note: `mal-traits` is referenced with an explicit `path` dependency rather
+# than through `[workspace.dependencies]`: cargo-deny's wildcard check reports
+# workspace-inherited path dependencies as unresolved. See deny.toml.
+
+[workspace.lints.rust]
+missing_docs = "warn"
+unsafe_code = "deny"
+
+[workspace.lints.clippy]
+all = { level = "warn", priority = -1 }
+pedantic = { level = "warn", priority = -1 }
+# `pedantic` lints that fight with readable comparison code.
+module_name_repetitions = "allow"
+must_use_candidate = "allow"
+missing_errors_doc = "allow"
+
+[profile.release]
+# Comparable, reproducible numbers for the binary-size and run-time columns.
+codegen-units = 1
+lto = "fat"
+strip = "symbols"

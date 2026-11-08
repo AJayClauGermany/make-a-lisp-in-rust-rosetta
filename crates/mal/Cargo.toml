@@ -1,0 +1,21 @@
+[package]
+name = "mal"
+description = "REPL and comparison runner for Make-a-Lisp implementations in Rust"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+authors.workspace = true
+publish.workspace = true
+
+[[bin]]
+name = "mal"
+path = "src/main.rs"
+
+[dependencies]
+mal-traits = { path = "../mal-traits" }
+
+[lints]
+workspace = true
