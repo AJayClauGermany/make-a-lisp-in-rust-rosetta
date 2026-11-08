@@ -35,6 +35,9 @@ ignore = true
 [bans]
 multiple-versions = "warn"
 wildcards = "deny"
+# Path dependencies between the workspace's own (unpublished) crates carry no
+# version requirement; that is fine, only registry wildcards are an error.
+allow-wildcard-paths = true
 highlight = "all"
 workspace-default-features = "allow"
 external-default-features = "allow"
