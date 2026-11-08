@@ -18,9 +18,9 @@ homepage = "https://ajayclaugermany.github.io/make-a-lisp-in-rust-rosetta/"
 authors = ["AJayClauGermany"]
 publish = false
 
-[workspace.dependencies]
-# Internal crates. Comparison implementations depend on `mal-traits` only.
-mal-traits = { path = "crates/mal-traits" }
+# Note: `mal-traits` is referenced with an explicit `path` dependency rather
+# than through `[workspace.dependencies]`, because cargo-deny's wildcard check
+# does not resolve workspace-inherited path dependencies.
 
 [workspace.lints.rust]
 missing_docs = "warn"

@@ -11,7 +11,7 @@ contribution is a new row: another crate doing one of the component jobs.
 
 2. **Create the crate** at `comparisons/<component>/<crate>/`, named
    `<component>-<crate>` (for example `comparisons/reader/nom/` with package
-   name `reader-nom`). Depend on `mal-traits` through the workspace:
+   name `reader-nom`). Depend on `mal-traits` by path:
 
    ```toml
    [package]
@@ -22,7 +22,7 @@ contribution is a new row: another crate doing one of the component jobs.
    publish.workspace = true
 
    [dependencies]
-   mal-traits.workspace = true
+   mal-traits = { path = "../../../crates/mal-traits" }
    nom = "8"
 
    [lints]
@@ -50,7 +50,7 @@ crate for this job; a row nobody would write in practice is not informative.
 
 ## What gets measured
 
-See [the methodology page](docs/src/methodology.md). In short, per
+See [the methodology page](https://ajayclaugermany.github.io/make-a-lisp-in-rust-rosetta/book/methodology.html). In short, per
 implementation: binary-size overhead against the `std` baseline, debug build
 time, run time on the mal test suite for the highest step reached, and the
 crate's version and download count at the time of the run.

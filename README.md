@@ -24,7 +24,7 @@ implementations and the published results.
 | [`crates/mal`](https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/tree/main/crates/mal) | The `mal` binary: a REPL over the wired-in components, and `mal --list`. |
 | [`comparisons/`](https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/tree/main/comparisons) | One crate per `<component>/<crate>` pair. Each exports an `Implementation` record and depends only on `mal-traits`. |
 | [`docs/`](https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/tree/main/docs) | The [mdBook] behind the documentation site: methodology, per-component pages, results. |
-| [`oranda.json`](https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/blob/main/oranda.json) | [oranda] configuration for the site, built and published by `.github/workflows/web.yml`. |
+| [`oranda.json`](https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/blob/main/oranda.json) | [oranda] configuration for the site, built and published from `main` by `.github/workflows/web.yml`. |
 | [`runs/`](https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/tree/main/runs) | Raw measurement output, committed so results are reproducible. |
 
 ## Components

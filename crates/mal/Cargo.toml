@@ -15,7 +15,7 @@ name = "mal"
 path = "src/main.rs"
 
 [dependencies]
-mal-traits.workspace = true
+mal-traits = { path = "../mal-traits" }
 
 [lints]
 workspace = true

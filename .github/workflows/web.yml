@@ -5,10 +5,10 @@ name: Web
 permissions:
   contents: write
 
+# The site is built and published only from main. Pull requests do not build
+# it; the CI workflow covers the code, and the mdBook sources are plain
+# Markdown.
 on:
-  # Check that a PR did not break the site. The deploy step is skipped.
-  pull_request:
-  # Publish on every push to main.
   push:
     branches:
       - main
@@ -51,7 +51,6 @@ jobs:
       # gh-pages" in the repository.
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
-        if: ${{ github.ref == 'refs/heads/main' }}
         with:
           branch: gh-pages
           folder: public
