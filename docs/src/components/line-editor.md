@@ -13,13 +13,20 @@ is a large dependency relative to the interpreter.
 - `Ok(None)` at end of input, so the REPL exits cleanly on Ctrl-D.
 - Must work when standard input is not a terminal: the test suite pipes input.
 
+## Notes from the rows
+
+rustyline reads piped input itself but stops printing the prompt, so the
+row prints it. reedline needs a terminal, so the row reads piped input with
+`std::io`; its step column is reached through that fallback. See
+[Trait notes](../trait-notes.md#line-editor).
+
 ## Candidates
 
 | crate | editing | history | step reached | version |
 |-------|---------|---------|--------------|---------|
 | std   | none | none | stepA_mal | - |
-| [rustyline] | Emacs/vi keymaps | file-backed | | |
-| [reedline] | Emacs/vi keymaps, menus | file- or SQLite-backed | | |
+| [rustyline] | Emacs/vi keymaps | in-memory | stepA_mal | 17.0.2 |
+| [reedline] | Emacs keymap, menus | built-in, in-memory | stepA_mal (piped input falls back to `std::io`) | 0.49.0 |
 | [linefeed] | Emacs keymap | in-memory | | |
 | [crossterm] (hand-rolled editor) | custom | custom | | |
 

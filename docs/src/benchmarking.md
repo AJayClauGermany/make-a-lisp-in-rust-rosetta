@@ -9,7 +9,7 @@ the newest run. Nothing on that page is typed by hand.
 
 | piece | where | job |
 |-------|-------|-----|
-| workloads | `crates/mal-bench/src/corpus.rs` | the fixed mal forms, REPL session and symbol lists every row is measured on |
+| workloads | `crates/mal-bench/src/corpus.rs` | the fixed mal forms, the evaluation `PROGRAMS`, the REPL session and symbol lists every row is measured on |
 | harness | `crates/mal-bench/src/lib.rs` | one generic Criterion bench per component trait: `reader`, `printer`, `env`, `evaluator`, `core_namespace`, `interpreter` |
 | bench list | `crates/mal/benches/components.rs` | one line per implementation: which rows get measured |
 | runner | `xtask/` | `cargo xtask bench` records a run; `cargo xtask report` renders it; `cargo xtask compare` diffs two runs |
@@ -46,6 +46,13 @@ mal_bench::printer(c, &printer_std::IMPLEMENTATION, &printer_std::StdPrinter, &v
 mal_bench::evaluator(c, &eval_rc::IMPLEMENTATION, eval_rc::setup, &forms);
 mal_bench::core_namespace(c, &core_std::IMPLEMENTATION, core_std::Core::default, Env::default);
 ```
+
+Environment rows are timed twice: `mal_bench::env` on the trait methods,
+and `mal_bench::evaluator` running the `PROGRAMS` workloads (recursive
+`fib`, a tail-call loop, closures through `map`) with the `std` evaluator on
+that environment, recorded under the environment's own group as
+`env/<name>/eval/<program>`. The second is what an interpreter actually
+does with an environment.
 
 Line editors are not timed: their run time is the terminal's, and the
 comparison for that component is binary-size overhead. They still appear on

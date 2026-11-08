@@ -60,3 +60,14 @@ A row is only compared at the steps it passes the mal test suite for. The
 "step reached" column is therefore also a correctness statement, and an
 implementation that stops at `step4_if_fn_do` is reported as such rather than
 excluded.
+
+The column is checked, not claimed: `cargo test` runs the upstream test
+files (vendored under `crates/mal/tests/mal/`) against every registered row
+with the same matching rules as mal's `runtest.py`, swapping that one row
+into an otherwise all-`std` interpreter, and fails if the step a row reaches
+differs from the step its `Implementation` states. Failures in the suite's
+optional (`soft`) sections are reported but do not count, as upstream.
+
+Rows also run shared unit checks for their component (`mal-testkit`), and
+every reader must read every benchmark form to exactly the value the `std`
+reader produces, so the reader table never times an error path.

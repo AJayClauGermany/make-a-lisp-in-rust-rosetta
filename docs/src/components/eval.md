@@ -17,12 +17,21 @@ category: reference counting, arenas and tracing garbage collectors.
 - Deep recursion in the test suite (`sum-to`, `fib`) is where value
   representation shows up in run time.
 
+## Status
+
+The `std` row is generic over the environment row, so it also drives the
+environment comparison. The other candidates change the value
+representation, which every reader and printer row is written against
+(`mal-types`), so each would need its own reader and printer until readers
+can build any representation; see
+[Trait notes](../trait-notes.md#shared-value-type).
+
 ## Candidates
 
 | crate | value representation | memory management | step reached | version |
 |-------|----------------------|-------------------|--------------|---------|
 | echo  | none | none | step0_repl | - |
-| std   | `Rc<Value>` enum | reference counting | | |
+| std   | `Rc` value enum (`mal-types`) | reference counting; closure cycles leak | stepA_mal | - |
 | std   | `Arc<Value>` enum | atomic reference counting | | |
 | [bumpalo] | arena references | bump allocation per REPL line | | |
 | [gc] | `Gc<Value>` | tracing mark-and-sweep | | |

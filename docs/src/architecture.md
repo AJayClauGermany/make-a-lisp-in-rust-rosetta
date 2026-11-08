@@ -1,14 +1,17 @@
 # Architecture
 
-The workspace has two permanent crates and a growing set of comparison
-crates.
+The workspace has a handful of permanent crates and a growing set of
+comparison crates.
 
 ```text
 crates/mal-traits      traits, Component/Step vocabulary, Implementation metadata, run_repl
-crates/mal             the REPL binary; std-only baselines; the implementation registry;
-                       benches/components.rs, the list of what gets benchmarked
+crates/mal-types       the shared Rc-based Value and MalError rows agree on
+crates/mal-testkit     unit checks every reader, printer and env row runs (dev-only)
+crates/mal             the stepA binary assembled from rows; run-time row selection;
+                       the implementation registry; benches/components.rs, the list of
+                       what gets benchmarked; tests/conformance.rs, the mal test suite
 crates/mal-bench       the benchmark harness: fixed workloads, one Criterion bench per trait
-comparisons/<c>/<x>    one crate per component/crate pair, depends only on mal-traits
+comparisons/<c>/<x>    one crate per component/crate pair: mal-traits, mal-types and the crate
 xtask                  cargo xtask bench | report | compare: runs/ in, docs/src/results.md out
 runs/<id>/             one results.json per recorded benchmark run
 ```
@@ -43,16 +46,45 @@ Alongside the traits:
   stops at end of input. All interpreters share it so the measurements stay
   about the components.
 
+## `mal-types`
+
+The traits leave the value type to each implementation, but a reader row
+can only feed a printer row, and the rows of one component can only be
+benchmarked on the same fixtures, if they agree on one. `mal-types` is that
+agreement: an `Rc`-based `Value` enum, `MalError`, mal equality, metadata and
+`Value::apply`, which lets the core namespace call closures without knowing
+the evaluator's environment type (closures store their environment
+type-erased). It has no dependencies. Evaluator rows that compare a
+different representation cannot use it; see [Trait notes](trait-notes.md).
+
 ## `mal`
 
-The binary, plus a small library the binary and the benchmarks share. It
-parses its few flags by hand so it contributes nothing to the size and
-build-time columns, ships the `std` baselines (`StdinLineEditor`,
+The binary, plus the library the binary, the benchmarks and the tests
+share. It parses its flags by hand so it contributes nothing to the size and
+build-time columns, ships the binary-level baselines (`StdinLineEditor`,
 `EchoInterpreter`), and keeps the registry that `mal --list` and the report
-generator read. Comparison crates are wired in here, and timed from here:
-`benches/components.rs` is one line per implementation, calling the matching
-harness function. Criterion and `mal-bench` are dev-dependencies only, so
-they never reach the binary.
+generator read.
+
+- `interpreter::Mal` is the guide's `rep`: a reader, the evaluator and a
+  printer around a top-level environment with the core namespace, the
+  `eval` built-in, `*ARGV*`, `*host-language*` and the mal prelude (`not`,
+  `load-file`, `cond`). `ReadPrint` is step1: read and print only.
+- `select` builds an interpreter from row names: `mal --reader nom` runs
+  the `nom` reader with `std` everywhere else. Only one of reader, printer,
+  env, eval and core may differ from `std` at a time, so the number of
+  monomorphised interpreters grows with the number of rows rather than
+  their product. `--line-editor` is chosen separately, and `--read-print`
+  composes with any reader or printer row.
+- `tests/conformance.rs` runs the vendored mal test suite (`tests/mal/`)
+  against every registered row through the binary and fails if a row does
+  not reach exactly the step it claims. `step0_repl` runs only for the echo
+  evaluator and `step1_read_print` in `--read-print` mode, because those
+  files test the shape of their own step.
+
+Comparison crates are timed from here too: `benches/components.rs` is one
+line per implementation, calling the matching harness function. Criterion,
+`mal-bench` and the test dependencies are dev-dependencies only, so they
+never reach the binary.
 
 ## `mal-bench` and `xtask`
 
@@ -67,5 +99,6 @@ runs. These are the only crates with third-party dependencies. See
 
 ## Comparison crates
 
-Each depends on `mal-traits` and the crate under test, implements one trait,
-and exports its `Implementation`. See [Contributing](contributing.md).
+Each depends on `mal-traits`, `mal-types` and the crate under test,
+implements one trait, and exports its `Implementation`. See
+[Contributing](contributing.md).

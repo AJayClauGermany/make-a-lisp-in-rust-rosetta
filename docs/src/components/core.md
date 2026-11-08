@@ -13,12 +13,21 @@ numbers, strings, hashing and time enter the interpreter.
   coverage is checked against it.
 - Arithmetic in the test suite is integer only, but the guide allows richer
   numeric towers, which is what the numeric candidates explore.
+- `read-string`, `pr-str`, `str`, `prn` and `println` use the reader and
+  printer rows the interpreter was built with; `eval` is installed by the
+  interpreter, since it needs the evaluator.
+
+## Status
+
+Only the `std` row exists: the numeric candidates need a number type other
+than the shared `Value::Int(i64)`, and the benchmark only times `install`.
+See [Trait notes](../trait-notes.md#core-namespace).
 
 ## Candidates
 
 | crate | provides | step reached | version |
 |-------|----------|--------------|---------|
-| std   | `i64`, `String`, `Vec` | - | - |
+| std   | checked `i64`, `String`, `Vec`; all stepA built-ins | stepA_mal | - |
 | [num-bigint] / [num-rational] | arbitrary precision and rational arithmetic | | |
 | [rug] | GMP-backed numbers | | |
 | [unicode-segmentation] | grapheme-aware string functions | | |
