@@ -18,15 +18,18 @@ crate, built and measured identically, presented in a table.
   which component each step exercises.
 - **Architecture**: the traits in `mal-traits` that all implementations are
   written against, and how the `mal` binary wires them together.
+- **Benchmarking**: how rows are timed, how runs are recorded under `runs/`,
+  and how the results page is generated from them.
 - **Components**: one page per component with the candidate crates, the
   qualitative comparison table and notes on what the job demands.
 - **Results**: the measured tables from the most recent run.
 
 ## Status
 
-The workspace, traits, runner and this site are in place. No comparison
-implementations have been written yet, so the tables contain only the
-dependency-free baselines.
+The workspace, traits, benchmark harness, run recorder and this site are in
+place. No comparison implementations have been written yet, so the tables
+contain only the dependency-free baselines, and the results page shows the
+baseline interpreter's numbers from the first recorded run.
 
 [mal]: https://github.com/kanaka/mal
 [rosetta]: https://github.com/rosetta-rs

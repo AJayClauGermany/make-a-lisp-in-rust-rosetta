@@ -1,0 +1,137 @@
+{
+  "schema": 1,
+  "id": "20261108-192541-cloud-sandbox",
+  "recorded_at": "2026-11-08T19:25:41Z",
+  "host": {
+    "name": "cloud-sandbox",
+    "os": "linux",
+    "arch": "x86_64",
+    "cpus": 4,
+    "cpu_model": "Intel(R) Xeon(R) Processor @ 2.10GHz"
+  },
+  "toolchain": {
+    "rustc": "rustc 1.97.0 (2d8144b78 2026-07-07)"
+  },
+  "commit": "d814ce5f7de3",
+  "dirty": true,
+  "command": [
+    "cargo",
+    "bench",
+    "--package",
+    "mal",
+    "--bench",
+    "components",
+    "--",
+    "--noplot"
+  ],
+  "benchmarks": [
+    {
+      "id": "eval/echo/rep/atom",
+      "component": "eval",
+      "implementation": "echo",
+      "workload": "rep/atom",
+      "mean_ns": 11.04099110342366,
+      "median_ns": 10.428918192573375,
+      "std_dev_ns": 1.7697392850770626,
+      "throughput": {
+        "bytes": 2
+      }
+    },
+    {
+      "id": "eval/echo/rep/collections",
+      "component": "eval",
+      "implementation": "echo",
+      "workload": "rep/collections",
+      "mean_ns": 13.564152979542357,
+      "median_ns": 12.555059439847792,
+      "std_dev_ns": 3.4140155774996206,
+      "throughput": {
+        "bytes": 58
+      }
+    },
+    {
+      "id": "eval/echo/rep/list",
+      "component": "eval",
+      "implementation": "echo",
+      "workload": "rep/list",
+      "mean_ns": 11.367102371466062,
+      "median_ns": 10.934444392930978,
+      "std_dev_ns": 2.128451043381699,
+      "throughput": {
+        "bytes": 24
+      }
+    },
+    {
+      "id": "eval/echo/rep/nested",
+      "component": "eval",
+      "implementation": "echo",
+      "workload": "rep/nested",
+      "mean_ns": 16.03861660754037,
+      "median_ns": 17.104582102634936,
+      "std_dev_ns": 2.543214346985696,
+      "throughput": {
+        "bytes": 67
+      }
+    },
+    {
+      "id": "eval/echo/rep/program",
+      "component": "eval",
+      "implementation": "echo",
+      "workload": "rep/program",
+      "mean_ns": 45.1002236880171,
+      "median_ns": 41.51540350347622,
+      "std_dev_ns": 7.187947108696084,
+      "throughput": {
+        "bytes": 1245
+      }
+    },
+    {
+      "id": "eval/echo/rep/quoting",
+      "component": "eval",
+      "implementation": "echo",
+      "workload": "rep/quoting",
+      "mean_ns": 14.080982389164449,
+      "median_ns": 14.274969177102502,
+      "std_dev_ns": 1.147264052093129,
+      "throughput": {
+        "bytes": 54
+      }
+    },
+    {
+      "id": "eval/echo/rep/string",
+      "component": "eval",
+      "implementation": "echo",
+      "workload": "rep/string",
+      "mean_ns": 12.789262782283842,
+      "median_ns": 12.046194027230785,
+      "std_dev_ns": 3.3826901077655567,
+      "throughput": {
+        "bytes": 59
+      }
+    },
+    {
+      "id": "eval/echo/rep/symbol",
+      "component": "eval",
+      "implementation": "echo",
+      "workload": "rep/symbol",
+      "mean_ns": 11.190420271698486,
+      "median_ns": 10.534692543453666,
+      "std_dev_ns": 1.8616342147787104,
+      "throughput": {
+        "bytes": 15
+      }
+    },
+    {
+      "id": "eval/echo/repl-session",
+      "component": "eval",
+      "implementation": "echo",
+      "workload": "repl-session",
+      "mean_ns": 533.9703040444613,
+      "median_ns": 506.22527554021224,
+      "std_dev_ns": 90.10422690190912,
+      "throughput": {
+        "bytes": 1570
+      }
+    }
+  ]
+}

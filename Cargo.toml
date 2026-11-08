@@ -3,6 +3,8 @@ resolver = "3"
 members = [
     "crates/mal-traits",
     "crates/mal",
+    "crates/mal-bench",
+    "xtask",
     # Comparison implementations live under `comparisons/<component>/<crate>/`.
     # Cargo rejects a glob that matches nothing, so members are listed here
     # explicitly as they are added. See CONTRIBUTING.md.

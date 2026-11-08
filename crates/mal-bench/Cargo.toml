@@ -1,0 +1,20 @@
+[package]
+name = "mal-bench"
+description = "Benchmark harness for the Make-a-Lisp rosetta comparison: fixed workloads and a Criterion bench per component trait"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+authors.workspace = true
+publish.workspace = true
+
+[dependencies]
+mal-traits = { path = "../mal-traits" }
+# Plots and rayon are left out: the numbers are exported to `runs/` by
+# `cargo xtask bench` and rendered into the docs from there.
+criterion = { version = "0.7", default-features = false, features = ["cargo_bench_support"] }
+
+[lints]
+workspace = true

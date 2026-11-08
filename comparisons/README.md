@@ -6,7 +6,8 @@ One crate per `<component>/<crate>` pair, for example `reader/nom`,
 - depends on `mal-traits` and the crate(s) being compared, nothing else;
 - implements exactly one component trait;
 - exports `pub const IMPLEMENTATION: mal_traits::Implementation`;
-- is listed in the root `Cargo.toml` and in `crates/mal/src/registry.rs`.
+- is listed in the root `Cargo.toml` and in `crates/mal/src/registry.rs`;
+- has one line in `crates/mal/benches/components.rs` so it gets measured.
 
 See [CONTRIBUTING.md](../CONTRIBUTING.md) for the step-by-step version.
 

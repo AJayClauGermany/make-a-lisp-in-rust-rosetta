@@ -29,6 +29,12 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
 
+      # The results page is generated from runs/. CI checks it is current on
+      # every pull request, but two merges can each be current alone and stale
+      # together, so it is regenerated here before the site is built.
+      - name: Regenerate the results page
+        run: cargo xtask report
+
       # oranda bundles mdbook as a library, so mdbook itself is not installed.
       # mdbook preprocessors/plugins would be installed here.
       - name: Install and run oranda

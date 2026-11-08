@@ -34,19 +34,25 @@ and how the crate integrates (library, build script, proc macro).
 
 ### Measured
 
-Produced by the benchmark harness and committed under `runs/`.
+Produced by `cargo xtask bench` and committed under `runs/`, one directory
+per run; the [Results](results.md) page is generated from the newest run.
+See [Benchmarking](benchmarking.md) for the mechanics.
 
-| column | how it is measured |
-|--------|--------------------|
-| Overhead (release) | Release binary size of `mal` with this row wired in, minus the size with the `std` baseline. Built with the workspace `release` profile (fat LTO, one codegen unit, symbols stripped). |
-| Build (debug) | Wall-clock time of a from-scratch `cargo build` of the row's package in the `dev` profile. |
-| Run (release) | Wall-clock time of the mal test suite for the row's highest step, release build. |
-| Step reached | The highest `stepN` of the mal test suite the row passes. Steps are cumulative. |
-| Downloads | crates.io recent downloads badge for the headline crate. |
-| Version | The exact version compiled against. |
+| column | how it is measured | status |
+|--------|--------------------|--------|
+| Run time (micro) | Criterion benchmarks of the row's trait methods on the fixed workloads in `mal_bench::corpus`: mean and standard deviation per iteration, throughput where the workload has a size. One Criterion group per row, `<component>/<name>`. | recorded |
+| Overhead (release) | Release binary size of `mal` with this row wired in, minus the size with the `std` baseline. Built with the workspace `release` profile (fat LTO, one codegen unit, symbols stripped). | planned |
+| Build (debug) | Wall-clock time of a from-scratch `cargo build` of the row's package in the `dev` profile. | planned |
+| Run (release) | Wall-clock time of the mal test suite for the row's highest step, release build. | planned |
+| Step reached | The highest `stepN` of the mal test suite the row passes. Steps are cumulative. | from the registry |
+| Downloads | crates.io recent downloads badge for the headline crate. | planned |
+| Version | The exact version compiled against. | from the registry |
 
-The host, toolchain and `-j` setting for every run are recorded alongside
-the numbers.
+The host (name, OS, architecture, CPU model and count), toolchain, commit
+and exact benchmark command of every run are recorded alongside the numbers,
+and the page says which run it was rendered from. Numbers from different
+hosts are presented side by side only with the host named; the change
+column between two runs is read as meaningful only when the hosts match.
 
 ## Correctness
 

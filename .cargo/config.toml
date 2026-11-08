@@ -1,0 +1,4 @@
+[alias]
+# `cargo xtask bench` records a benchmark run under runs/ and regenerates the
+# results page; `cargo xtask report --check` is what CI runs. See xtask/.
+xtask = "run --quiet --package xtask --"

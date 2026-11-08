@@ -55,6 +55,19 @@ impl Component {
         }
     }
 
+    /// The human-readable name used for headings, matching the component
+    /// pages of the documentation.
+    pub const fn title(self) -> &'static str {
+        match self {
+            Component::Reader => "Reader",
+            Component::Printer => "Printer",
+            Component::Env => "Environment",
+            Component::Evaluator => "Evaluator",
+            Component::Core => "Core namespace",
+            Component::LineEditor => "Line editor",
+        }
+    }
+
     /// A one-line description of what implementations of this component do.
     pub const fn description(self) -> &'static str {
         match self {
@@ -194,6 +207,7 @@ mod tests {
         assert_eq!(Step::IfFnDo.to_string(), "step4_if_fn_do");
         assert_eq!(Step::Mal.label(), 'A');
         assert_eq!(Component::LineEditor.to_string(), "line-editor");
+        assert_eq!(Component::LineEditor.title(), "Line editor");
     }
 
     #[test]
