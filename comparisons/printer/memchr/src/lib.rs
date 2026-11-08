@@ -3,7 +3,7 @@
 //! the run before it in one `push_str`, instead of pushing one `char` at a
 //! time.
 //!
-//! The three bytes that need escaping (`"`, `\\` and newline) are ASCII, so
+//! The three bytes that need escaping (`"`, `\` and newline) are ASCII, so
 //! searching bytes is safe on UTF-8 and every run boundary is a character
 //! boundary. Long strings with few escapes are where this should win.
 
