@@ -47,23 +47,26 @@ impl Interpreter for EchoInterpreter {
     }
 }
 
+/// Table entry for [`StdinLineEditor`].
+pub const STDIN_LINE_EDITOR: Implementation = Implementation {
+    name: "std",
+    component: Component::LineEditor,
+    crates: &[],
+    highest_step: Step::Mal,
+    notes: "std::io::stdin; no editing, no history",
+};
+
+/// Table entry for [`EchoInterpreter`].
+pub const ECHO: Implementation = Implementation {
+    name: "echo",
+    component: Component::Evaluator,
+    crates: &[],
+    highest_step: Step::Repl,
+    notes: "step0: prints each line back unchanged",
+};
+
 /// Table entries for the baselines.
-pub const IMPLEMENTATIONS: &[Implementation] = &[
-    Implementation {
-        name: "std",
-        component: Component::LineEditor,
-        crates: &[],
-        highest_step: Step::Mal,
-        notes: "std::io::stdin; no editing, no history",
-    },
-    Implementation {
-        name: "echo",
-        component: Component::Evaluator,
-        crates: &[],
-        highest_step: Step::Repl,
-        notes: "step0: prints each line back unchanged",
-    },
-];
+pub const IMPLEMENTATIONS: &[Implementation] = &[STDIN_LINE_EDITOR, ECHO];
 
 #[cfg(test)]
 mod tests {

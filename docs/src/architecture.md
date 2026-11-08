@@ -5,8 +5,12 @@ crates.
 
 ```text
 crates/mal-traits      traits, Component/Step vocabulary, Implementation metadata, run_repl
-crates/mal             the REPL binary; std-only baselines; the implementation registry
+crates/mal             the REPL binary; std-only baselines; the implementation registry;
+                       benches/components.rs, the list of what gets benchmarked
+crates/mal-bench       the benchmark harness: fixed workloads, one Criterion bench per trait
 comparisons/<c>/<x>    one crate per component/crate pair, depends only on mal-traits
+xtask                  cargo xtask bench | report | compare: runs/ in, docs/src/results.md out
+runs/<id>/             one results.json per recorded benchmark run
 ```
 
 ## `mal-traits`
@@ -41,10 +45,25 @@ Alongside the traits:
 
 ## `mal`
 
-The binary. It parses its few flags by hand so it contributes nothing to the
-size and build-time columns, ships the `std` baselines (`StdinLineEditor`,
+The binary, plus a small library the binary and the benchmarks share. It
+parses its few flags by hand so it contributes nothing to the size and
+build-time columns, ships the `std` baselines (`StdinLineEditor`,
 `EchoInterpreter`), and keeps the registry that `mal --list` and the report
-generator read. Comparison crates are wired in here.
+generator read. Comparison crates are wired in here, and timed from here:
+`benches/components.rs` is one line per implementation, calling the matching
+harness function. Criterion and `mal-bench` are dev-dependencies only, so
+they never reach the binary.
+
+## `mal-bench` and `xtask`
+
+`mal-bench` holds the fixed workloads (`corpus`) and one generic Criterion
+benchmark per component trait, each recording under the group
+`<component>/<implementation>` so results can be joined back to the registry.
+`xtask` is the runner: `cargo xtask bench` records a run as
+`runs/<id>/results.json`, `cargo xtask report` renders the newest run and the
+registry into `docs/src/results.md`, and `cargo xtask compare` diffs two
+runs. These are the only crates with third-party dependencies. See
+[Benchmarking](benchmarking.md).
 
 ## Comparison crates
 

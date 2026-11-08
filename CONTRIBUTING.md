@@ -44,6 +44,18 @@ contribution is a new row: another crate doing one of the component jobs.
 6. **Add a page** at `docs/src/components/<component>.md` if the component
    does not have one yet, and a row in that component's table.
 
+7. **Benchmark it** with one line in `crates/mal/benches/components.rs`, in
+   the function for its component:
+
+   ```rust
+   mal_bench::reader(c, &reader_nom::IMPLEMENTATION, reader_nom::NomReader::default);
+   ```
+
+   Then `cargo xtask bench` records a run under `runs/` and regenerates
+   `docs/src/results.md`; commit both. See the
+   [benchmarking page](https://ajayclaugermany.github.io/make-a-lisp-in-rust-rosetta/book/benchmarking.html)
+   for the components that also take fixtures, and for recording runs.
+
 Keep implementations idiomatic for the crate being compared rather than
 optimal for the benchmark. The comparison is about what it is like to use the
 crate for this job; a row nobody would write in practice is not informative.
@@ -51,9 +63,10 @@ crate for this job; a row nobody would write in practice is not informative.
 ## What gets measured
 
 See [the methodology page](https://ajayclaugermany.github.io/make-a-lisp-in-rust-rosetta/book/methodology.html). In short, per
-implementation: binary-size overhead against the `std` baseline, debug build
-time, run time on the mal test suite for the highest step reached, and the
-crate's version and download count at the time of the run.
+implementation: Criterion timings of its trait methods on fixed workloads
+(recorded today), and, planned, binary-size overhead against the `std`
+baseline, debug build time, run time on the mal test suite for the highest
+step reached, and the crate's download count at the time of the run.
 
 ## Checks
 
@@ -63,6 +76,8 @@ CI runs the following; please run them before pushing.
 cargo fmt --all -- --check
 cargo clippy --workspace --all-targets -- -D warnings
 cargo test --workspace
+cargo test -p mal --benches        # runs every benchmark once, as a smoke test
+cargo xtask report --check         # docs/src/results.md matches the newest run
 RUSTDOCFLAGS="-D warnings" cargo doc --workspace --no-deps
 cargo deny check
 ```

@@ -5,11 +5,10 @@
 //! Argument parsing is done by hand so the binary itself contributes nothing
 //! to the size and build-time columns of the comparison tables.
 
-mod baseline;
-mod registry;
-
 use std::io;
 use std::process::ExitCode;
+
+use mal::{baseline, registry};
 
 const USAGE: &str = "\
 Usage: mal [OPTIONS]

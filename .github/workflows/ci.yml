@@ -80,6 +80,20 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - run: cargo doc --workspace --no-deps
 
+  bench:
+    name: Benchmarks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      # Runs every benchmark once, so a broken bench fails here rather than
+      # at the next `cargo xtask bench`.
+      - run: cargo test -p mal --benches
+      # docs/src/results.md is generated from runs/ and the registry; it has
+      # to be committed current.
+      - run: cargo xtask report --check
+
   deny:
     name: cargo-deny
     runs-on: ubuntu-latest

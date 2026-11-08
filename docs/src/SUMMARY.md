@@ -7,6 +7,7 @@
 - [Methodology](methodology.md)
 - [The Make-a-Lisp steps](mal-steps.md)
 - [Architecture](architecture.md)
+- [Benchmarking](benchmarking.md)
 
 # Components
 
