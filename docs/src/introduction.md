@@ -31,7 +31,8 @@ crate, built and measured identically, presented in a table.
 The first comparison rows are in place: 9 readers, 4 printers, 8
 environments, the `std` evaluator and core namespace, and 3 line editors.
 Every new row reaches `stepA_mal` of the mal test suite (checked by `cargo
-test`), and every row except the line editors is on the results page. The
+test`), and every row except the line editors is timed on the results
+page. The
 evaluator and core namespace have only their `std` rows so far; the
 [trait notes](trait-notes.md) explain what blocks the other candidates.
 

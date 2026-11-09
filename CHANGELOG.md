@@ -26,12 +26,6 @@ All notable changes to this project are recorded here. The format follows
 - [Trait notes](docs/src/trait-notes.md): where the traits forced rows away
   from their crates' idioms, and the refinements proposed.
 
-### Changed
-
-- `run_repl` accepts unsized interpreters (`Box<dyn Interpreter>`).
-- `mal` with no arguments now starts the stepA interpreter rather than the
-  step0 echo; `--eval echo` runs the echo.
-
 - Cargo workspace with `mal-traits` (component traits, step and component
   vocabulary, `Implementation` metadata, REPL driver) and `mal` (the REPL
   binary with a dependency-free step0 baseline and `--list`).
@@ -46,3 +40,9 @@ All notable changes to this project are recorded here. The format follows
   `echo` baseline.
 - `Component::title()` for headings; `mal` now also exposes its baselines
   and registry as a library for the benchmarks.
+
+### Changed
+
+- `run_repl` accepts unsized interpreters (`Box<dyn Interpreter>`).
+- `mal` with no arguments now starts the stepA interpreter rather than the
+  step0 echo; `--eval echo` runs the echo.

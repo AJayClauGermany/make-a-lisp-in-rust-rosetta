@@ -51,6 +51,16 @@ pub const FORMS: &[Form] = &[
     },
 ];
 
+/// Definitions for the free symbols in [`FORMS`], so that an interpreter
+/// benchmarked on them evaluates every form instead of timing an
+/// `'x' not found` error. Interpreters run these once, before timing; they
+/// need the core namespace.
+pub const BINDINGS: &[&str] = &[
+    "(def! a 1)",
+    "(def! counter (atom 0))",
+    "(def! swap-and-reset! (fn* (at) (reset! at 0)))",
+];
+
 /// Programs that spend their time evaluating rather than parsing: deep
 /// non-tail recursion, a tail-call loop, and closures passed to built-ins.
 /// Each is one `do` form that defines what it needs, so it can be

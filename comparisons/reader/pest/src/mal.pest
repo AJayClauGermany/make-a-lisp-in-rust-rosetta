@@ -5,7 +5,7 @@
 //! every non-atomic rule.
 
 WHITESPACE = _{ WHITE_SPACE | "," }
-COMMENT    = _{ ";" ~ (!NEWLINE ~ ANY)* }
+COMMENT    = _{ ";" ~ (!"\n" ~ ANY)* }
 
 /// The first form of the input, or nothing at all. There is deliberately no
 /// `EOI` after `form`: trailing input is ignored, as in the reference

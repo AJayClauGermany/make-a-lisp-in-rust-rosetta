@@ -17,11 +17,11 @@ use std::fmt;
 use mal_traits::{Component, CrateRef, Implementation, ReadOutcome, Reader, Step};
 use mal_types::{MalError, Value};
 use nom::branch::alt;
-use nom::bytes::complete::{escaped_transform, is_not, tag, take_till, take_while, take_while1};
+use nom::bytes::complete::{is_not, tag, take_till, take_while, take_while1};
 use nom::character::complete::{anychar, char, digit1, satisfy};
 use nom::combinator::{cut, eof, map, map_res, not, opt, recognize, value};
 use nom::error::{ErrorKind, FromExternalError, ParseError};
-use nom::multi::{many0, many0_count};
+use nom::multi::{fold_many0, many0, many0_count};
 use nom::sequence::{pair, preceded, terminated};
 use nom::{IResult, Parser};
 
@@ -234,15 +234,34 @@ fn with_meta(input: &str) -> PResult<'_, Value> {
     .parse(input)
 }
 
+/// One piece of a string literal's body.
+enum Fragment<'a> {
+    Literal(&'a str),
+    Escaped(char),
+}
+
 /// A string literal with `\n`, `\"` and `\\` escapes; any other escaped
 /// character stands for itself.
+///
+/// Built like nom's own string example: `fold_many0` over runs of plain
+/// characters and escapes. (`escaped_transform` was the first choice, but it
+/// reports a backslash at the end of input at the start of the body rather
+/// than as running out of input, and rejects an empty body.)
 fn string(input: &str) -> PResult<'_, String> {
-    let escape = alt((value('\n', char('n')), anychar));
-    // `escaped_transform` rejects an empty body, so `""` needs the `opt`.
-    let body = map(
-        opt(escaped_transform(is_not("\"\\"), '\\', escape)),
-        Option::unwrap_or_default,
-    );
+    // `cut`: after a backslash something must follow, so a backslash at the
+    // end of input is a hard failure there, reported as running out of input.
+    let escaped = preceded(char('\\'), cut(alt((value('\n', char('n')), anychar))));
+    let fragment = alt((
+        map(is_not("\"\\"), Fragment::Literal),
+        map(escaped, Fragment::Escaped),
+    ));
+    let body = fold_many0(fragment, String::new, |mut s, fragment| {
+        match fragment {
+            Fragment::Literal(run) => s.push_str(run),
+            Fragment::Escaped(c) => s.push(c),
+        }
+        s
+    });
     preceded(char('"'), cut(terminated(body, char('"')))).parse(input)
 }
 

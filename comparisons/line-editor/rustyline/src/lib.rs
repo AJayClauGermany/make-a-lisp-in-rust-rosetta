@@ -1,11 +1,17 @@
 //! The `rustyline` line-editor row: Emacs/vi editing and in-memory history
 //! through `rustyline::DefaultEditor`.
 //!
-//! When standard input is not a terminal (the mal test runner pipes its
-//! input), rustyline reads plain lines without editing on its own, but it
-//! also stops showing the prompt. `LineEditor::read_line` promises the
+//! When standard input is not a terminal (this repository's conformance
+//! tests pipe their input), rustyline reads lines itself without a
+//! terminal, but it stops showing the prompt and does not end the last
+//! prompt's line at end of input. `LineEditor::read_line` promises the
 //! prompt, and the mal test protocol waits for it, so in that case the row
-//! writes the prompt itself before handing over to rustyline.
+//! writes the prompt, and the newline at end of input, itself.
+//!
+//! Piped lines are still processed by rustyline: each backspace character
+//! (U+0008) deletes the character before it, as if it had been typed. The
+//! `std` and `reedline` rows pass such a line through unchanged, so a mal
+//! program containing a literal backspace reads differently under this row.
 
 use std::io::{self, IsTerminal, Write};
 
@@ -55,7 +61,15 @@ impl LineEditor for RustylineEditor {
         let prompt = if self.interactive { prompt } else { "" };
         match self.editor.readline(prompt) {
             Ok(line) => Ok(Some(line)),
-            Err(ReadlineError::Eof) => Ok(None),
+            Err(ReadlineError::Eof) => {
+                // On a terminal rustyline ends the prompt's line itself.
+                if !self.interactive {
+                    let mut stdout = io::stdout().lock();
+                    stdout.write_all(b"\n")?;
+                    stdout.flush()?;
+                }
+                Ok(None)
+            }
             // Ctrl-C abandons the line being typed, as in a shell.
             Err(ReadlineError::Interrupted) => Ok(Some(String::new())),
             Err(e) => Err(e),

@@ -167,6 +167,8 @@ fn reader_cases() -> Vec<(&'static str, Value)> {
         ("1; comment after expression", int(1)),
         ("; leading comment\n2", int(2)),
         ("(1 ; inner comment\n 2)", list([int(1), int(2)])),
+        // Only a newline ends a comment; a lone carriage return does not.
+        ("(1 ;c\r2\n 3)", list([int(1), int(3)])),
         ("1 2 3", int(1)),
         ("abc)", sym("abc")),
     ]
@@ -197,6 +199,16 @@ const UNBALANCED_INPUTS: &[&str] = &[
     "(",
     "'",
     "(1 (2 3)",
+    // Reader macros with nothing after them, which must not fall back to
+    // reading the macro character as a symbol.
+    "~",
+    "@",
+    "^",
+    "~@",
+    "^x",
+    "(~",
+    // A backslash escaping the end of input.
+    r#""abc\"#,
 ];
 
 /// Check a [`Reader`] against the shared cases. `new` is called for every

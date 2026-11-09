@@ -19,8 +19,7 @@ as a candidate refinement.
 
 ## Proposed refinements
 
-Ordered by how many rows they would simplify. Numbers refer to the notes
-below.
+Ordered roughly by how many rows they would simplify.
 
 | # | refinement | affects |
 |---|------------|---------|
@@ -36,6 +35,7 @@ below.
 | 10 | A number representation that the core row can choose (an associated type, or a `Value` parameter). | future core rows |
 | 11 | A lifecycle hook on `LineEditor` (`fn finish(&mut self) -> Result<...>`) for saving history, and a fallible `add_history`. | rustyline, reedline |
 | 12 | Require `Env: Default` (or add `fn new()`), since every caller needs a root environment. | the wiring, benchmarks |
+| 13 | A nesting limit readers (and printers) honour, reported as an error instead of a stack overflow. | 6 of 9 readers, all printers |
 
 ## Notes by component
 
@@ -101,41 +101,62 @@ below.
    failed integer conversion backtracks, and the token would silently read
    as a symbol; each needs a cut, a checkpoint reset or a `!integer()`
    guard.
+10. **Reader macros must not fall back to symbols.** `~`, `@` and `^` are
+    symbol characters inside a symbol (`a~b`) but start a reader macro at
+    the beginning of a form. A combinator grammar without a cut tries the
+    macro, fails when no form follows, and backtracks into reading `~` as a
+    symbol: chumsky did exactly that until its symbol rule excluded those
+    first characters, as the pest, lalrpop and logos grammars do.
+11. **No depth limit in the trait.** Every recursive-descent row overflows
+    the stack on deep enough nesting, aborting the process, and the trait
+    has no way to report "too deep" as an error. How deep differs a lot.
+    Reading an unclosed run of `(` in a debug build of the binary (so only
+    the reader recurses), nom aborts at about 340 levels, winnow 1,700, peg
+    2,050, logos 2,700, regex 5,000 and `std` 5,300, while chumsky
+    (`stacker`), pest (its stack guard) and lalrpop (an explicit LR stack)
+    read 200,000. Release builds use smaller frames and get further. The
+    printer rows recurse too, so printing a deep enough value overflows
+    whichever reader built it. A `max_depth` setting or an `Error` case for
+    it would turn the crash into a reported error.
+12. **nom's `escaped_transform` misreports a trailing backslash.** It
+    reports `"abc\` at the start of the string body rather than as running
+    out of input, and rejects an empty body. The row uses `fold_many0` over
+    literal runs and escapes instead, as nom's own string example does.
 
 ### Printer
 
-10. **`&mut String` output.** The trait appends to a `String`, which rules
+13. **`&mut String` output.** The trait appends to a `String`, which rules
     out the small-string candidates on the printer page (`compact_str`,
     `smol_str`) as output buffers and writing straight to `io::Write`.
     Refinement 7. `ryu` is not a row because `Value` has no floats.
 
 ### Environment
 
-11. **`set` takes `&str`.** Every binding allocates an owned key, including
+14. **`set` takes `&str`.** Every binding allocates an owned key, including
     every parameter of every function call, although the value already
     holds the symbol as an `Rc<str>`. hashbrown's `entry_ref` avoids the
     allocation only when rebinding. Refinement 5.
-12. **Persistent maps cannot be used as persistent maps.** The idiomatic
+15. **Persistent maps cannot be used as persistent maps.** The idiomatic
     environment on `imbl` or `rpds` gives each child scope a structurally
     shared snapshot of its parent, so lookups hit one map. `Env::set`
     through a parent must be visible to children created before it
     (recursive `def!` after `fn*` captured the scope relies on it), which
     snapshots break. So both rows keep the scope chain and a `RefCell`, and
     the persistent map is just a map. Refinement 6.
-13. **No constructor in the trait.** The wiring and the benchmarks need
+16. **No constructor in the trait.** The wiring and the benchmarks need
     `E: Default`. Refinement 12.
 
 ### Evaluator
 
-14. **`eval(&mut self)` versus re-entry.** `eval`, `apply`, `map`, `swap!`
+17. **`eval(&mut self)` versus re-entry.** `eval`, `apply`, `map`, `swap!`
     and macro expansion all call back into the evaluator from inside a
     built-in or closure, so the evaluator has to be stateless and `Clone`,
     and the `eval` built-in clones it per call. Refinement 4.
-15. **`DEBUG-EVAL` cannot be implemented.** The optional tests that bind
+18. **`DEBUG-EVAL` cannot be implemented.** The optional tests that bind
     `DEBUG-EVAL` expect the evaluator to print each form, and the evaluator
     has no printer. These are soft failures (17 across steps 3, 7 and 8) in
     every row.
-16. **Reference cycles leak.** Every closure that captures the scope it is
+19. **Reference cycles leak.** Every closure that captures the scope it is
     defined in (every recursive `def!`) and the `eval` built-in, which
     captures the top-level environment, form `Rc` cycles. This is the cost
     of the `std` row's memory-management strategy rather than a trait issue,
@@ -143,38 +164,41 @@ below.
 
 ### Core namespace
 
-17. **The core needs other components.** `read-string` needs a reader,
+20. **The core needs other components.** `read-string` needs a reader,
     `pr-str`/`str`/`prn`/`println` a printer, and `eval`, `apply`, `map` and
     `swap!` the evaluator; `install` only receives the environment. The
     `std` row is generic over a reader and a printer, calls functions through
     `Value::apply`, and `eval` is installed by the wiring. Refinement 3.
-18. **`readline` cannot use the line-editor row.** It reads standard input
+21. **`readline` cannot use the line-editor row.** It reads standard input
     directly.
-19. **Representation is fixed.** The numeric candidates (`num-bigint`,
+22. **Representation is fixed.** The numeric candidates (`num-bigint`,
     `rug`) need a different number type in `Value`, and the core is the only
     row that would change it. Refinement 10. Until then the core table has
     only the `std` row.
-20. **The benchmark only times `install`.** Timing the built-ins themselves
+23. **The benchmark only times `install`.** Timing the built-ins themselves
     would make a second core row worth comparing.
 
 ### Line editor
 
-21. **"Show the prompt" when piped.** rustyline stops printing the prompt
-    when standard input is not a terminal, and the mal test protocol waits
-    for it, so the row writes the prompt itself in that case. reedline cannot
-    run without a terminal at all; the row reads piped input with `std::io`,
-    as nushell does, so the step column for reedline is reached through that
-    fallback.
-22. **History.** `add_history` returns `()`, so rustyline's error is
+24. **"Show the prompt" when piped.** rustyline reads piped input itself
+    but stops printing the prompt, and the newline at end of input, so the
+    row writes both; it still applies backspace characters in piped lines,
+    which the other rows pass through unchanged. reedline cannot run without
+    a terminal at all; the row reads piped input with `std::io`, as nushell
+    does, so the step column for reedline is reached through that fallback.
+    The conformance tests pipe input (`runtest.py --no-pty`); upstream
+    `runtest.py` uses a pseudo-terminal by default, where reedline sends a
+    cursor query before every line that the runner does not cope with.
+25. **History.** `add_history` returns `()`, so rustyline's error is
     dropped; reedline records history itself, so the call is a no-op. Neither
     can save a history file without a lifecycle hook. Refinement 11.
 
 ### Interpreter and wiring
 
-23. **Run-time selection multiplies code.** Every row is generic, so every
+26. **Run-time selection multiplies code.** Every row is generic, so every
     combination the binary can run is a monomorphised copy. The binary allows
     one row to differ from `std` at a time, which keeps the copies linear.
-24. **Rendered errors.** `run_repl` prints `Error: {e}` with `Display`, which
+27. **Rendered errors.** `run_repl` prints `Error: {e}` with `Display`, which
     cannot print a thrown mal value with the printer row, so the wiring's
     error type is a pre-rendered `String`. Refinement 9.
 

@@ -16,10 +16,17 @@ the newest run. Nothing on that page is typed by hand.
 | data | `runs/<id>/results.json` | one file per run: host, toolchain, commit, command and every benchmark's statistics |
 | page | `docs/src/results.md` | generated; CI fails if it is stale |
 
-The harness and the runner are tooling and are the only crates in the
-workspace with third-party dependencies. They are dev-dependencies of `mal`,
-so the `mal` binary that the size and build-time columns describe is still
-built from `mal-traits` and the comparison crates alone.
+The harness is a dev-dependency of `mal` and the runner a separate crate,
+so neither reaches the `mal` binary. The comparison crates do: the binary
+currently links every row so any of them can be selected at run time (see
+the [methodology](methodology.md#the-baseline) for what that means for the
+planned binary-size column).
+
+Interpreter benchmarks run `rep` on every corpus form, and check once,
+before timing, that each succeeds, so an error path is never what gets
+measured. Interpreters that evaluate run `corpus::BINDINGS` first, which
+defines the free symbols the forms mention (`a`, `counter`,
+`swap-and-reset!`).
 
 ## Adding an implementation to the benchmarks
 

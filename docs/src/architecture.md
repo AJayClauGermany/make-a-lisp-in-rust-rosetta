@@ -60,8 +60,8 @@ different representation cannot use it; see [Trait notes](trait-notes.md).
 ## `mal`
 
 The binary, plus the library the binary, the benchmarks and the tests
-share. It parses its flags by hand so it contributes nothing to the size and
-build-time columns, ships the binary-level baselines (`StdinLineEditor`,
+share. It parses its flags by hand so argument parsing adds nothing to the
+size and build-time columns, ships the binary-level baselines (`StdinLineEditor`,
 `EchoInterpreter`), and keeps the registry that `mal --list` and the report
 generator read.
 
@@ -94,8 +94,8 @@ benchmark per component trait, each recording under the group
 `xtask` is the runner: `cargo xtask bench` records a run as
 `runs/<id>/results.json`, `cargo xtask report` renders the newest run and the
 registry into `docs/src/results.md`, and `cargo xtask compare` diffs two
-runs. These are the only crates with third-party dependencies. See
-[Benchmarking](benchmarking.md).
+runs. Their third-party dependencies (Criterion, serde) never reach the
+`mal` binary. See [Benchmarking](benchmarking.md).
 
 ## Comparison crates
 

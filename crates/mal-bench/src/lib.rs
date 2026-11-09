@@ -211,6 +211,14 @@ pub fn core_namespace<N, F, G>(
 /// Benchmark an [`Interpreter`]: `rep` on every form in [`corpus::FORMS`],
 /// and one whole [`corpus::session`] driven through [`run_repl`] with an
 /// in-memory line editor, which is what the mal test runner does.
+///
+/// `new` must return an interpreter in which every form evaluates; an
+/// evaluating interpreter gets that by running [`corpus::BINDINGS`] first.
+///
+/// # Panics
+///
+/// If `rep` fails on a form, checked once before timing, so an error path is
+/// never what gets measured.
 pub fn interpreter<I, F>(c: &mut Criterion, imp: &Implementation, mut new: F)
 where
     I: Interpreter,
@@ -221,6 +229,9 @@ where
         group.throughput(Throughput::Bytes(form.source.len() as u64));
         group.bench_function(BenchmarkId::new("rep", form.name), |b| {
             let mut interpreter = new();
+            if let Err(e) = interpreter.rep(form.source) {
+                panic!("{}: `rep` fails on {}: {e}", group_id(imp), form.name);
+            }
             b.iter(|| interpreter.rep(black_box(form.source)));
         });
     }

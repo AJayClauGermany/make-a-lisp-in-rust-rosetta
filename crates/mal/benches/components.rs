@@ -16,7 +16,7 @@ use criterion::{Criterion, criterion_group, criterion_main};
 use mal::baseline;
 use mal::interpreter::Mal;
 use mal_bench::corpus::{self, Form};
-use mal_traits::{CoreNamespace, Env, ReadOutcome, Reader};
+use mal_traits::{CoreNamespace, Env, Interpreter, ReadOutcome, Reader};
 use mal_types::Value;
 
 use core_std::StdCore;
@@ -123,16 +123,23 @@ fn evaluators(c: &mut Criterion) {
         setup::<StdEnv<Value>>,
         &programs,
     );
-    // The whole std stack, read-eval-print, as the REPL runs it.
+    // The whole std stack, read-eval-print, as the REPL runs it, with the
+    // corpus's free symbols bound so every form evaluates.
     mal_bench::interpreter(c, &eval_std::IMPLEMENTATION, || {
-        Mal::new(
+        let mut mal = Mal::new(
             StdReader,
             StdPrinter,
             StdEvaluator::new(),
             StdEnv::new(),
             &StdCore::<_, StdReader, _>::new(StdPrinter),
             &[],
-        )
+        );
+        for binding in corpus::BINDINGS {
+            if let Err(e) = mal.rep(binding) {
+                panic!("corpus binding {binding} fails: {e}");
+            }
+        }
+        mal
     });
 }
 

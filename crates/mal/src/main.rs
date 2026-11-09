@@ -5,8 +5,9 @@
 //! can be swapped in with `--<component> <name>` (see `mal --list`), which
 //! is how the conformance tests run the mal test suite against each row.
 //!
-//! Argument parsing is done by hand so the binary itself contributes nothing
-//! to the size and build-time columns of the comparison tables.
+//! Argument parsing is done by hand so that it adds nothing to the size and
+//! build-time columns of the comparison tables. The binary links every row
+//! so any of them can be selected at run time.
 
 use std::io;
 use std::process::ExitCode;
@@ -92,6 +93,10 @@ fn parse(args: &[String]) -> Result<(Selection, &[String]), String> {
 }
 
 fn run(selection: &Selection, script: &[String]) -> ExitCode {
+    if let Err(e) = check(selection, !script.is_empty()) {
+        eprintln!("error: {e}");
+        return ExitCode::from(2);
+    }
     let argv = script.get(1..).unwrap_or_default();
     let mut interpreter = match select::build(selection, argv) {
         Ok(interpreter) => interpreter,
@@ -113,13 +118,27 @@ fn run(selection: &Selection, script: &[String]) -> ExitCode {
             }
         },
         "reedline" => repl(&mut ReedlineEditor::new(), interpreter.as_mut()),
-        other => {
-            eprintln!(
-                "error: unknown line-editor implementation `{other}`; `mal --list` shows what is available"
-            );
-            ExitCode::from(2)
-        }
+        other => unreachable!("line editor `{other}` passed `check` but has no constructor"),
     }
+}
+
+/// Reject selections the binary cannot honour before doing anything: an
+/// unregistered line editor, and a script run by an interpreter that does
+/// not evaluate (the echo evaluator, `--read-print`).
+fn check(selection: &Selection, script: bool) -> Result<(), String> {
+    let editor = selection.get(Component::LineEditor);
+    let registered = registry::all()
+        .into_iter()
+        .any(|imp| imp.component == Component::LineEditor && imp.name == editor);
+    if !registered {
+        return Err(format!(
+            "unknown line-editor implementation `{editor}`; `mal --list` shows what is available"
+        ));
+    }
+    if script && (selection.read_print() || selection.get(Component::Evaluator) == "echo") {
+        return Err("running a FILE needs an evaluator; drop --read-print / --eval echo".into());
+    }
+    Ok(())
 }
 
 fn run_file(interpreter: &mut (impl Interpreter + ?Sized), file: &str) -> ExitCode {

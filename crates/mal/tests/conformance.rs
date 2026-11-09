@@ -17,7 +17,7 @@
 //! than be looked up, so it runs in `--read-print` mode, which tests the
 //! reader and printer rows alone; steps 2 to A run the full interpreter.
 //!
-//! Set `MAL_CONFORMANCE=reader/nom,env/im` to run only some rows, and run
+//! Set `MAL_CONFORMANCE=reader/nom,env/imbl` to run only some rows, and run
 //! with `--nocapture` to see the per-row report even when everything passes.
 
 use std::fmt::Write as _;
@@ -263,16 +263,39 @@ impl RowReport {
     }
 }
 
+/// Every registered row, or the ones `MAL_CONFORMANCE` names.
+///
+/// # Panics
+///
+/// If the filter names a row that is not registered, so a typo cannot pass
+/// by running nothing.
 fn selected_rows() -> Vec<&'static Implementation> {
-    let filter = std::env::var("MAL_CONFORMANCE").ok();
-    registry::all()
-        .into_iter()
-        .filter(|imp| {
-            filter.as_deref().is_none_or(|f| {
-                f.split(',')
-                    .any(|want| want.trim() == format!("{}/{}", imp.component, imp.name))
-            })
-        })
+    let all = registry::all();
+    let Ok(filter) = std::env::var("MAL_CONFORMANCE") else {
+        return all;
+    };
+    let id = |imp: &Implementation| format!("{}/{}", imp.component, imp.name);
+    let wanted: Vec<&str> = filter
+        .split(',')
+        .map(str::trim)
+        .filter(|w| !w.is_empty())
+        .collect();
+    assert!(
+        !wanted.is_empty(),
+        "MAL_CONFORMANCE is set but names no rows"
+    );
+    let unknown: Vec<&str> = wanted
+        .iter()
+        .copied()
+        .filter(|w| !all.iter().any(|imp| id(imp) == *w))
+        .collect();
+    assert!(
+        unknown.is_empty(),
+        "MAL_CONFORMANCE names unregistered rows {unknown:?}; registered rows are {:?}",
+        all.iter().map(|imp| id(imp)).collect::<Vec<_>>()
+    );
+    all.into_iter()
+        .filter(|imp| wanted.contains(&id(imp).as_str()))
         .collect()
 }
 

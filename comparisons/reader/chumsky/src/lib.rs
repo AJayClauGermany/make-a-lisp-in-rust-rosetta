@@ -150,9 +150,11 @@ fn parser<'src>() -> impl Parser<'src, &'src str, ReadOutcome<Value>, Extra<'src
         let keyword = just(':')
             .ignore_then(symbol_char.repeated().to_slice())
             .map(Value::keyword);
+        // `~`, `@` and `^` start reader macros; without the guard, a macro
+        // with no form after it would backtrack into a symbol.
         let symbol = symbol_char
-            .repeated()
-            .at_least(1)
+            .and_is(one_of("~@^").not())
+            .then(symbol_char.repeated())
             .to_slice()
             .map(|token| match token {
                 "nil" => Value::Nil,

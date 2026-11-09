@@ -5,8 +5,16 @@
 //! when standard input is piped, so unlike rustyline it does not read plain
 //! lines by itself. This row checks `IsTerminal` and reads piped input with
 //! `std::io` instead, which is also what nushell does for non-interactive
-//! input. The mal test suite pipes its input, so the step column for this
-//! row is reached through that fallback.
+//! input. This repository's conformance tests pipe their input (like
+//! `runtest.py --no-pty`), so the step column for this row is reached
+//! through that fallback.
+//!
+//! Upstream `runtest.py` runs implementations on a pseudo-terminal by
+//! default. There reedline does run, and it sends a cursor-position query and
+//! a styled prompt before every line; `runtest.py` answers the query by
+//! clearing its output buffer, which loses the previous result, so this row
+//! is not expected to pass the upstream runner in that mode (checked with a
+//! pty driver that answers the query the way `runtest.py` does).
 
 use std::borrow::Cow;
 use std::io::{self, BufRead, IsTerminal, Write};
