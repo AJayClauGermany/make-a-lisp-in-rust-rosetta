@@ -23,7 +23,11 @@ contribution is a new row: another crate doing one of the component jobs.
 
    [dependencies]
    mal-traits = { path = "../../../crates/mal-traits" }
+   mal-types = { path = "../../../crates/mal-types" }
    nom = "8"
+
+   [dev-dependencies]
+   mal-testkit = { path = "../../../crates/mal-testkit" }
 
    [lints]
    workspace = true
@@ -33,13 +37,23 @@ contribution is a new row: another crate doing one of the component jobs.
    rejects globs that match nothing, so members are listed explicitly.
 
 4. **Implement the trait** for that component (`mal_traits::Reader`,
-   `Printer`, `Env`, `Evaluator`, `CoreNamespace` or `LineEditor`) and
-   export one `pub const IMPLEMENTATION: mal_traits::Implementation`
-   describing it: the crates used with exact versions, the highest mal step
-   it passes, and one line of notes for the table.
+   `Printer`, `Env`, `Evaluator`, `CoreNamespace` or `LineEditor`) over
+   `mal_types::Value`, and export one
+   `pub const IMPLEMENTATION: mal_traits::Implementation` describing it: the
+   crates used with exact versions (a test checks them against
+   `Cargo.lock`), the highest mal step it passes, and one line of notes for
+   the table. Readers, printers and environments call the shared checks
+   from a test: `mal_testkit::check_reader(NomReader::default)`.
 
 5. **Register it** in `crates/mal/src/registry.rs` so `mal --list` and the
-   generated tables see it.
+   generated tables see it, add it as a dependency of `crates/mal`, and add
+   a line to `build` in `crates/mal/src/select.rs` so `mal --reader nom`
+   runs it. `cargo test -p mal --test conformance` then runs the mal test
+   suite against it and fails unless it reaches exactly the step it claims;
+   `MAL_CONFORMANCE=reader/nom` runs just that row.
+
+   If the trait made you write something a user of the crate would not,
+   keep it and add a note to `docs/src/trait-notes.md`.
 
 6. **Add a page** at `docs/src/components/<component>.md` if the component
    does not have one yet, and a row in that component's table.

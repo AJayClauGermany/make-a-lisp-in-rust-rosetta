@@ -20,8 +20,13 @@ to go".
 
 Every component has a `std` row: the smallest implementation using only the
 standard library. It is the `null` row of the rosetta tables and the zero
-point for the overhead columns. The `mal` binary ships these baselines so
-that the runner itself adds no third-party code to the measurements.
+point for the overhead columns.
+
+The `mal` binary currently links every row, so that the conformance tests
+and `mal --reader nom` can select any of them at run time. The planned
+binary-size column needs a `mal` built with only the baselines plus the one
+row being measured; that means putting each non-`std` row behind a cargo
+feature, which is not done yet.
 
 ## Columns
 
@@ -41,7 +46,7 @@ See [Benchmarking](benchmarking.md) for the mechanics.
 | column | how it is measured | status |
 |--------|--------------------|--------|
 | Run time (micro) | Criterion benchmarks of the row's trait methods on the fixed workloads in `mal_bench::corpus`: mean and standard deviation per iteration, throughput where the workload has a size. One Criterion group per row, `<component>/<name>`. | recorded |
-| Overhead (release) | Release binary size of `mal` with this row wired in, minus the size with the `std` baseline. Built with the workspace `release` profile (fat LTO, one codegen unit, symbols stripped). | planned |
+| Overhead (release) | Release binary size of `mal` with only this row wired in, minus the size with only the `std` baselines. Built with the workspace `release` profile (fat LTO, one codegen unit, symbols stripped). Needs per-row cargo features first (see above). | planned |
 | Build (debug) | Wall-clock time of a from-scratch `cargo build` of the row's package in the `dev` profile. | planned |
 | Run (release) | Wall-clock time of the mal test suite for the row's highest step, release build. | planned |
 | Step reached | The highest `stepN` of the mal test suite the row passes. Steps are cumulative. | from the registry |
@@ -60,3 +65,14 @@ A row is only compared at the steps it passes the mal test suite for. The
 "step reached" column is therefore also a correctness statement, and an
 implementation that stops at `step4_if_fn_do` is reported as such rather than
 excluded.
+
+The column is checked, not claimed: `cargo test` runs the upstream test
+files (vendored under `crates/mal/tests/mal/`) against every registered row
+with the same matching rules as mal's `runtest.py`, swapping that one row
+into an otherwise all-`std` interpreter, and fails if the step a row reaches
+differs from the step its `Implementation` states. Failures in the suite's
+optional (`soft`) sections are reported but do not count, as upstream.
+
+Rows also run shared unit checks for their component (`mal-testkit`), and
+every reader must read every benchmark form to exactly the value the `std`
+reader produces, so the reader table never times an error path.

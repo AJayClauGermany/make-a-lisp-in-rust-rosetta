@@ -20,16 +20,21 @@ crate, built and measured identically, presented in a table.
   written against, and how the `mal` binary wires them together.
 - **Benchmarking**: how rows are timed, how runs are recorded under `runs/`,
   and how the results page is generated from them.
+- **Trait notes**: where the shared traits forced a row away from its
+  crate's idioms, and the refinements proposed.
 - **Components**: one page per component with the candidate crates, the
   qualitative comparison table and notes on what the job demands.
 - **Results**: the measured tables from the most recent run.
 
 ## Status
 
-The workspace, traits, benchmark harness, run recorder and this site are in
-place. No comparison implementations have been written yet, so the tables
-contain only the dependency-free baselines, and the results page shows the
-baseline interpreter's numbers from the first recorded run.
+The first comparison rows are in place: 9 readers, 4 printers, 8
+environments, the `std` evaluator and core namespace, and 3 line editors.
+Every new row reaches `stepA_mal` of the mal test suite (checked by `cargo
+test`), and every row except the line editors is timed on the results
+page. The
+evaluator and core namespace have only their `std` rows so far; the
+[trait notes](trait-notes.md) explain what blocks the other candidates.
 
 [mal]: https://github.com/kanaka/mal
 [rosetta]: https://github.com/rosetta-rs

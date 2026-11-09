@@ -1,0 +1,64 @@
+//! The mal token grammar as a pest PEG.
+//!
+//! Commas count as whitespace and `;` starts a comment that runs to the end
+//! of the line. pest inserts `WHITESPACE` and `COMMENT` between the parts of
+//! every non-atomic rule.
+
+WHITESPACE = _{ WHITE_SPACE | "," }
+COMMENT    = _{ ";" ~ (!"\n" ~ ANY)* }
+
+/// The first form of the input, or nothing at all. There is deliberately no
+/// `EOI` after `form`: trailing input is ignored, as in the reference
+/// implementations.
+input = _{ SOI ~ (form | EOI) }
+
+/// Any mal form. Reader macros come before `atom`, so `@a` is a `deref`.
+form = _{
+    list | vector | map
+  | quote | quasiquote | splice_unquote | unquote | deref | with_meta
+  | string | atom
+}
+
+/// `( ... )`
+list   = { "(" ~ form* ~ ")" }
+/// `[ ... ]`
+vector = { "[" ~ form* ~ "]" }
+/// `{ ... }`: alternating keys and values.
+map    = { "{" ~ form* ~ "}" }
+
+/// `'form`
+quote          = { "'" ~ form }
+/// `` `form ``
+quasiquote     = { "`" ~ form }
+/// `~@form`
+splice_unquote = { "~@" ~ form }
+/// `~form`
+unquote        = { "~" ~ form }
+/// `@form`
+deref          = { "@" ~ form }
+/// `^meta form`, read as `(with-meta form meta)`.
+with_meta      = { "^" ~ form ~ form }
+
+/// A string literal; `inner` is the text between the quotes, still escaped.
+string = ${ "\"" ~ inner ~ "\"" }
+/// The escaped contents of a string literal.
+inner  = @{ (!("\"" | "\\") ~ ANY | "\\" ~ ANY)* }
+
+/// A literal or a name.
+atom    = _{ integer | nil | boolean | keyword | symbol }
+/// `-?[0-9]+`, not followed by more symbol characters.
+integer = @{ "-"? ~ ASCII_DIGIT+ ~ !symbol_char }
+/// `nil`
+nil     = @{ "nil" ~ !symbol_char }
+/// `true` or `false`
+boolean = @{ ("true" | "false") ~ !symbol_char }
+/// `:name`
+keyword = @{ ":" ~ symbol_char* }
+/// Any other run of symbol characters. `~`, `@` and `^` start reader
+/// macros, so a lone `@` is an error rather than a symbol.
+symbol  = @{ !("~" | "@" | "^") ~ symbol_char+ }
+
+symbol_char = _{
+    !(WHITE_SPACE | "[" | "]" | "{" | "}" | "(" | ")" | "'" | "\"" | "`" | "," | ";")
+    ~ ANY
+}

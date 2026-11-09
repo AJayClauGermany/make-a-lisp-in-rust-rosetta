@@ -4,15 +4,15 @@
 the implementation registry. Do not edit by hand: CI checks that this page
 matches the generator. To change the layout, edit `xtask/src/report.rs`. -->
 
-Newest run: [`20261108-192541-cloud-sandbox`](https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/blob/main/runs/20261108-192541-cloud-sandbox/results.json), recorded 2026-11-08 19:25:41 UTC.
+Newest run: [`20261109-042245-cloud-sandbox`](https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/blob/main/runs/20261109-042245-cloud-sandbox/results.json), recorded 2026-11-09 04:22:45 UTC.
 
 | | |
 |---|---|
 | host | `cloud-sandbox`, linux x86_64, 4 logical CPUs, Intel(R) Xeon(R) Processor @ 2.10GHz |
 | toolchain | `rustc 1.97.0 (2d8144b78 2026-07-07)` |
-| commit | [`d814ce5f7de3`](https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/commit/d814ce5f7de3) with uncommitted changes |
-| command | `cargo bench --package mal --bench components -- --noplot` |
-| compared against | no earlier run |
+| commit | [`0f12aebd0a9c`](https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/commit/0f12aebd0a9c) |
+| command | `cargo bench --package mal --bench components -- --noplot --warm-up-time 1 --measurement-time 3` |
+| compared against | [`20261108-192541-cloud-sandbox`](https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/blob/main/runs/20261108-192541-cloud-sandbox/results.json) on `cloud-sandbox` |
 
 Times are Criterion's point estimate of the mean per iteration, with the
 standard deviation; throughput divides the declared input size by the mean.
@@ -23,43 +23,291 @@ component.
 
 ## Reader
 
-No implementations registered yet.
+- **std**: reaches `stepA_mal`; no third-party crates. hand-written recursive descent over byte offsets; no token pass
+- **nom**: reaches `stepA_mal`; [nom 8.0.0](https://github.com/rust-bakery/nom). nom 8 combinator fns with cut after openers; custom ParseError for EOF messages
+- **winnow**: reaches `stepA_mal`; [winnow 1.0.5](https://github.com/winnow-rs/winnow). winnow combinator fns, dispatch! on the first char, cut_err + ContextError labels
+- **chumsky**: reaches `stepA_mal`; [chumsky 0.13.0](https://github.com/zesterer/chumsky). chumsky combinator grammar with recursive(); Rich errors, rebuilt per read_str call
+- **pest**: reaches `stepA_mal`; [pest 2.9.5](https://github.com/pest-parser/pest), [pest_derive 2.9.5](https://github.com/pest-parser/pest). PEG; grammar in a .pest file via derive macro, actions walk an untyped pair tree in Rust
+- **peg**: reaches `stepA_mal`; [peg 0.8.6](https://github.com/kevinmehall/rust-peg). PEG; grammar and actions in a peg::parser! proc-macro block, builds values directly
+- **lalrpop**: reaches `stepA_mal`; [lalrpop 0.22.2](https://github.com/lalrpop/lalrpop), [lalrpop-util 0.22.2](https://github.com/lalrpop/lalrpop). LR(1) + built-in regex lexer; grammar and actions in a .lalrpop file compiled by build.rs
+- **logos**: reaches `stepA_mal`; [logos 0.16.1](https://github.com/maciejhirsz/logos). #[derive(Logos)] token enum with literal callbacks; hand-written recursive descent over the lexer
+- **regex**: reaches `stepA_mal`; [regex 1.13.1](https://github.com/rust-lang/regex). the guide's single tokenizer regex, then recursive descent over the token list
+
+| implementation | workload | mean | std dev | throughput | vs previous |
+|---|---|---:|---:|---:|---:|
+| std | `read_str/atom` | 35.1 ns | 4.82 ns | 54.3 MiB/s | new |
+| std | `read_str/collections` | 1.58 µs | 319 ns | 34.9 MiB/s | new |
+| std | `read_str/list` | 523 ns | 76.7 ns | 43.7 MiB/s | new |
+| std | `read_str/nested` | 1.50 µs | 254 ns | 42.5 MiB/s | new |
+| std | `read_str/program` | 22.6 µs | 5.33 µs | 52.5 MiB/s | new |
+| std | `read_str/quoting` | 1.21 µs | 35.0 ns | 42.7 MiB/s | new |
+| std | `read_str/string` | 365 ns | 88.3 ns | 154 MiB/s | new |
+| std | `read_str/symbol` | 114 ns | 16.2 ns | 126 MiB/s | new |
+| nom | `read_str/atom` | 202 ns | 9.28 ns | 9.43 MiB/s | new |
+| nom | `read_str/collections` | 4.64 µs | 576 ns | 11.9 MiB/s | new |
+| nom | `read_str/list` | 2.21 µs | 281 ns | 10.4 MiB/s | new |
+| nom | `read_str/nested` | 8.44 µs | 974 ns | 7.57 MiB/s | new |
+| nom | `read_str/program` | 81.4 µs | 9.84 µs | 14.6 MiB/s | new |
+| nom | `read_str/quoting` | 4.89 µs | 719 ns | 10.5 MiB/s | new |
+| nom | `read_str/string` | 449 ns | 40.0 ns | 125 MiB/s | new |
+| nom | `read_str/symbol` | 303 ns | 35.8 ns | 47.2 MiB/s | new |
+| winnow | `read_str/atom` | 60.1 ns | 3.21 ns | 31.7 MiB/s | new |
+| winnow | `read_str/collections` | 2.13 µs | 410 ns | 25.9 MiB/s | new |
+| winnow | `read_str/list` | 974 ns | 223 ns | 23.5 MiB/s | new |
+| winnow | `read_str/nested` | 3.72 µs | 783 ns | 17.2 MiB/s | new |
+| winnow | `read_str/program` | 62.4 µs | 13.9 µs | 19.0 MiB/s | new |
+| winnow | `read_str/quoting` | 2.04 µs | 172 ns | 25.3 MiB/s | new |
+| winnow | `read_str/string` | 213 ns | 36.1 ns | 264 MiB/s | new |
+| winnow | `read_str/symbol` | 126 ns | 22.7 ns | 114 MiB/s | new |
+| chumsky | `read_str/atom` | 1.22 µs | 204 ns | 1.56 MiB/s | new |
+| chumsky | `read_str/collections` | 18.0 µs | 732 ns | 3.08 MiB/s | new |
+| chumsky | `read_str/list` | 12.0 µs | 1.95 µs | 1.91 MiB/s | new |
+| chumsky | `read_str/nested` | 33.3 µs | 6.09 µs | 1.92 MiB/s | new |
+| chumsky | `read_str/program` | 487 µs | 58.7 µs | 2.44 MiB/s | new |
+| chumsky | `read_str/quoting` | 26.7 µs | 4.52 µs | 1.93 MiB/s | new |
+| chumsky | `read_str/string` | 1.99 µs | 500 ns | 28.3 MiB/s | new |
+| chumsky | `read_str/symbol` | 1.78 µs | 386 ns | 8.06 MiB/s | new |
+| pest | `read_str/atom` | 821 ns | 200 ns | 2.32 MiB/s | new |
+| pest | `read_str/collections` | 16.5 µs | 3.53 µs | 3.35 MiB/s | new |
+| pest | `read_str/list` | 9.60 µs | 1.72 µs | 2.38 MiB/s | new |
+| pest | `read_str/nested` | 25.9 µs | 6.72 µs | 2.47 MiB/s | new |
+| pest | `read_str/program` | 309 µs | 79.0 µs | 3.84 MiB/s | new |
+| pest | `read_str/quoting` | 18.7 µs | 3.44 µs | 2.76 MiB/s | new |
+| pest | `read_str/string` | 2.40 µs | 455 ns | 23.5 MiB/s | new |
+| pest | `read_str/symbol` | 1.91 µs | 219 ns | 7.48 MiB/s | new |
+| peg | `read_str/atom` | 65.4 ns | 9.28 ns | 29.2 MiB/s | new |
+| peg | `read_str/collections` | 3.11 µs | 397 ns | 17.8 MiB/s | new |
+| peg | `read_str/list` | 1.17 µs | 47.2 ns | 19.5 MiB/s | new |
+| peg | `read_str/nested` | 3.38 µs | 726 ns | 18.9 MiB/s | new |
+| peg | `read_str/program` | 38.5 µs | 7.63 µs | 30.8 MiB/s | new |
+| peg | `read_str/quoting` | 2.63 µs | 488 ns | 19.6 MiB/s | new |
+| peg | `read_str/string` | 623 ns | 146 ns | 90.2 MiB/s | new |
+| peg | `read_str/symbol` | 184 ns | 24.4 ns | 77.6 MiB/s | new |
+| lalrpop | `read_str/atom` | 4.51 µs | 815 ns | 433 KiB/s | new |
+| lalrpop | `read_str/collections` | 33.8 µs | 8.04 µs | 1.64 MiB/s | new |
+| lalrpop | `read_str/list` | 10.3 µs | 1.76 µs | 2.23 MiB/s | new |
+| lalrpop | `read_str/nested` | 25.0 µs | 1.95 µs | 2.56 MiB/s | new |
+| lalrpop | `read_str/program` | 130 µs | 26.6 µs | 9.13 MiB/s | new |
+| lalrpop | `read_str/quoting` | 52.4 µs | 1.79 µs | 1006 KiB/s | new |
+| lalrpop | `read_str/string` | 13.4 µs | 3.93 µs | 4.19 MiB/s | new |
+| lalrpop | `read_str/symbol` | 5.03 µs | 1.06 µs | 2.85 MiB/s | new |
+| logos | `read_str/atom` | 34.8 ns | 3.06 ns | 54.9 MiB/s | new |
+| logos | `read_str/collections` | 1.43 µs | 248 ns | 38.7 MiB/s | new |
+| logos | `read_str/list` | 724 ns | 99.1 ns | 31.6 MiB/s | new |
+| logos | `read_str/nested` | 1.38 µs | 247 ns | 46.4 MiB/s | new |
+| logos | `read_str/program` | 24.6 µs | 2.89 µs | 48.2 MiB/s | new |
+| logos | `read_str/quoting` | 1.83 µs | 82.6 ns | 28.2 MiB/s | new |
+| logos | `read_str/string` | 148 ns | 22.2 ns | 380 MiB/s | new |
+| logos | `read_str/symbol` | 42.5 ns | 3.71 ns | 337 MiB/s | new |
+| regex | `read_str/atom` | 464 ns | 134 ns | 4.11 MiB/s | new |
+| regex | `read_str/collections` | 8.36 µs | 2.61 µs | 6.61 MiB/s | new |
+| regex | `read_str/list` | 3.98 µs | 1.21 µs | 5.75 MiB/s | new |
+| regex | `read_str/nested` | 12.0 µs | 3.72 µs | 5.32 MiB/s | new |
+| regex | `read_str/program` | 132 µs | 38.5 µs | 8.98 MiB/s | new |
+| regex | `read_str/quoting` | 8.87 µs | 2.97 µs | 5.81 MiB/s | new |
+| regex | `read_str/string` | 3.40 µs | 623 ns | 16.5 MiB/s | new |
+| regex | `read_str/symbol` | 810 ns | 236 ns | 17.7 MiB/s | new |
 
 ## Printer
 
-No implementations registered yet.
+- **std**: reaches `stepA_mal`; no third-party crates. write! for integers, char-by-char escaping, recursion for collections
+- **itoa**: reaches `stepA_mal`; [itoa 1.0.18](https://github.com/dtolnay/itoa). std printer with integers through itoa::Buffer (no core::fmt)
+- **memchr**: reaches `stepA_mal`; [memchr 2.8.3](https://github.com/BurntSushi/memchr). std printer; readable strings escaped by copying runs between memchr3 hits
+- **ufmt**: reaches `stepA_mal`; [ufmt 0.2.0](https://github.com/japaric/ufmt). std printer with integers through ufmt::uwrite! (no core::fmt)
+
+| implementation | workload | mean | std dev | throughput | vs previous |
+|---|---|---:|---:|---:|---:|
+| std | `pr_str-raw/atom` | 24.6 ns | 7.01 ns | - | new |
+| std | `pr_str-raw/collections` | 278 ns | 76.2 ns | - | new |
+| std | `pr_str-raw/list` | 272 ns | 71.5 ns | - | new |
+| std | `pr_str-raw/nested` | 271 ns | 38.1 ns | - | new |
+| std | `pr_str-raw/program` | 2.37 µs | 435 ns | - | new |
+| std | `pr_str-raw/quoting` | 358 ns | 83.4 ns | - | new |
+| std | `pr_str-raw/string` | 7.04 ns | 1.39 ns | - | new |
+| std | `pr_str-raw/symbol` | 7.05 ns | 1.30 ns | - | new |
+| std | `pr_str-readably/atom` | 21.6 ns | 4.44 ns | - | new |
+| std | `pr_str-readably/collections` | 290 ns | 52.0 ns | - | new |
+| std | `pr_str-readably/list` | 232 ns | 48.0 ns | - | new |
+| std | `pr_str-readably/nested` | 251 ns | 56.3 ns | - | new |
+| std | `pr_str-readably/program` | 2.32 µs | 469 ns | - | new |
+| std | `pr_str-readably/quoting` | 303 ns | 52.5 ns | - | new |
+| std | `pr_str-readably/string` | 120 ns | 31.3 ns | - | new |
+| std | `pr_str-readably/symbol` | 6.45 ns | 0.99 ns | - | new |
+| itoa | `pr_str-raw/atom` | 6.74 ns | 0.58 ns | - | new |
+| itoa | `pr_str-raw/collections` | 206 ns | 34.9 ns | - | new |
+| itoa | `pr_str-raw/list` | 102 ns | 15.3 ns | - | new |
+| itoa | `pr_str-raw/nested` | 159 ns | 16.2 ns | - | new |
+| itoa | `pr_str-raw/program` | 2.23 µs | 395 ns | - | new |
+| itoa | `pr_str-raw/quoting` | 220 ns | 33.8 ns | - | new |
+| itoa | `pr_str-raw/string` | 6.18 ns | 0.69 ns | - | new |
+| itoa | `pr_str-raw/symbol` | 7.30 ns | 1.17 ns | - | new |
+| itoa | `pr_str-readably/atom` | 7.10 ns | 1.33 ns | - | new |
+| itoa | `pr_str-readably/collections` | 213 ns | 27.8 ns | - | new |
+| itoa | `pr_str-readably/list` | 95.8 ns | 8.82 ns | - | new |
+| itoa | `pr_str-readably/nested` | 170 ns | 31.6 ns | - | new |
+| itoa | `pr_str-readably/program` | 1.92 µs | 163 ns | - | new |
+| itoa | `pr_str-readably/quoting` | 209 ns | 29.2 ns | - | new |
+| itoa | `pr_str-readably/string` | 104 ns | 21.1 ns | - | new |
+| itoa | `pr_str-readably/symbol` | 6.12 ns | 0.75 ns | - | new |
+| memchr | `pr_str-raw/atom` | 21.2 ns | 4.95 ns | - | new |
+| memchr | `pr_str-raw/collections` | 246 ns | 20.5 ns | - | new |
+| memchr | `pr_str-raw/list` | 221 ns | 26.6 ns | - | new |
+| memchr | `pr_str-raw/nested` | 203 ns | 31.5 ns | - | new |
+| memchr | `pr_str-raw/program` | 2.70 µs | 388 ns | - | new |
+| memchr | `pr_str-raw/quoting` | 312 ns | 58.9 ns | - | new |
+| memchr | `pr_str-raw/string` | 5.14 ns | 0.66 ns | - | new |
+| memchr | `pr_str-raw/symbol` | 6.49 ns | 1.06 ns | - | new |
+| memchr | `pr_str-readably/atom` | 19.8 ns | 4.40 ns | - | new |
+| memchr | `pr_str-readably/collections` | 273 ns | 41.5 ns | - | new |
+| memchr | `pr_str-readably/list` | 234 ns | 45.1 ns | - | new |
+| memchr | `pr_str-readably/nested` | 230 ns | 36.1 ns | - | new |
+| memchr | `pr_str-readably/program` | 2.69 µs | 369 ns | - | new |
+| memchr | `pr_str-readably/quoting` | 312 ns | 36.0 ns | - | new |
+| memchr | `pr_str-readably/string` | 65.9 ns | 20.9 ns | - | new |
+| memchr | `pr_str-readably/symbol` | 6.16 ns | 1.42 ns | - | new |
+| ufmt | `pr_str-raw/atom` | 10.5 ns | 1.47 ns | - | new |
+| ufmt | `pr_str-raw/collections` | 169 ns | 19.3 ns | - | new |
+| ufmt | `pr_str-raw/list` | 114 ns | 15.0 ns | - | new |
+| ufmt | `pr_str-raw/nested` | 187 ns | 26.1 ns | - | new |
+| ufmt | `pr_str-raw/program` | 2.43 µs | 371 ns | - | new |
+| ufmt | `pr_str-raw/quoting` | 197 ns | 6.83 ns | - | new |
+| ufmt | `pr_str-raw/string` | 6.97 ns | 0.99 ns | - | new |
+| ufmt | `pr_str-raw/symbol` | 6.81 ns | 1.30 ns | - | new |
+| ufmt | `pr_str-readably/atom` | 11.0 ns | 1.49 ns | - | new |
+| ufmt | `pr_str-readably/collections` | 216 ns | 18.5 ns | - | new |
+| ufmt | `pr_str-readably/list` | 97.7 ns | 19.4 ns | - | new |
+| ufmt | `pr_str-readably/nested` | 197 ns | 27.8 ns | - | new |
+| ufmt | `pr_str-readably/program` | 2.71 µs | 306 ns | - | new |
+| ufmt | `pr_str-readably/quoting` | 231 ns | 33.8 ns | - | new |
+| ufmt | `pr_str-readably/string` | 135 ns | 31.4 ns | - | new |
+| ufmt | `pr_str-readably/symbol` | 6.69 ns | 1.18 ns | - | new |
 
 ## Environment
 
-No implementations registered yet.
+- **std**: reaches `stepA_mal`; no third-party crates. HashMap<String, V> (SipHash) per scope, Rc<RefCell<_>> handles, outer-scope chain
+- **hashbrown**: reaches `stepA_mal`; [hashbrown 0.17.1](https://github.com/rust-lang/hashbrown). hashbrown::HashMap (SwissTable, foldhash) per scope; entry_ref avoids key allocation on rebind
+- **indexmap**: reaches `stepA_mal`; [indexmap 2.14.2](https://github.com/indexmap-rs/indexmap). indexmap::IndexMap (insertion-ordered, SipHash) per scope
+- **rustc-hash**: reaches `stepA_mal`; [rustc-hash 2.1.3](https://github.com/rust-lang/rustc-hash). std HashMap with rustc's FxHasher (not resistant to hash flooding) per scope
+- **ahash**: reaches `stepA_mal`; [ahash 0.8.12](https://github.com/tkaitchuck/aHash). std HashMap with aHash (AES-NI where available, resistant to hash flooding) per scope
+- **foldhash**: reaches `stepA_mal`; [foldhash 0.2.0](https://github.com/orlp/foldhash). std HashMap with foldhash (fast, minimally resistant to hash flooding) per scope
+- **imbl**: reaches `stepA_mal`; [imbl 7.0.2](https://github.com/jneem/imbl). imbl::HashMap (persistent HAMT, maintained fork of im) per scope; RefCell forced by Env::set(&self)
+- **rpds**: reaches `stepA_mal`; [rpds 1.2.1](https://github.com/orium/rpds). rpds::HashTrieMap (persistent HAMT, Rc-shared) per scope; RefCell forced by Env::set(&self)
+
+| implementation | workload | mean | std dev | throughput | vs previous |
+|---|---|---:|---:|---:|---:|
+| std | `child` | 25.0 ns | 2.96 ns | - | new |
+| std | `eval/closures` | 29.1 µs | 5.35 µs | - | new |
+| std | `eval/fib` | 272 µs | 57.9 µs | - | new |
+| std | `eval/sum-to` | 838 µs | 199 µs | - | new |
+| std | `get-local/64` | 1.39 µs | 296 ns | - | new |
+| std | `get-miss/8` | 38.0 ns | 9.44 ns | - | new |
+| std | `get-outer/8` | 1.86 µs | 237 ns | - | new |
+| std | `set/64` | 5.92 µs | 721 ns | - | new |
+| hashbrown | `child` | 16.9 ns | 0.81 ns | - | new |
+| hashbrown | `eval/closures` | 23.5 µs | 5.68 µs | - | new |
+| hashbrown | `eval/fib` | 240 µs | 51.2 µs | - | new |
+| hashbrown | `eval/sum-to` | 651 µs | 134 µs | - | new |
+| hashbrown | `get-local/64` | 970 ns | 288 ns | - | new |
+| hashbrown | `get-miss/8` | 21.1 ns | 3.32 ns | - | new |
+| hashbrown | `get-outer/8` | 1.80 µs | 357 ns | - | new |
+| hashbrown | `set/64` | 5.20 µs | 1.53 µs | - | new |
+| indexmap | `child` | 22.8 ns | 4.08 ns | - | new |
+| indexmap | `eval/closures` | 34.7 µs | 5.12 µs | - | new |
+| indexmap | `eval/fib` | 261 µs | 42.7 µs | - | new |
+| indexmap | `eval/sum-to` | 1.03 ms | 197 µs | - | new |
+| indexmap | `get-local/64` | 1.63 µs | 572 ns | - | new |
+| indexmap | `get-miss/8` | 30.7 ns | 7.06 ns | - | new |
+| indexmap | `get-outer/8` | 2.86 µs | 1.01 µs | - | new |
+| indexmap | `set/64` | 6.93 µs | 706 ns | - | new |
+| rustc-hash | `child` | 19.4 ns | 2.53 ns | - | new |
+| rustc-hash | `eval/closures` | 23.3 µs | 5.31 µs | - | new |
+| rustc-hash | `eval/fib` | 220 µs | 41.9 µs | - | new |
+| rustc-hash | `eval/sum-to` | 644 µs | 128 µs | - | new |
+| rustc-hash | `get-local/64` | 1.11 µs | 328 ns | - | new |
+| rustc-hash | `get-miss/8` | 20.7 ns | 3.68 ns | - | new |
+| rustc-hash | `get-outer/8` | 2.03 µs | 251 ns | - | new |
+| rustc-hash | `set/64` | 4.65 µs | 832 ns | - | new |
+| ahash | `child` | 42.5 ns | 3.76 ns | - | new |
+| ahash | `eval/closures` | 22.6 µs | 4.34 µs | - | new |
+| ahash | `eval/fib` | 254 µs | 46.1 µs | - | new |
+| ahash | `eval/sum-to` | 592 µs | 98.7 µs | - | new |
+| ahash | `get-local/64` | 965 ns | 342 ns | - | new |
+| ahash | `get-miss/8` | 20.7 ns | 4.32 ns | - | new |
+| ahash | `get-outer/8` | 1.98 µs | 398 ns | - | new |
+| ahash | `set/64` | 6.33 µs | 1.22 µs | - | new |
+| foldhash | `child` | 18.0 ns | 1.98 ns | - | new |
+| foldhash | `eval/closures` | 20.4 µs | 3.89 µs | - | new |
+| foldhash | `eval/fib` | 232 µs | 45.1 µs | - | new |
+| foldhash | `eval/sum-to` | 722 µs | 112 µs | - | new |
+| foldhash | `get-local/64` | 747 ns | 203 ns | - | new |
+| foldhash | `get-miss/8` | 22.0 ns | 4.08 ns | - | new |
+| foldhash | `get-outer/8` | 1.44 µs | 265 ns | - | new |
+| foldhash | `set/64` | 6.14 µs | 2.31 µs | - | new |
+| imbl | `child` | 17.6 ns | 2.33 ns | - | new |
+| imbl | `eval/closures` | 31.3 µs | 9.41 µs | - | new |
+| imbl | `eval/fib` | 298 µs | 53.8 µs | - | new |
+| imbl | `eval/sum-to` | 719 µs | 89.2 µs | - | new |
+| imbl | `get-local/64` | 1.78 µs | 259 ns | - | new |
+| imbl | `get-miss/8` | 33.9 ns | 8.23 ns | - | new |
+| imbl | `get-outer/8` | 2.40 µs | 321 ns | - | new |
+| imbl | `set/64` | 11.1 µs | 59.6 µs | - | new |
+| rpds | `child` | 34.0 ns | 3.28 ns | - | new |
+| rpds | `eval/closures` | 32.5 µs | 8.41 µs | - | new |
+| rpds | `eval/fib` | 274 µs | 11.3 µs | - | new |
+| rpds | `eval/sum-to` | 836 µs | 140 µs | - | new |
+| rpds | `get-local/64` | 1.94 µs | 342 ns | - | new |
+| rpds | `get-miss/8` | 170 ns | 40.8 ns | - | new |
+| rpds | `get-outer/8` | 10.5 µs | 2.61 µs | - | new |
+| rpds | `set/64` | 8.36 µs | 3.08 µs | - | new |
 
 ## Evaluator
 
 - **echo**: reaches `step0_repl`; no third-party crates. step0: prints each line back unchanged
+- **std**: reaches `stepA_mal`; no third-party crates. Rc values, loop-based TCO, closures capture a type-erased env; Rc cycles leak
 
-| implementation | workload | mean | std dev | throughput |
-|---|---|---:|---:|---:|
-| echo | `rep/atom` | 11.0 ns | 1.77 ns | 173 MiB/s |
-| echo | `rep/collections` | 13.6 ns | 3.41 ns | 3.98 GiB/s |
-| echo | `rep/list` | 11.4 ns | 2.13 ns | 1.97 GiB/s |
-| echo | `rep/nested` | 16.0 ns | 2.54 ns | 3.89 GiB/s |
-| echo | `rep/program` | 45.1 ns | 7.19 ns | 25.7 GiB/s |
-| echo | `rep/quoting` | 14.1 ns | 1.15 ns | 3.57 GiB/s |
-| echo | `rep/string` | 12.8 ns | 3.38 ns | 4.30 GiB/s |
-| echo | `rep/symbol` | 11.2 ns | 1.86 ns | 1.25 GiB/s |
-| echo | `repl-session` | 534 ns | 90.1 ns | 2.74 GiB/s |
+| implementation | workload | mean | std dev | throughput | vs previous |
+|---|---|---:|---:|---:|---:|
+| echo | `rep/atom` | 14.7 ns | 3.82 ns | 130 MiB/s | +33.3% |
+| echo | `rep/collections` | 16.0 ns | 3.33 ns | 3.37 GiB/s | +18.1% |
+| echo | `rep/list` | 13.3 ns | 2.67 ns | 1.68 GiB/s | +17.1% |
+| echo | `rep/nested` | 13.6 ns | 2.33 ns | 4.59 GiB/s | -15.2% |
+| echo | `rep/program` | 50.8 ns | 8.25 ns | 22.8 GiB/s | +12.7% |
+| echo | `rep/quoting` | 13.0 ns | 2.98 ns | 3.86 GiB/s | -7.6% |
+| echo | `rep/string` | 11.5 ns | 0.34 ns | 4.79 GiB/s | -10.3% |
+| echo | `rep/symbol` | 14.4 ns | 3.36 ns | 993 MiB/s | +28.7% |
+| echo | `repl-session` | 548 ns | 98.5 ns | 2.67 GiB/s | +2.6% |
+| std | `eval/closures` | 28.3 µs | 6.33 µs | - | new |
+| std | `eval/fib` | 293 µs | 66.9 µs | - | new |
+| std | `eval/sum-to` | 780 µs | 188 µs | - | new |
+| std | `rep/atom` | 95.0 ns | 17.4 ns | 20.1 MiB/s | new |
+| std | `rep/collections` | 2.98 µs | 701 ns | 18.6 MiB/s | new |
+| std | `rep/list` | 1.06 µs | 164 ns | 21.6 MiB/s | new |
+| std | `rep/nested` | 2.02 µs | 533 ns | 31.6 MiB/s | new |
+| std | `rep/program` | 34.7 µs | 8.09 µs | 34.2 MiB/s | new |
+| std | `rep/quoting` | 8.74 µs | 1.94 µs | 5.89 MiB/s | new |
+| std | `rep/string` | 635 ns | 167 ns | 88.7 MiB/s | new |
+| std | `rep/symbol` | 169 ns | 25.9 ns | 84.7 MiB/s | new |
+| std | `repl-session` | 77.8 µs | 16.2 µs | 19.2 MiB/s | new |
 
 ## Core namespace
 
-No implementations registered yet.
+- **std**: reaches `stepA_mal`; no third-party crates. checked i64 arithmetic; Vec-backed sequences; static fn table plus printer/reader closures
+
+| implementation | workload | mean | std dev | throughput | vs previous |
+|---|---|---:|---:|---:|---:|
+| std | `install` | 19.3 µs | 103 µs | 3.15 Melem/s | new |
 
 ## Line editor
 
 - **std**: reaches `stepA_mal`; no third-party crates. std::io::stdin; no editing, no history
+- **rustyline**: reaches `stepA_mal`; [rustyline 17.0.2](https://github.com/kkawakam/rustyline). DefaultEditor; Emacs/vi keymaps, in-memory history; prompt written by the row when piped
+- **reedline**: reaches `stepA_mal`; [reedline 0.49.0](https://github.com/nushell/reedline). Reedline::create(); Emacs keymap, built-in history; std::io fallback when piped
 
-| implementation | workload | mean | std dev | throughput |
-|---|---|---:|---:|---:|
-| std | *not measured in this run* | | | |
+| implementation | workload | mean | std dev | throughput | vs previous |
+|---|---|---:|---:|---:|---:|
+| std | *not measured in this run* | | | | |
+| rustyline | *not measured in this run* | | | | |
+| reedline | *not measured in this run* | | | | |
 
 ## Recorded runs
 
@@ -68,4 +316,5 @@ prints the benchmarks two runs share.
 
 | run | recorded (UTC) | host | toolchain | commit | benchmarks |
 |---|---|---|---|---|---:|
+| [`20261109-042245-cloud-sandbox`](https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/blob/main/runs/20261109-042245-cloud-sandbox/results.json) | 2026-11-09 04:22:45 | `cloud-sandbox` | `rustc 1.97.0 (2d8144b78 2026-07-07)` | `0f12aebd0a9c` | 222 |
 | [`20261108-192541-cloud-sandbox`](https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/blob/main/runs/20261108-192541-cloud-sandbox/results.json) | 2026-11-08 19:25:41 | `cloud-sandbox` | `rustc 1.97.0 (2d8144b78 2026-07-07)` | `d814ce5f7de3` | 9 |

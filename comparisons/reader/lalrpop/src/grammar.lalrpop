@@ -1,0 +1,67 @@
+// The mal token and form grammar for LALRPOP's built-in lexer and LR(1)
+// parser generator. Action code builds `Value`s directly.
+
+use lalrpop_util::ParseError;
+use mal_types::Value;
+
+use crate::{SemanticError, unescape};
+
+grammar;
+
+extern {
+    type Error = SemanticError;
+}
+
+// The built-in lexer takes the longest match; on a tie the earlier block
+// wins, and within a block a fixed string beats a regex.
+match {
+    // Whitespace and commas are trivia; `;` starts a comment.
+    r"[\s,]*" => { },
+    r";[^\n]*" => { },
+    r"-?[0-9]+" => INTEGER,
+} else {
+    r#""(\\(?s:.)|[^"\\])*""# => STRING,
+    // A string with no closing quote. Matching it as a token keeps the lexer
+    // from failing, so the parser can report it as running into EOF, and
+    // one in trailing input is skipped like any other token.
+    r#""(\\(?s:.)|[^"\\])*\\?"# => UNTERMINATED_STRING,
+    r#":[^\s\[\]{}()'"`,;]*"# => KEYWORD,
+    // `~`, `@` and `^` start reader macros, so they cannot start a symbol.
+    r#"[^\s\[\]{}()'"`,;~@^:][^\s\[\]{}()'"`,;]*"# => SYMBOL,
+    _
+}
+
+/// The first form, or `None` for blank input. The parser must consume the
+/// whole input, so any tokens after the first form are matched and dropped.
+pub First: Option<Value> = {
+    <Form> Token* => Some(<>),
+    => None,
+};
+
+Form: Value = {
+    "(" <Form*> ")" => Value::list(<>),
+    "[" <Form*> "]" => Value::vector(<>),
+    "{" <Form*> "}" =>? Value::map_from_pairs(<>)
+        .map_err(|e| ParseError::User { error: SemanticError::BadMap(e.to_string()) }),
+    "'" <Form> => Value::wrap("quote", <>),
+    "`" <Form> => Value::wrap("quasiquote", <>),
+    "~" <Form> => Value::wrap("unquote", <>),
+    "~@" <Form> => Value::wrap("splice-unquote", <>),
+    "@" <Form> => Value::wrap("deref", <>),
+    "^" <meta:Form> <form:Form> => Value::list(vec![Value::symbol("with-meta"), form, meta]),
+    <s:STRING> => Value::string(&unescape(&s[1..s.len() - 1])),
+    UNTERMINATED_STRING =>? Err(ParseError::User { error: SemanticError::UnterminatedString }),
+    <n:INTEGER> =>? n.parse().map(Value::Int)
+        .map_err(|_| ParseError::User { error: SemanticError::IntegerOverflow(n.to_owned()) }),
+    "nil" => Value::Nil,
+    "true" => Value::Bool(true),
+    "false" => Value::Bool(false),
+    <k:KEYWORD> => Value::keyword(&k[1..]),
+    <s:SYMBOL> => Value::symbol(s),
+};
+
+/// Every token, for skipping trailing input.
+Token = {
+    "(", ")", "[", "]", "{", "}", "'", "`", "~", "~@", "@", "^",
+    STRING, UNTERMINATED_STRING, INTEGER, "nil", "true", "false", KEYWORD, SYMBOL,
+};

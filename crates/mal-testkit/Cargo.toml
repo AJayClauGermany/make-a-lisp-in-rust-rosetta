@@ -1,0 +1,18 @@
+[package]
+name = "mal-testkit"
+description = "Shared unit-test cases every comparison row runs: reader, printer and environment conformance checks"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+authors.workspace = true
+publish.workspace = true
+
+[dependencies]
+mal-traits = { path = "../mal-traits" }
+mal-types = { path = "../mal-types" }
+
+[lints]
+workspace = true

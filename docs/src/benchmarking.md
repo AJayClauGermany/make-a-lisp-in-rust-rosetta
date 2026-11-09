@@ -9,17 +9,24 @@ the newest run. Nothing on that page is typed by hand.
 
 | piece | where | job |
 |-------|-------|-----|
-| workloads | `crates/mal-bench/src/corpus.rs` | the fixed mal forms, REPL session and symbol lists every row is measured on |
+| workloads | `crates/mal-bench/src/corpus.rs` | the fixed mal forms, the evaluation `PROGRAMS`, the REPL session and symbol lists every row is measured on |
 | harness | `crates/mal-bench/src/lib.rs` | one generic Criterion bench per component trait: `reader`, `printer`, `env`, `evaluator`, `core_namespace`, `interpreter` |
 | bench list | `crates/mal/benches/components.rs` | one line per implementation: which rows get measured |
 | runner | `xtask/` | `cargo xtask bench` records a run; `cargo xtask report` renders it; `cargo xtask compare` diffs two runs |
 | data | `runs/<id>/results.json` | one file per run: host, toolchain, commit, command and every benchmark's statistics |
 | page | `docs/src/results.md` | generated; CI fails if it is stale |
 
-The harness and the runner are tooling and are the only crates in the
-workspace with third-party dependencies. They are dev-dependencies of `mal`,
-so the `mal` binary that the size and build-time columns describe is still
-built from `mal-traits` and the comparison crates alone.
+The harness is a dev-dependency of `mal` and the runner a separate crate,
+so neither reaches the `mal` binary. The comparison crates do: the binary
+currently links every row so any of them can be selected at run time (see
+the [methodology](methodology.md#the-baseline) for what that means for the
+planned binary-size column).
+
+Interpreter benchmarks run `rep` on every corpus form, and check once,
+before timing, that each succeeds, so an error path is never what gets
+measured. Interpreters that evaluate run `corpus::BINDINGS` first, which
+defines the free symbols the forms mention (`a`, `counter`,
+`swap-and-reset!`).
 
 ## Adding an implementation to the benchmarks
 
@@ -46,6 +53,13 @@ mal_bench::printer(c, &printer_std::IMPLEMENTATION, &printer_std::StdPrinter, &v
 mal_bench::evaluator(c, &eval_rc::IMPLEMENTATION, eval_rc::setup, &forms);
 mal_bench::core_namespace(c, &core_std::IMPLEMENTATION, core_std::Core::default, Env::default);
 ```
+
+Environment rows are timed twice: `mal_bench::env` on the trait methods,
+and `mal_bench::evaluator` running the `PROGRAMS` workloads (recursive
+`fib`, a tail-call loop, closures through `map`) with the `std` evaluator on
+that environment, recorded under the environment's own group as
+`env/<name>/eval/<program>`. The second is what an interpreter actually
+does with an environment.
 
 Line editors are not timed: their run time is the terminal's, and the
 comparison for that component is binary-size overhead. They still appear on

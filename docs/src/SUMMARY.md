@@ -8,6 +8,7 @@
 - [The Make-a-Lisp steps](mal-steps.md)
 - [Architecture](architecture.md)
 - [Benchmarking](benchmarking.md)
+- [Trait notes](trait-notes.md)
 
 # Components
 

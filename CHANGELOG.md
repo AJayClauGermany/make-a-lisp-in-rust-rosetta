@@ -7,6 +7,25 @@ All notable changes to this project are recorded here. The format follows
 
 ### Added
 
+- Comparison rows, each verified against the mal test suite and
+  benchmarked: readers (std, nom, winnow, chumsky, pest, peg, lalrpop,
+  logos, regex), printers (std, itoa, memchr, ufmt), environments (std,
+  hashbrown, indexmap, rustc-hash, ahash, foldhash, imbl, rpds), the `std`
+  evaluator and core namespace (stepA), and line editors (rustyline,
+  reedline).
+- `mal-types`, the shared `Rc`-based value type rows agree on, and
+  `mal-testkit`, the unit checks every reader, printer and env row runs.
+- The `mal` binary is a stepA interpreter assembled from rows, with
+  `--<component> <name>` to swap one row in and `--read-print` for step1.
+- Conformance tests: the upstream mal test suite (vendored) run against
+  every row, checking each reaches exactly its claimed step; a test that
+  `CrateRef` versions match `Cargo.lock`; a test that every reader agrees
+  with `std` on the benchmark corpus.
+- `mal_bench::corpus::PROGRAMS`, evaluation workloads; environment rows are
+  also timed running them on the `std` evaluator.
+- [Trait notes](docs/src/trait-notes.md): where the traits forced rows away
+  from their crates' idioms, and the refinements proposed.
+
 - Cargo workspace with `mal-traits` (component traits, step and component
   vocabulary, `Implementation` metadata, REPL driver) and `mal` (the REPL
   binary with a dependency-free step0 baseline and `--list`).
@@ -21,3 +40,9 @@ All notable changes to this project are recorded here. The format follows
   `echo` baseline.
 - `Component::title()` for headings; `mal` now also exposes its baselines
   and registry as a library for the benchmarks.
+
+### Changed
+
+- `run_repl` accepts unsized interpreters (`Box<dyn Interpreter>`).
+- `mal` with no arguments now starts the stepA interpreter rather than the
+  step0 echo; `--eval echo` runs the echo.
