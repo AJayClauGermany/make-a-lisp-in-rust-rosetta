@@ -11,6 +11,7 @@
 //! this crate is where the tooling dependencies (serde, `serde_json`) live.
 
 mod bench;
+mod chart;
 mod report;
 mod run;
 

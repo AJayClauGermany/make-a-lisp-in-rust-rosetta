@@ -10,6 +10,7 @@ use std::fs;
 
 use mal_traits::{Component, Implementation};
 
+use crate::chart;
 use crate::run::{Benchmark, Run, Throughput};
 use crate::{Result, workspace_root};
 
@@ -167,6 +168,14 @@ fn render_run_header(out: &mut String, run: &Run, previous: Option<&Run>) {
          fixed inputs in `mal_bench::corpus`, shared by every implementation of a\n\
          component.\n\n",
     );
+    out.push_str(
+        "Above each table, two charts drawn from the same numbers show how the\n\
+         implementations compare with the dependency-free `std` row: the geometric\n\
+         mean of each one's time relative to `std` across the workloads, and a\n\
+         heatmap of that ratio per workload. The tables remain the reference.\n\n",
+    );
+    out.push_str(chart::STYLE);
+    out.push_str("\n\n");
 }
 
 fn render_component(
@@ -218,6 +227,18 @@ fn render_component(
         return;
     }
 
+    let mut names: Vec<&str> = registered.iter().map(|imp| imp.name).collect();
+    for b in &measured {
+        if !names.contains(&b.implementation.as_str()) {
+            names.push(&b.implementation);
+        }
+    }
+
+    if let Some(charts) = chart::render(component.title(), &names, &measured) {
+        out.push_str(&charts);
+        out.push('\n');
+    }
+
     let with_delta = previous.is_some();
     out.push_str("| implementation | workload | mean | std dev | throughput |");
     if with_delta {
@@ -229,12 +250,6 @@ fn render_component(
     }
     out.push('\n');
 
-    let mut names: Vec<&str> = registered.iter().map(|imp| imp.name).collect();
-    for b in &measured {
-        if !names.contains(&b.implementation.as_str()) {
-            names.push(&b.implementation);
-        }
-    }
     for name in names {
         let rows: Vec<&&Benchmark> = measured
             .iter()
