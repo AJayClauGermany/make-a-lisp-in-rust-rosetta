@@ -30,24 +30,24 @@ heatmap of that ratio per workload. The tables remain the reference.
 .malc{margin:1.5em 0;overflow-x:auto}
 .malc svg{display:block;width:100%;height:auto;font-size:12px;font-variant-numeric:tabular-nums}
 .malc figcaption{font-size:.85em;opacity:.8;margin-top:.4em}
-.malc .t{fill:var(--fg,#333)}
-.malc .m{fill:var(--fg,#333);fill-opacity:.62}
+.malc .t{fill:currentColor}
+.malc .m{fill:currentColor;fill-opacity:.62}
 .malc .w{fill:#fff}
-.malc .grid{stroke:var(--fg,#333);stroke-opacity:.14;stroke-width:1}
-.malc .axis{stroke:var(--fg,#333);stroke-opacity:.45;stroke-width:1}
-.malc .none{fill:none;stroke:var(--fg,#333);stroke-opacity:.18;stroke-width:1}
-.malc .c0{fill:color-mix(in oklab,var(--fg,#333) 9%,var(--bg,#fff))}
-.malc .f1{fill:color-mix(in oklab,#1c5cab 28%,var(--bg,#fff))}
-.malc .f2{fill:color-mix(in oklab,#1c5cab 52%,var(--bg,#fff))}
-.malc .f3{fill:color-mix(in oklab,#1c5cab 78%,var(--bg,#fff))}
+.malc .grid{stroke:currentColor;stroke-opacity:.14;stroke-width:1}
+.malc .axis{stroke:currentColor;stroke-opacity:.45;stroke-width:1}
+.malc .none{fill:none;stroke:currentColor;stroke-opacity:.18;stroke-width:1}
+.malc .c0{fill:currentColor;fill-opacity:.09}
+.malc .f1{fill:#1c5cab;fill-opacity:.28}
+.malc .f2{fill:#1c5cab;fill-opacity:.52}
+.malc .f3{fill:#1c5cab;fill-opacity:.8}
 .malc .f4{fill:#1c5cab}
-.malc .s1{fill:color-mix(in oklab,#c0302f 28%,var(--bg,#fff))}
-.malc .s2{fill:color-mix(in oklab,#c0302f 52%,var(--bg,#fff))}
-.malc .s3{fill:color-mix(in oklab,#c0302f 78%,var(--bg,#fff))}
+.malc .s1{fill:#c0302f;fill-opacity:.28}
+.malc .s2{fill:#c0302f;fill-opacity:.52}
+.malc .s3{fill:#c0302f;fill-opacity:.8}
 .malc .s4{fill:#c0302f}
 .malc .bf{fill:#2a78d6}
 .malc .bs{fill:#e34948}
-.malc .dot{fill:var(--fg,#333);stroke:var(--bg,#fff);stroke-width:2}
+.malc .dot{fill:currentColor}
 </style>
 
 ## Reader
