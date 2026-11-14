@@ -105,7 +105,9 @@ Every implementation is timed with Criterion on the same fixed workloads.
 `cargo xtask bench` records a run as `runs/<id>/results.json`, and the
 [results page][results] on the documentation site is generated from the
 newest run together with the implementation registry, so it always shows
-every registered row, measured or not. CI fails if the page is stale. The
+every registered row, measured or not. Above each table, charts drawn from
+the same numbers show each implementation's time relative to `std`, overall
+and per workload. CI fails if the page is stale. The
 binary-size, build-time and test-suite columns of the methodology are not
 measured yet; see the [benchmarking page][benchmarking].
 

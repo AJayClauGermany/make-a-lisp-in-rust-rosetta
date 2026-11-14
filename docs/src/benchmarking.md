@@ -15,6 +15,7 @@ the newest run. Nothing on that page is typed by hand.
 | runner | `xtask/` | `cargo xtask bench` records a run; `cargo xtask report` renders it; `cargo xtask compare` diffs two runs |
 | data | `runs/<id>/results.json` | one file per run: host, toolchain, commit, command and every benchmark's statistics |
 | page | `docs/src/results.md` | generated; CI fails if it is stale |
+| charts | `xtask/src/chart.rs` | inline SVG drawn from the same rows as each table: geometric-mean ratio to `std`, and a per-workload heatmap |
 
 The harness is a dev-dependency of `mal` and the runner a separate crate,
 so neither reaches the `mal` binary. The comparison crates do: the binary
