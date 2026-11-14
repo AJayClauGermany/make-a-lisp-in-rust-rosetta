@@ -1,0 +1,267 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js oranda-dark">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Methodology - Make-a-Lisp in Rust: a rosetta comparison</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="Comparing Rust crates by implementing the components of a Make-a-Lisp interpreter">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+        <link rel="stylesheet" href="oranda-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "oranda-dark" : "oranda-dark";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('orandamdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('orandamdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('orandamdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('oranda-dark')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">The comparison</li><li class="chapter-item expanded "><a href="methodology.html" class="active"><strong aria-hidden="true">1.</strong> Methodology</a></li><li class="chapter-item expanded "><a href="mal-steps.html"><strong aria-hidden="true">2.</strong> The Make-a-Lisp steps</a></li><li class="chapter-item expanded "><a href="architecture.html"><strong aria-hidden="true">3.</strong> Architecture</a></li><li class="chapter-item expanded "><a href="benchmarking.html"><strong aria-hidden="true">4.</strong> Benchmarking</a></li><li class="chapter-item expanded "><a href="trait-notes.html"><strong aria-hidden="true">5.</strong> Trait notes</a></li><li class="chapter-item expanded affix "><li class="part-title">Components</li><li class="chapter-item expanded "><a href="components/index.html"><strong aria-hidden="true">6.</strong> Overview</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="components/reader.html"><strong aria-hidden="true">6.1.</strong> Reader</a></li><li class="chapter-item expanded "><a href="components/printer.html"><strong aria-hidden="true">6.2.</strong> Printer</a></li><li class="chapter-item expanded "><a href="components/env.html"><strong aria-hidden="true">6.3.</strong> Environment</a></li><li class="chapter-item expanded "><a href="components/eval.html"><strong aria-hidden="true">6.4.</strong> Evaluator</a></li><li class="chapter-item expanded "><a href="components/core.html"><strong aria-hidden="true">6.5.</strong> Core namespace</a></li><li class="chapter-item expanded "><a href="components/line-editor.html"><strong aria-hidden="true">6.6.</strong> Line editor</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Results</li><li class="chapter-item expanded "><a href="results.html"><strong aria-hidden="true">7.</strong> Results</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="contributing.html">Contributing</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="oranda-dark">Axo Dark</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="oranda-light">Axo Light</button></li>
+
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Make-a-Lisp in Rust: a rosetta comparison</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/edit/main/docs/src/methodology.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="methodology"><a class="header" href="#methodology">Methodology</a></h1>
+<p>The method follows the rosetta-rs repositories such as
+<a href="https://github.com/rosetta-rs/parse-rosetta-rs">parse-rosetta-rs</a> and
+<a href="https://github.com/rosetta-rs/argparse-rosetta-rs">argparse-rosetta-rs</a>.</p>
+<h2 id="one-task-many-crates"><a class="header" href="#one-task-many-crates">One task, many crates</a></h2>
+<p>Each component of the interpreter is a task with a fixed interface, defined
+as a trait in <code>mal-traits</code>. A comparison row is a crate implementing that
+trait, in its own package under <code>comparisons/&lt;component&gt;/&lt;crate&gt;/</code>, depending
+on nothing but <code>mal-traits</code> and the crate(s) being compared.</p>
+<p>Implementations are written the way a user of that crate would write them,
+not tuned for the benchmark. The question each row answers is "what is it
+like to do this job with this crate", not "how fast can this crate be made
+to go".</p>
+<h2 id="the-baseline"><a class="header" href="#the-baseline">The baseline</a></h2>
+<p>Every component has a <code>std</code> row: the smallest implementation using only the
+standard library. It is the <code>null</code> row of the rosetta tables and the zero
+point for the overhead columns.</p>
+<p>The <code>mal</code> binary currently links every row, so that the conformance tests
+and <code>mal --reader nom</code> can select any of them at run time. The planned
+binary-size column needs a <code>mal</code> built with only the baselines plus the one
+row being measured; that means putting each non-<code>std</code> row behind a cargo
+feature, which is not done yet.</p>
+<h2 id="columns"><a class="header" href="#columns">Columns</a></h2>
+<h3 id="qualitative"><a class="header" href="#qualitative">Qualitative</a></h3>
+<p>Filled in by hand when a row is added, from the crate's documentation and the
+experience of writing the implementation. They differ per component; for
+example the reader table records parser type, where the action code lives
+and how the crate integrates (library, build script, proc macro).</p>
+<h3 id="measured"><a class="header" href="#measured">Measured</a></h3>
+<p>Produced by <code>cargo xtask bench</code> and committed under <code>runs/</code>, one directory
+per run; the <a href="results.html">Results</a> page is generated from the newest run.
+See <a href="benchmarking.html">Benchmarking</a> for the mechanics.</p>
+<div class="table-wrapper"><table><thead><tr><th>column</th><th>how it is measured</th><th>status</th></tr></thead><tbody>
+<tr><td>Run time (micro)</td><td>Criterion benchmarks of the row's trait methods on the fixed workloads in <code>mal_bench::corpus</code>: mean and standard deviation per iteration, throughput where the workload has a size. One Criterion group per row, <code>&lt;component&gt;/&lt;name&gt;</code>.</td><td>recorded</td></tr>
+<tr><td>Overhead (release)</td><td>Release binary size of <code>mal</code> with only this row wired in, minus the size with only the <code>std</code> baselines. Built with the workspace <code>release</code> profile (fat LTO, one codegen unit, symbols stripped). Needs per-row cargo features first (see above).</td><td>planned</td></tr>
+<tr><td>Build (debug)</td><td>Wall-clock time of a from-scratch <code>cargo build</code> of the row's package in the <code>dev</code> profile.</td><td>planned</td></tr>
+<tr><td>Run (release)</td><td>Wall-clock time of the mal test suite for the row's highest step, release build.</td><td>planned</td></tr>
+<tr><td>Step reached</td><td>The highest <code>stepN</code> of the mal test suite the row passes. Steps are cumulative.</td><td>from the registry</td></tr>
+<tr><td>Downloads</td><td>crates.io recent downloads badge for the headline crate.</td><td>planned</td></tr>
+<tr><td>Version</td><td>The exact version compiled against.</td><td>from the registry</td></tr>
+</tbody></table>
+</div>
+<p>The host (name, OS, architecture, CPU model and count), toolchain, commit
+and exact benchmark command of every run are recorded alongside the numbers,
+and the page says which run it was rendered from. Numbers from different
+hosts are presented side by side only with the host named; the change
+column between two runs is read as meaningful only when the hosts match.</p>
+<h2 id="correctness"><a class="header" href="#correctness">Correctness</a></h2>
+<p>A row is only compared at the steps it passes the mal test suite for. The
+"step reached" column is therefore also a correctness statement, and an
+implementation that stops at <code>step4_if_fn_do</code> is reported as such rather than
+excluded.</p>
+<p>The column is checked, not claimed: <code>cargo test</code> runs the upstream test
+files (vendored under <code>crates/mal/tests/mal/</code>) against every registered row
+with the same matching rules as mal's <code>runtest.py</code>, swapping that one row
+into an otherwise all-<code>std</code> interpreter, and fails if the step a row reaches
+differs from the step its <code>Implementation</code> states. Failures in the suite's
+optional (<code>soft</code>) sections are reported but do not count, as upstream.</p>
+<p>Rows also run shared unit checks for their component (<code>mal-testkit</code>), and
+every reader must read every benchmark form to exactly the value the <code>std</code>
+reader produces, so the reader table never times an error path.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="introduction.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="mal-steps.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="introduction.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="mal-steps.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en" id="oranda" class="dark axo">
+  <head>
+    <title>make-a-lisp-in-rust-rosetta</title>
+    
+      <meta property="og:url" content="https://ajayclaugermany.github.io/make-a-lisp-in-rust-rosetta/" />
+    
+    
+      <link rel="icon" href="/make-a-lisp-in-rust-rosetta/favicon.ico" />
+    
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+      <meta name="description" content="Comparing Rust crates by implementing the components of a Make-a-Lisp interpreter" />
+      <meta property="og:description" content="Comparing Rust crates by implementing the components of a Make-a-Lisp interpreter" />
+    
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="make-a-lisp-in-rust-rosetta" />
+    
+    
+    
+    <meta http-equiv="Permissions-Policy" content="interest-cohort=()" />
+    <link rel="stylesheet" href="/make-a-lisp-in-rust-rosetta/oranda-v0.6.1.css" />
+    
+    
+  </head>
+  <body>
+    <div class="container">
+      <div class="page-body">
+        
+          <div class="repo_banner">
+            <a href="https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta">
+              <div class="github-icon" aria-hidden="true"></div>
+              Check out our GitHub!
+            </a>
+          </div>
+        
+
+        <main>
+          <header>
+            
+            <h1 class="title">make-a-lisp-in-rust-rosetta</h1>
+            
+  <nav class="nav">
+    <ul>
+      <li><a href="/make-a-lisp-in-rust-rosetta/">Home</a></li>
+
+      
+
+      
+
+      
+        <li><a href="/make-a-lisp-in-rust-rosetta/book/">Docs</a></li>
+      
+
+      
+
+      
+    </ul>
+  </nav>
+
+          </header>
+
+          
+
+
+    <h1>Make-a-Lisp in Rust: a rosetta comparison</h1>
+<p>Compare Rust crates by making each of them do the same job inside a Lisp
+interpreter.</p>
+<p><a href="https://github.com/kanaka/mal" rel="noopener noreferrer">Make-a-Lisp</a> (mal) describes a small Lisp as a ladder of eleven steps
+and a handful of components: a <strong>reader</strong>, a <strong>printer</strong>, an <strong>environment</strong>,
+an <strong>evaluator</strong>, a <strong>core</strong> namespace and a <strong>REPL</strong>. Each component is a
+job that several Rust crates can do, so each one becomes a comparison in the
+spirit of <a href="https://github.com/rosetta-rs" rel="noopener noreferrer">rosetta-rs</a>: the same task, implemented once per crate, measured
+the same way, with the results in a table.</p>
+<p>This repository holds the shared traits, the runner, the comparison
+implementations and the published results.</p>
+<blockquote>
+<p><strong>Status:</strong> first comparison rows in place: 9 readers, 4 printers, 8
+environments, the <code>std</code> evaluator and core namespace, and 3 line editors,
+each checked against the upstream mal test suite and benchmarked. Where
+the traits forced crates away from their idioms is recorded in
+<a href="https://ajayclaugermany.github.io/make-a-lisp-in-rust-rosetta/book/trait-notes.html" rel="noopener noreferrer">Trait notes</a>, ahead of refining the traits.</p>
+</blockquote>
+<h2>Layout</h2>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>What it is</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/tree/main/crates/mal-traits" rel="noopener noreferrer"><code>crates/mal-traits</code></a></td>
+<td>The component traits every implementation is written against. No dependencies.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/tree/main/crates/mal-types" rel="noopener noreferrer"><code>crates/mal-types</code></a></td>
+<td>The shared <code>Rc</code>-based <code>Value</code> and <code>MalError</code> that rows of different components agree on. No dependencies.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/tree/main/crates/mal-testkit" rel="noopener noreferrer"><code>crates/mal-testkit</code></a></td>
+<td>Unit checks every reader, printer and environment row runs (dev-dependency only).</td>
+</tr>
+<tr>
+<td><a href="https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/tree/main/crates/mal" rel="noopener noreferrer"><code>crates/mal</code></a></td>
+<td>The <code>mal</code> binary: a stepA interpreter assembled from rows, <code>--&lt;component&gt; &lt;name&gt;</code> to swap one in, and <code>mal --list</code>. Its <code>benches/components.rs</code> is the list of what gets benchmarked, and <code>tests/conformance.rs</code> runs the mal test suite against every row.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/tree/main/crates/mal-bench" rel="noopener noreferrer"><code>crates/mal-bench</code></a></td>
+<td>The benchmark harness: fixed workloads and one generic <a href="https://github.com/bheisler/criterion.rs" rel="noopener noreferrer">Criterion</a> benchmark per component trait.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/tree/main/xtask" rel="noopener noreferrer"><code>xtask/</code></a></td>
+<td><code>cargo xtask bench</code> records a run under <code>runs/</code>; <code>cargo xtask report</code> renders the newest run into the results page.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/tree/main/comparisons" rel="noopener noreferrer"><code>comparisons/</code></a></td>
+<td>One crate per <code>&lt;component&gt;/&lt;crate&gt;</code> pair. Each exports an <code>Implementation</code> record and depends only on <code>mal-traits</code>, <code>mal-types</code> and the crate it compares.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/tree/main/docs" rel="noopener noreferrer"><code>docs/</code></a></td>
+<td>The <a href="https://rust-lang.github.io/mdBook/" rel="noopener noreferrer">mdBook</a> behind the documentation site: methodology, per-component pages, results.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/blob/main/oranda.json" rel="noopener noreferrer"><code>oranda.json</code></a></td>
+<td><a href="https://github.com/axodotdev/oranda" rel="noopener noreferrer">oranda</a> configuration for the site, built and published from <code>main</code> by <code>.github/workflows/web.yml</code>.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/tree/main/runs" rel="noopener noreferrer"><code>runs/</code></a></td>
+<td>One <code>results.json</code> per recorded benchmark run (host, toolchain, commit, statistics), committed so results are reproducible.</td>
+</tr>
+</tbody>
+</table>
+<h2>Components</h2>
+<p>Each table lists the crates compared for one component. The <code>std</code> row is the
+dependency-free baseline everything else is compared against; <em>step reached</em>
+is checked by <code>cargo test</code> against the upstream mal test suite. Timings are
+on the <a href="https://ajayclaugermany.github.io/make-a-lisp-in-rust-rosetta/book/results.html" rel="noopener noreferrer">results page</a>; the component pages on the documentation
+site have the candidates not yet implemented.</p>
+<h3>Reader (<code>comparisons/reader/</code>)</h3>
+<table>
+<thead>
+<tr>
+<th>crate</th>
+<th>parser type</th>
+<th>action code</th>
+<th>integration</th>
+<th>step reached</th>
+<th>version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>std</td>
+<td>hand-written recursive descent</td>
+<td>in source</td>
+<td>library</td>
+<td>stepA_mal</td>
+<td>-</td>
+</tr>
+<tr>
+<td>nom</td>
+<td>combinators</td>
+<td>in source</td>
+<td>library</td>
+<td>stepA_mal</td>
+<td>8.0.0</td>
+</tr>
+<tr>
+<td>winnow</td>
+<td>combinators</td>
+<td>in source</td>
+<td>library</td>
+<td>stepA_mal</td>
+<td>1.0.5</td>
+</tr>
+<tr>
+<td>chumsky</td>
+<td>combinators</td>
+<td>in source</td>
+<td>library</td>
+<td>stepA_mal</td>
+<td>0.13.0</td>
+</tr>
+<tr>
+<td>pest</td>
+<td>PEG</td>
+<td>external grammar</td>
+<td>proc macro (file)</td>
+<td>stepA_mal</td>
+<td>2.9.5</td>
+</tr>
+<tr>
+<td>peg</td>
+<td>PEG</td>
+<td>in grammar</td>
+<td>proc macro (block)</td>
+<td>stepA_mal</td>
+<td>0.8.6</td>
+</tr>
+<tr>
+<td>lalrpop</td>
+<td>LR(1)</td>
+<td>in grammar</td>
+<td>build script</td>
+<td>stepA_mal</td>
+<td>0.22.2</td>
+</tr>
+<tr>
+<td>logos</td>
+<td>lexer + hand-written descent</td>
+<td>in source</td>
+<td>proc macro</td>
+<td>stepA_mal</td>
+<td>0.16.1</td>
+</tr>
+<tr>
+<td>regex</td>
+<td>tokeniser (the guide's approach)</td>
+<td>in source</td>
+<td>library</td>
+<td>stepA_mal</td>
+<td>1.13.1</td>
+</tr>
+</tbody>
+</table>
+<h3>Printer (<code>comparisons/printer/</code>)</h3>
+<table>
+<thead>
+<tr>
+<th>crate</th>
+<th>approach</th>
+<th>step reached</th>
+<th>version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>std</td>
+<td><code>fmt::Write</code></td>
+<td>stepA_mal</td>
+<td>-</td>
+</tr>
+<tr>
+<td>itoa</td>
+<td>integers through <code>itoa::Buffer</code></td>
+<td>stepA_mal</td>
+<td>1.0.18</td>
+</tr>
+<tr>
+<td>memchr</td>
+<td>escaping by runs between <code>memchr3</code> hits</td>
+<td>stepA_mal</td>
+<td>2.8.3</td>
+</tr>
+<tr>
+<td>ufmt</td>
+<td>integers through <code>ufmt</code> instead of <code>core::fmt</code></td>
+<td>stepA_mal</td>
+<td>0.2.0</td>
+</tr>
+</tbody>
+</table>
+<h3>Env (<code>comparisons/env/</code>)</h3>
+<table>
+<thead>
+<tr>
+<th>crate</th>
+<th>structure</th>
+<th>sharing</th>
+<th>step reached</th>
+<th>version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>std</td>
+<td><code>HashMap</code> (SipHash)</td>
+<td><code>Rc&lt;RefCell&lt;_&gt;&gt;</code></td>
+<td>stepA_mal</td>
+<td>-</td>
+</tr>
+<tr>
+<td>hashbrown</td>
+<td>SwissTable <code>HashMap</code> (foldhash)</td>
+<td><code>Rc&lt;RefCell&lt;_&gt;&gt;</code></td>
+<td>stepA_mal</td>
+<td>0.17.1</td>
+</tr>
+<tr>
+<td>indexmap</td>
+<td>insertion-ordered map</td>
+<td><code>Rc&lt;RefCell&lt;_&gt;&gt;</code></td>
+<td>stepA_mal</td>
+<td>2.14.2</td>
+</tr>
+<tr>
+<td>rustc-hash</td>
+<td><code>HashMap</code> with FxHasher</td>
+<td><code>Rc&lt;RefCell&lt;_&gt;&gt;</code></td>
+<td>stepA_mal</td>
+<td>2.1.3</td>
+</tr>
+<tr>
+<td>ahash</td>
+<td><code>HashMap</code> with aHash</td>
+<td><code>Rc&lt;RefCell&lt;_&gt;&gt;</code></td>
+<td>stepA_mal</td>
+<td>0.8.12</td>
+</tr>
+<tr>
+<td>foldhash</td>
+<td><code>HashMap</code> with foldhash</td>
+<td><code>Rc&lt;RefCell&lt;_&gt;&gt;</code></td>
+<td>stepA_mal</td>
+<td>0.2.0</td>
+</tr>
+<tr>
+<td>imbl</td>
+<td>persistent HAMT</td>
+<td><code>Rc&lt;RefCell&lt;_&gt;&gt;</code></td>
+<td>stepA_mal</td>
+<td>7.0.2</td>
+</tr>
+<tr>
+<td>rpds</td>
+<td>persistent <code>HashTrieMap</code></td>
+<td><code>Rc&lt;RefCell&lt;_&gt;&gt;</code></td>
+<td>stepA_mal</td>
+<td>1.2.1</td>
+</tr>
+</tbody>
+</table>
+<h3>Evaluator (<code>comparisons/eval/</code>)</h3>
+<table>
+<thead>
+<tr>
+<th>crate</th>
+<th>value representation</th>
+<th>memory management</th>
+<th>step reached</th>
+<th>version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>echo</td>
+<td>none</td>
+<td>none</td>
+<td>step0_repl</td>
+<td>-</td>
+</tr>
+<tr>
+<td>std</td>
+<td><code>Rc</code> value enum</td>
+<td>reference counting</td>
+<td>stepA_mal</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<h3>Core (<code>comparisons/core/</code>)</h3>
+<table>
+<thead>
+<tr>
+<th>crate</th>
+<th>provides</th>
+<th>step reached</th>
+<th>version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>std</td>
+<td>checked <code>i64</code>, strings, vectors, all stepA built-ins</td>
+<td>stepA_mal</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<h3>Line editor (<code>comparisons/line-editor/</code>)</h3>
+<table>
+<thead>
+<tr>
+<th>crate</th>
+<th>editing</th>
+<th>history</th>
+<th>step reached</th>
+<th>version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>std</td>
+<td>none</td>
+<td>none</td>
+<td>stepA_mal</td>
+<td>-</td>
+</tr>
+<tr>
+<td>rustyline</td>
+<td>Emacs/vi keymaps</td>
+<td>in-memory</td>
+<td>stepA_mal</td>
+<td>17.0.2</td>
+</tr>
+<tr>
+<td>reedline</td>
+<td>Emacs keymap</td>
+<td>built-in</td>
+<td>stepA_mal (piped: <code>std::io</code> fallback)</td>
+<td>0.49.0</td>
+</tr>
+</tbody>
+</table>
+<h2>Results</h2>
+<p>Every implementation is timed with Criterion on the same fixed workloads.
+<code>cargo xtask bench</code> records a run as <code>runs/&lt;id&gt;/results.json</code>, and the
+<a href="https://ajayclaugermany.github.io/make-a-lisp-in-rust-rosetta/book/results.html" rel="noopener noreferrer">results page</a> on the documentation site is generated from the
+newest run together with the implementation registry, so it always shows
+every registered row, measured or not. Above each table, charts drawn from
+the same numbers show each implementation's time relative to <code>std</code>, overall
+and per workload. CI fails if the page is stale. The
+binary-size, build-time and test-suite columns of the methodology are not
+measured yet; see the <a href="https://ajayclaugermany.github.io/make-a-lisp-in-rust-rosetta/book/benchmarking.html" rel="noopener noreferrer">benchmarking page</a>.</p>
+<h2>Running</h2>
+<pre style="background-color:#263238;"><span style="color:#82aaff;">cargo run</span><span style="color:#89ddff;"> -</span><span style="color:#f78c6c;">p</span><span style="color:#82aaff;"> mal                      </span><span style="font-style:italic;color:#546e7a;"># start the REPL (all std rows)
+</span><span style="color:#82aaff;">cargo run</span><span style="color:#89ddff;"> -</span><span style="color:#f78c6c;">p</span><span style="color:#82aaff;"> mal</span><span style="color:#89ddff;"> --</span><span style="color:#82aaff;"> --reader nom      </span><span style="font-style:italic;color:#546e7a;"># the same with one row swapped in
+</span><span style="color:#82aaff;">cargo run</span><span style="color:#89ddff;"> -</span><span style="color:#f78c6c;">p</span><span style="color:#82aaff;"> mal</span><span style="color:#89ddff;"> --</span><span style="color:#82aaff;"> --list            </span><span style="font-style:italic;color:#546e7a;"># list the implementations available to compare
+</span><span style="color:#82aaff;">cargo test</span><span style="color:#89ddff;"> --</span><span style="color:#f78c6c;">workspace                </span><span style="font-style:italic;color:#546e7a;"># includes the mal test suite for every row
+</span><span style="color:#82aaff;">cargo xtask bench                     </span><span style="font-style:italic;color:#546e7a;"># benchmark, record under runs/, regenerate docs/src/results.md
+</span><span style="color:#82aaff;">cargo xtask report</span><span style="color:#89ddff;"> --</span><span style="color:#f78c6c;">check            </span><span style="font-style:italic;color:#546e7a;"># verify the results page matches the newest run
+</span></pre>
+
+<p>To preview the documentation site locally, install <a href="https://github.com/axodotdev/oranda" rel="noopener noreferrer">oranda</a> and run
+<code>oranda dev</code> in the repository root.</p>
+<h2>Contributing</h2>
+<p>See <a href="https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/blob/main/CONTRIBUTING.md" rel="noopener noreferrer">CONTRIBUTING.md</a> for how to add a crate to a
+comparison.</p>
+<h2>License</h2>
+<p>Licensed under the <a href="https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/blob/main/LICENSE" rel="noopener noreferrer">Mozilla Public License 2.0</a>.</p>
+
+
+
+        </main>
+      </div>
+
+      <footer>
+        
+          <a href="https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta"><div class="github-icon" aria-hidden="true"></div></a>
+        
+        <span>
+          make-a-lisp-in-rust-rosetta, MPL-2.0
+        </span>
+      </footer>
+    </div>
+
+    
+    
+
+    
+
+
+  </body>
+</html>
