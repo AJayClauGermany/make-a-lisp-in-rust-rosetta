@@ -61,6 +61,9 @@ heatmap of that ratio per workload. The tables remain the reference.
 - **lalrpop**: reaches `stepA_mal`; [lalrpop 0.22.2](https://github.com/lalrpop/lalrpop), [lalrpop-util 0.22.2](https://github.com/lalrpop/lalrpop). LR(1) + built-in regex lexer; grammar and actions in a .lalrpop file compiled by build.rs
 - **logos**: reaches `stepA_mal`; [logos 0.16.1](https://github.com/maciejhirsz/logos). #[derive(Logos)] token enum with literal callbacks; hand-written recursive descent over the lexer
 - **regex**: reaches `stepA_mal`; [regex 1.13.1](https://github.com/rust-lang/regex). the guide's single tokenizer regex, then recursive descent over the token list
+- **stacker**: reaches `stepA_mal`; [stacker 0.1.25](https://github.com/rust-lang/stacker). std recursive descent with stacker::maybe_grow per form: deep nesting cannot overflow
+- **combine**: reaches `stepA_mal`; [combine 4.6.9](https://github.com/Marwes/combine). LL(1) combinators generic over the stream; commit-on-consume replaces cut; easy errors made owned
+- **lexpr**: reaches `step0_repl`; [lexpr 0.2.7](https://github.com/rotty/lexpr-rs). ready-made Scheme/Elisp S-expression parser + conversion; fits the trait, not mal's grammar ({}, ~, @, ^)
 
 <figure class="malc"><svg viewBox="0 0 680 270" style="max-width:680px;min-width:544px" role="img" xmlns="http://www.w3.org/2000/svg"><title>Reader: geometric mean time relative to std, one bar per implementation</title>
 <line class="grid" x1="166.0" y1="8.0" x2="166.0" y2="246.0"/><text class="m" x="166.0" y="262.0" text-anchor="middle">1/2×</text><line class="axis" x1="243.0" y1="8.0" x2="243.0" y2="246.0"/><text class="m" x="243.0" y="262.0" text-anchor="middle">1×</text><line class="grid" x1="320.0" y1="8.0" x2="320.0" y2="246.0"/><text class="m" x="320.0" y="262.0" text-anchor="middle">2×</text><line class="grid" x1="397.0" y1="8.0" x2="397.0" y2="246.0"/><text class="m" x="397.0" y="262.0" text-anchor="middle">4×</text><line class="grid" x1="474.0" y1="8.0" x2="474.0" y2="246.0"/><text class="m" x="474.0" y="262.0" text-anchor="middle">8×</text><line class="grid" x1="551.0" y1="8.0" x2="551.0" y2="246.0"/><text class="m" x="551.0" y="262.0" text-anchor="middle">16×</text><line class="grid" x1="628.0" y1="8.0" x2="628.0" y2="246.0"/><text class="m" x="628.0" y="262.0" text-anchor="middle">32×</text>
@@ -162,6 +165,9 @@ heatmap of that ratio per workload. The tables remain the reference.
 | regex | `read_str/quoting` | 8.87 µs | 2.97 µs | 5.81 MiB/s | new |
 | regex | `read_str/string` | 3.40 µs | 623 ns | 16.5 MiB/s | new |
 | regex | `read_str/symbol` | 810 ns | 236 ns | 17.7 MiB/s | new |
+| stacker | *not measured in this run* | | | | |
+| combine | *not measured in this run* | | | | |
+| lexpr | *not measured in this run* | | | | |
 
 ## Printer
 
@@ -169,6 +175,8 @@ heatmap of that ratio per workload. The tables remain the reference.
 - **itoa**: reaches `stepA_mal`; [itoa 1.0.18](https://github.com/dtolnay/itoa). std printer with integers through itoa::Buffer (no core::fmt)
 - **memchr**: reaches `stepA_mal`; [memchr 2.8.3](https://github.com/BurntSushi/memchr). std printer; readable strings escaped by copying runs between memchr3 hits
 - **ufmt**: reaches `stepA_mal`; [ufmt 0.2.0](https://github.com/japaric/ufmt). std printer with integers through ufmt::uwrite! (no core::fmt)
+- **pretty**: reaches `stepA_mal`; [pretty 0.12.5](https://github.com/Marwes/pretty.rs). Wadler-style RcDoc with soft line breaks, rendered at an unbounded width (the trait has none)
+- **lexical**: reaches `stepA_mal`; [lexical-write-integer 1.0.6](https://github.com/Alexhuszagh/rust-lexical). std printer with integers through lexical's ToLexical (bytes, UTF-8 checked)
 
 <figure class="malc"><svg viewBox="0 0 680 140" style="max-width:680px;min-width:544px" role="img" xmlns="http://www.w3.org/2000/svg"><title>Printer: geometric mean time relative to std, one bar per implementation</title>
 <line class="grid" x1="166.0" y1="8.0" x2="166.0" y2="116.0"/><text class="m" x="166.0" y="132.0" text-anchor="middle">1/2×</text><line class="axis" x1="397.0" y1="8.0" x2="397.0" y2="116.0"/><text class="m" x="397.0" y="132.0" text-anchor="middle">1×</text><line class="grid" x1="628.0" y1="8.0" x2="628.0" y2="116.0"/><text class="m" x="628.0" y="132.0" text-anchor="middle">2×</text>
@@ -265,6 +273,8 @@ heatmap of that ratio per workload. The tables remain the reference.
 | ufmt | `pr_str-readably/quoting` | 231 ns | 33.8 ns | - | new |
 | ufmt | `pr_str-readably/string` | 135 ns | 31.4 ns | - | new |
 | ufmt | `pr_str-readably/symbol` | 6.69 ns | 1.18 ns | - | new |
+| pretty | *not measured in this run* | | | | |
+| lexical | *not measured in this run* | | | | |
 
 ## Environment
 
@@ -276,6 +286,10 @@ heatmap of that ratio per workload. The tables remain the reference.
 - **foldhash**: reaches `stepA_mal`; [foldhash 0.2.0](https://github.com/orlp/foldhash). std HashMap with foldhash (fast, minimally resistant to hash flooding) per scope
 - **imbl**: reaches `stepA_mal`; [imbl 7.0.2](https://github.com/jneem/imbl). imbl::HashMap (persistent HAMT, maintained fork of im) per scope; RefCell forced by Env::set(&self)
 - **rpds**: reaches `stepA_mal`; [rpds 1.2.1](https://github.com/orium/rpds). rpds::HashTrieMap (persistent HAMT, Rc-shared) per scope; RefCell forced by Env::set(&self)
+- **fnv**: reaches `stepA_mal`; [fnv 1.0.7](https://github.com/servo/rust-fnv). std HashMap with the byte-at-a-time FNV-1a hasher per scope
+- **smallvec**: reaches `stepA_mal`; [smallvec 1.16.5](https://github.com/servo/rust-smallvec). linear scan over up to 8 inline (symbol, value) pairs per scope, no hashing
+- **lasso**: reaches `stepA_mal`; [lasso 0.7.3](https://github.com/Kixiron/lasso). symbols interned in one shared Rodeo; scopes keyed by u32 Spur, but &str lookups still hash the text
+- **slotmap**: reaches `stepA_mal`; [slotmap 1.1.1](https://github.com/orlp/slotmap). all scopes in one SlotMap arena, handles are keys; Clone handles force hand-written refcounts
 
 <figure class="malc"><svg viewBox="0 0 680 244" style="max-width:680px;min-width:544px" role="img" xmlns="http://www.w3.org/2000/svg"><title>Environment: geometric mean time relative to std, one bar per implementation</title>
 <line class="grid" x1="166.0" y1="8.0" x2="166.0" y2="220.0"/><text class="m" x="166.0" y="236.0" text-anchor="middle">1/2×</text><line class="axis" x1="397.0" y1="8.0" x2="397.0" y2="220.0"/><text class="m" x="397.0" y="236.0" text-anchor="middle">1×</text><line class="grid" x1="628.0" y1="8.0" x2="628.0" y2="220.0"/><text class="m" x="628.0" y="236.0" text-anchor="middle">2×</text>
@@ -368,6 +382,10 @@ heatmap of that ratio per workload. The tables remain the reference.
 | rpds | `get-miss/8` | 170 ns | 40.8 ns | - | new |
 | rpds | `get-outer/8` | 10.5 µs | 2.61 µs | - | new |
 | rpds | `set/64` | 8.36 µs | 3.08 µs | - | new |
+| fnv | *not measured in this run* | | | | |
+| smallvec | *not measured in this run* | | | | |
+| lasso | *not measured in this run* | | | | |
+| slotmap | *not measured in this run* | | | | |
 
 ## Evaluator
 
@@ -434,12 +452,14 @@ heatmap of that ratio per workload. The tables remain the reference.
 - **std**: reaches `stepA_mal`; no third-party crates. std::io::stdin; no editing, no history
 - **rustyline**: reaches `stepA_mal`; [rustyline 17.0.2](https://github.com/kkawakam/rustyline). DefaultEditor; Emacs/vi keymaps, in-memory history; prompt written by the row when piped
 - **reedline**: reaches `stepA_mal`; [reedline 0.49.0](https://github.com/nushell/reedline). Reedline::create(); Emacs keymap, built-in history; std::io fallback when piped
+- **dialoguer**: reaches `stepA_mal`; [dialoguer 0.12.0](https://github.com/console-rs/dialoguer). Input::interact_text with BasicHistory and a verbatim-prompt Theme; no Ctrl-D; std::io fallback when piped
 
 | implementation | workload | mean | std dev | throughput | vs previous |
 |---|---|---:|---:|---:|---:|
 | std | *not measured in this run* | | | | |
 | rustyline | *not measured in this run* | | | | |
 | reedline | *not measured in this run* | | | | |
+| dialoguer | *not measured in this run* | | | | |
 
 ## Recorded runs
 
