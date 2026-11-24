@@ -26,6 +26,13 @@ is reached through that fallback; on a pseudo-terminal it sends a cursor
 query before every line, which upstream `runtest.py` does not cope with. See
 [Trait notes](../trait-notes.md#line-editor).
 
+dialoguer is a crate for command-line forms rather than a readline: its
+`Input` prompt formats the prompt through a theme (the row supplies one that
+writes it verbatim), echoes the answer unless told not to, and has no
+end-of-input key, so on a terminal `read_line` never returns `Ok(None)` and
+the REPL is left with Ctrl-C. Like reedline it needs a terminal, and the row
+falls back to `std::io` when piped.
+
 ## Candidates
 
 | crate | editing | history | step reached | version |
@@ -33,10 +40,14 @@ query before every line, which upstream `runtest.py` does not cope with. See
 | std   | none | none | stepA_mal | - |
 | [rustyline] | Emacs/vi keymaps | in-memory | stepA_mal | 17.0.2 |
 | [reedline] | Emacs keymap, menus | built-in, in-memory | stepA_mal (piped input falls back to `std::io`) | 0.49.0 |
+| [dialoguer] | basic cursor movement | caller-owned `BasicHistory` | stepA_mal (piped input falls back to `std::io`; no Ctrl-D) | 0.12.0 |
 | [linefeed] | Emacs keymap | in-memory | | |
+| [inquire] | basic cursor movement | none | | |
 | [crossterm] (hand-rolled editor) | custom | custom | | |
 
 [rustyline]: https://github.com/kkawakam/rustyline
 [reedline]: https://github.com/nushell/reedline
 [linefeed]: https://github.com/murarth/linefeed
+[dialoguer]: https://github.com/console-rs/dialoguer
+[inquire]: https://github.com/mikaelmello/inquire
 [crossterm]: https://github.com/crossterm-rs/crossterm

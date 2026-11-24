@@ -12,6 +12,7 @@
 use std::io;
 use std::process::ExitCode;
 
+use line_editor_dialoguer::DialoguerEditor;
 use line_editor_reedline::ReedlineEditor;
 use line_editor_rustyline::RustylineEditor;
 use mal::baseline::StdinLineEditor;
@@ -118,6 +119,7 @@ fn run(selection: &Selection, script: &[String]) -> ExitCode {
             }
         },
         "reedline" => repl(&mut ReedlineEditor::new(), interpreter.as_mut()),
+        "dialoguer" => repl(&mut DialoguerEditor::new(), interpreter.as_mut()),
         other => unreachable!("line editor `{other}` passed `check` but has no constructor"),
     }
 }

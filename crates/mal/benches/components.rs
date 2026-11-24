@@ -67,6 +67,12 @@ fn readers(c: &mut Criterion) {
     mal_bench::reader(c, &reader_regex::IMPLEMENTATION, || {
         reader_regex::RegexReader
     });
+    mal_bench::reader(c, &reader_stacker::IMPLEMENTATION, || {
+        reader_stacker::StackerReader
+    });
+    mal_bench::reader(c, &reader_combine::IMPLEMENTATION, || {
+        reader_combine::CombineReader
+    });
 }
 
 fn printers(c: &mut Criterion) {
@@ -88,6 +94,18 @@ fn printers(c: &mut Criterion) {
         c,
         &printer_ufmt::IMPLEMENTATION,
         &printer_ufmt::UfmtPrinter,
+        &values,
+    );
+    mal_bench::printer(
+        c,
+        &printer_pretty::IMPLEMENTATION,
+        &printer_pretty::PrettyPrinter::default(),
+        &values,
+    );
+    mal_bench::printer(
+        c,
+        &printer_lexical::IMPLEMENTATION,
+        &printer_lexical::LexicalPrinter,
         &values,
     );
 }
@@ -112,6 +130,10 @@ fn envs(c: &mut Criterion) {
     env_row!(env_foldhash, env_foldhash::FoldHashEnv<Value>);
     env_row!(env_imbl, env_imbl::ImblEnv<Value>);
     env_row!(env_rpds, env_rpds::RpdsEnv<Value>);
+    env_row!(env_fnv, env_fnv::FnvEnv<Value>);
+    env_row!(env_smallvec, env_smallvec::SmallVecEnv<Value>);
+    env_row!(env_lasso, env_lasso::LassoEnv<Value>);
+    env_row!(env_slotmap, env_slotmap::SlotMapEnv<Value>);
 }
 
 fn evaluators(c: &mut Criterion) {
