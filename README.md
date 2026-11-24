@@ -13,11 +13,12 @@ the same way, with the results in a table.
 This repository holds the shared traits, the runner, the comparison
 implementations and the published results.
 
-> **Status:** first comparison rows in place: 9 readers, 4 printers, 8
-> environments, the `std` evaluator and core namespace, and 3 line editors,
-> each checked against the upstream mal test suite and benchmarked. Where
-> the traits forced crates away from their idioms is recorded in
-> [Trait notes][trait-notes], ahead of refining the traits.
+> **Status:** 12 readers, 6 printers, 12 environments, the `std` evaluator
+> and core namespace, and 4 line editors, each checked against the upstream
+> mal test suite and benchmarked (except `lexpr`, which cannot read the
+> corpus). Where the traits forced crates away from their idioms, and which
+> parts of them no row needed, is recorded in [Trait notes][trait-notes],
+> ahead of refining the traits.
 
 ## Layout
 
@@ -55,6 +56,9 @@ site have the candidates not yet implemented.
 | lalrpop | LR(1) | in grammar | build script | stepA_mal | 0.22.2 |
 | logos   | lexer + hand-written descent | in source | proc macro | stepA_mal | 0.16.1 |
 | regex   | tokeniser (the guide's approach) | in source | library | stepA_mal | 1.13.1 |
+| stacker | the `std` parser on a growable stack | in source | library | stepA_mal | 0.1.25 |
+| combine | LL(1) combinators | in source | library | stepA_mal | 4.6.9 |
+| lexpr   | ready-made S-expression parser + conversion | none (options) | library | step0_repl | 0.2.7 |
 
 ### Printer (`comparisons/printer/`)
 
@@ -64,6 +68,8 @@ site have the candidates not yet implemented.
 | itoa   | integers through `itoa::Buffer` | stepA_mal | 1.0.18 |
 | memchr | escaping by runs between `memchr3` hits | stepA_mal | 2.8.3 |
 | ufmt   | integers through `ufmt` instead of `core::fmt` | stepA_mal | 0.2.0 |
+| pretty | Wadler-style document, unbounded width | stepA_mal | 0.12.5 |
+| lexical | integers through `lexical-write-integer` | stepA_mal | 1.0.6 |
 
 ### Env (`comparisons/env/`)
 
@@ -77,6 +83,10 @@ site have the candidates not yet implemented.
 | foldhash   | `HashMap` with foldhash | `Rc<RefCell<_>>` | stepA_mal | 0.2.0 |
 | imbl       | persistent HAMT | `Rc<RefCell<_>>` | stepA_mal | 7.0.2 |
 | rpds       | persistent `HashTrieMap` | `Rc<RefCell<_>>` | stepA_mal | 1.2.1 |
+| fnv        | `HashMap` with FNV-1a | `Rc<RefCell<_>>` | stepA_mal | 1.0.7 |
+| smallvec   | linear scan, 8 pairs inline | `Rc<RefCell<_>>` | stepA_mal | 1.16.5 |
+| lasso      | interned symbols, `HashMap<Spur, V>` | `Rc<RefCell<_>>` | stepA_mal | 0.7.3 |
+| slotmap    | all scopes in one arena | arena key + refcount | stepA_mal | 1.1.1 |
 
 ### Evaluator (`comparisons/eval/`)
 
@@ -98,6 +108,7 @@ site have the candidates not yet implemented.
 | std       | none    | none    | stepA_mal    | -       |
 | rustyline | Emacs/vi keymaps | in-memory | stepA_mal | 17.0.2 |
 | reedline  | Emacs keymap | built-in | stepA_mal (piped: `std::io` fallback) | 0.49.0 |
+| dialoguer | basic | caller-owned | stepA_mal (piped: `std::io` fallback) | 0.12.0 |
 
 ## Results
 

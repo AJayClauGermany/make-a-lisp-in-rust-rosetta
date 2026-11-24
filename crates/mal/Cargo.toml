@@ -27,10 +27,15 @@ reader-peg = { path = "../../comparisons/reader/peg" }
 reader-lalrpop = { path = "../../comparisons/reader/lalrpop" }
 reader-logos = { path = "../../comparisons/reader/logos" }
 reader-regex = { path = "../../comparisons/reader/regex" }
+reader-stacker = { path = "../../comparisons/reader/stacker" }
+reader-combine = { path = "../../comparisons/reader/combine" }
+reader-lexpr = { path = "../../comparisons/reader/lexpr" }
 printer-std = { path = "../../comparisons/printer/std" }
 printer-itoa = { path = "../../comparisons/printer/itoa" }
 printer-memchr = { path = "../../comparisons/printer/memchr" }
 printer-ufmt = { path = "../../comparisons/printer/ufmt" }
+printer-pretty = { path = "../../comparisons/printer/pretty" }
+printer-lexical = { path = "../../comparisons/printer/lexical" }
 env-std = { path = "../../comparisons/env/std" }
 env-hashbrown = { path = "../../comparisons/env/hashbrown" }
 env-indexmap = { path = "../../comparisons/env/indexmap" }
@@ -39,10 +44,15 @@ env-ahash = { path = "../../comparisons/env/ahash" }
 env-foldhash = { path = "../../comparisons/env/foldhash" }
 env-imbl = { path = "../../comparisons/env/imbl" }
 env-rpds = { path = "../../comparisons/env/rpds" }
+env-fnv = { path = "../../comparisons/env/fnv" }
+env-smallvec = { path = "../../comparisons/env/smallvec" }
+env-lasso = { path = "../../comparisons/env/lasso" }
+env-slotmap = { path = "../../comparisons/env/slotmap" }
 eval-std = { path = "../../comparisons/eval/std" }
 core-std = { path = "../../comparisons/core/std" }
 line-editor-rustyline = { path = "../../comparisons/line-editor/rustyline" }
 line-editor-reedline = { path = "../../comparisons/line-editor/reedline" }
+line-editor-dialoguer = { path = "../../comparisons/line-editor/dialoguer" }
 
 # Benchmarks only. Dev-dependencies never reach the `mal` binary, so the size
 # and build-time columns are unaffected.

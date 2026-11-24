@@ -26,7 +26,16 @@ The persistent maps (`imbl`, the maintained fork of `im`, and `rpds`) cannot
 be used the way they are meant to be: `Env::set` through a parent has to be
 visible to children created before it, which rules out giving each child a
 structurally shared snapshot. Both rows keep the scope chain and a `RefCell`
-like the others. See [Trait notes](../trait-notes.md#environment).
+like the others.
+
+The second batch varied the *shape* of a scope rather than the hasher.
+`smallvec` drops hashing for a linear scan over a few inline pairs. `lasso`
+interns symbols, but because `Env` takes `&str` every lookup still hashes the
+text in the interner first. `slotmap` puts every scope in one arena, and
+because environment handles are `Clone` with no notion of when a scope is
+dead, the row has to count handles per scope by hand: an arena of scopes
+behind this trait is reference counting again. See
+[Trait notes](../trait-notes.md#environment).
 
 ## Candidates
 
@@ -40,6 +49,12 @@ like the others. See [Trait notes](../trait-notes.md#environment).
 | [foldhash] | std `HashMap` with foldhash | `Rc<RefCell<_>>` | stepA_mal | 0.2.0 |
 | [imbl] | persistent `HashMap` (HAMT) | `Rc<RefCell<_>>`, see below | stepA_mal | 7.0.2 |
 | [rpds] | persistent `HashTrieMap` | `Rc<RefCell<_>>`, see below | stepA_mal | 1.2.1 |
+| [fnv] | std `HashMap` with FNV-1a | `Rc<RefCell<_>>` | stepA_mal | 1.0.7 |
+| [smallvec] | linear scan, 8 pairs inline | `Rc<RefCell<_>>` | stepA_mal | 1.16.5 |
+| [lasso] | `HashMap<Spur, V>`, symbols interned in a shared `Rodeo` | `Rc<RefCell<_>>` | stepA_mal | 0.7.3 |
+| [slotmap] | every scope in one `SlotMap` arena | arena key + hand-written refcount | stepA_mal | 1.1.1 |
+| [rapidhash] | std `HashMap` with rapidhash | `Rc<RefCell<_>>` | | |
+| [elsa] | append-only `FrozenMap` | `Rc` without `RefCell` | | |
 
 [hashbrown]: https://github.com/rust-lang/hashbrown
 [indexmap]: https://github.com/indexmap-rs/indexmap
@@ -48,3 +63,9 @@ like the others. See [Trait notes](../trait-notes.md#environment).
 [rustc-hash]: https://github.com/rust-lang/rustc-hash
 [ahash]: https://github.com/tkaitchuck/aHash
 [foldhash]: https://github.com/orlp/foldhash
+[fnv]: https://github.com/servo/rust-fnv
+[smallvec]: https://github.com/servo/rust-smallvec
+[lasso]: https://github.com/Kixiron/lasso
+[slotmap]: https://github.com/orlp/slotmap
+[rapidhash]: https://github.com/hoxxep/rapidhash
+[elsa]: https://github.com/Manishearth/elsa

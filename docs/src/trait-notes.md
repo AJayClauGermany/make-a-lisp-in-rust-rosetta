@@ -9,6 +9,15 @@ The traits themselves were changed in one place only while the first rows
 were written; everything else below is worked around in the rows and listed
 as a candidate refinement.
 
+A second batch of rows (readers `stacker`, `combine`, `lexpr`; printers
+`pretty`, `lexical`; environments `fnv`, `smallvec`, `lasso`, `slotmap`;
+line editor `dialoguer`) was chosen to test the traits from new directions
+rather than to add more of the same: a ready-made parser with its own data
+model, a document-building printer, environments that are not one hash map
+per scope, and a line editor that is not a readline. None of them needed a
+trait change. What they showed is under
+[Second batch](#second-batch-what-the-new-rows-showed).
+
 ## Changes made
 
 | change | why |
@@ -23,19 +32,21 @@ Ordered roughly by how many rows they would simplify.
 
 | # | refinement | affects |
 |---|------------|---------|
-| 1 | A reader error contract: an owned error with an `is_incomplete()` (or `UnexpectedEof`) case and a byte offset, instead of "the message must contain `EOF`". Also what a REPL needs for multi-line input. | all 9 readers |
+| 1 | A reader error contract: an owned error with an `is_incomplete()` (or `UnexpectedEof`) case and a byte offset, instead of "the message must contain `EOF`". Also what a REPL needs for multi-line input. lexpr already has exactly this (`Error::is_eof`), and combine's `easy` errors carry `end_of_input()` and a position. | all 12 readers |
 | 2 | `read_str` returns the form *and* where it ended, `(ReadOutcome<V>, usize)`, so grammars need not be bent into "parse one form, ignore the rest", and `load-file` can read form by form instead of wrapping the file in `(do ...)`. | pest, peg, lalrpop, winnow |
 | 3 | Give the core namespace the components it calls: `install(&self, env, ctx)` with a context offering read, print and apply/eval, or make `CoreNamespace` generic over them explicitly. | core, eval, the wiring |
 | 4 | `Evaluator::eval(&self, ...)` rather than `&mut self`: built-ins (`eval`, `apply`, `map`, `swap!`) and macros re-enter the evaluator, so it cannot hold mutable state anyway. | eval |
-| 5 | An owned symbol type for `Env` (`type Symbol`, or `Rc<str>`) instead of `&str`, so binding a parameter does not allocate a new key on every call. | all 8 envs |
+| 5 | An owned symbol type for `Env` (`type Symbol`, or `Rc<str>`) instead of `&str`, so binding a parameter does not allocate a new key on every call, and an interned symbol is hashed once by the reader instead of on every lookup. | all 12 envs, lasso most |
 | 6 | Separate "define in this scope" from "make a child scope with these bindings" (`fn bind(&self, pairs) -> Self`). Function calls and `let*` only need the latter, which a persistent map can implement with a structurally shared snapshot. | imbl, rpds |
-| 7 | `Printer` writes to any `fmt::Write` (or is generic over the output buffer) instead of `&mut String`. | printer candidates `compact_str`, `smol_str` |
+| 7 | `Printer` writes to any `fmt::Write` (or is generic over the output buffer) instead of `&mut String`. pretty renders to any `fmt::Write` or `io::Write` already. | printer candidates `compact_str`, `smol_str`, pretty |
 | 8 | A value-builder (serde-style visitor) between readers and values, so an evaluator with its own representation (`Arc`, arena, tracing GC) can reuse every reader row. | future eval rows |
 | 9 | Let `run_repl` render errors through the printer, or have `Interpreter` return rendered errors, so thrown values print as mal values without a pre-rendered `String` error type. | the wiring |
 | 10 | A number representation that the core row can choose (an associated type, or a `Value` parameter). | future core rows |
 | 11 | A lifecycle hook on `LineEditor` (`fn finish(&mut self) -> Result<...>`) for saving history, and a fallible `add_history`. | rustyline, reedline |
 | 12 | Require `Env: Default` (or add `fn new()`), since every caller needs a root environment. | the wiring, benchmarks |
-| 13 | A nesting limit readers (and printers) honour, reported as an error instead of a stack overflow. | 6 of 9 readers, all printers |
+| 13 | A nesting limit readers (and printers) honour, reported as an error instead of a stack overflow. The stacker row shows that fixing the reader alone is not enough: printing or dropping the value it reads still recurses. | 6 of 12 readers, all printers, `Value`'s `Drop` |
+| 14 | Report the fraction of each step's cases a row passes next to the highest unbroken step, so a row that implements most of the grammar is not indistinguishable from one that implements none. | lexpr |
+| 15 | Drop trait surface no row uses: `Interpreter::host_language` (the wiring binds `*host-language*` itself), `Implementation::supports`, and `Env::contains` (only the shared checks call it); make `Reader::read_str` take `&self` unless a row needs state. | the traits |
 
 ## Notes by component
 
@@ -201,6 +212,142 @@ Ordered roughly by how many rows they would simplify.
 27. **Rendered errors.** `run_repl` prints `Error: {e}` with `Display`, which
     cannot print a thrown mal value with the printer row, so the wiring's
     error type is a pre-rendered `String`. Refinement 9.
+
+## Second batch: what the new rows showed
+
+The question the second batch asked was whether the traits are
+over-prescriptive: do they admit crates that do the job in a way the first
+rows did not, without adding requirements on top of what Make-a-Lisp itself
+asks for? Mostly yes. Every new row was written the way its crate's own
+documentation writes things, and none needed a trait change. The friction
+below is either already a listed refinement or a consequence of mal's test
+suite rather than of the traits.
+
+### What fit without friction
+
+28. **A ready-made parser with its own data model (lexpr).** The `Reader`
+    trait is the shape lexpr already has: `Parser::next_value` reads one
+    datum and leaves the rest, returns `None` for blank or comment-only
+    input, and `Error::is_eof` says whether input ran out. The conversion
+    from `lexpr::Value` to the shared `Value` is a 30-line function. What
+    lexpr cannot do is read mal (no `{}` maps; `,` is `unquote`, not
+    whitespace; no `~`, `@` or `^` reader macros), so the gate it fails is
+    the grammar, not the trait. It passes 85% of the suite's cases (all of
+    steps 3 to 5) and still reaches only `step0_repl`, because a row's step
+    is the last of an unbroken run of fully passing steps. Refinement 14.
+29. **Configuration lives in the constructor.** pretty needs a line width
+    and lexpr needs its syntax options; neither is a trait parameter and
+    neither has to be. `PrettyPrinter::with_width` and
+    `LexprReader::default` carry them, the same way lalrpop's row keeps its
+    compiled parser. This argues against adding options such as a width to
+    `Printer`.
+30. **Combinators with commit-on-consume semantics (combine).** combine only
+    tries the next alternative of `choice` when the previous one failed
+    without consuming input, which is exactly "a missing `)` is an error at
+    EOF, and `~` with nothing after it is not a symbol". No `cut` was needed
+    (compare nom, winnow and chumsky, notes 9 and 10). The grammar is generic
+    over the input stream, as combine's examples are, and only needed one
+    type annotation on an `and_then` closure for the generic error type.
+31. **Not hashing at all (smallvec), hashing one byte at a time (fnv).**
+    Both are drop-in. They are there for the numbers: whether a linear scan
+    over a few inline pairs beats hashing for function-call scopes, and how
+    far the newer word-at-a-time hashers have moved from FNV.
+32. **A readline that is not a readline (dialoguer).** dialoguer's `Input`
+    is a form prompt. It fits `read_line(prompt)` once a theme writes the
+    prompt verbatim (the default appends `": "`) and the answer echo is
+    turned off, and it records history itself, so the default no-op
+    `add_history` is right for it, as for reedline.
+
+### Friction
+
+33. **An arena of scopes is reference counting again (slotmap).** `Env`
+    handles are `Clone` and the trait says nothing about when a scope is
+    dead, so an arena cannot free a function call's scope when the call
+    returns: a row that never freed scopes would grow without bound under the
+    benchmark loops. The row counts handles per scope and frees a scope, and
+    any outer scopes only it kept alive, when the count reaches zero. That is
+    `Rc` written by hand, plus a hazard `Rc` hides: freeing a scope drops its
+    values, a value can be a closure holding a handle into the same arena,
+    and that handle's `Drop` borrows the arena again, so every drop has to
+    happen after the arena's `RefCell` borrow is released. A tracing
+    collector over the arena (the point of arena-allocated scopes in most
+    interpreters) would need a root set the trait cannot provide. This is the
+    environment-side half of note 19 and refinement 8: the traits assume
+    reference-counted sharing.
+34. **Interning stops at the trait boundary (lasso).** Symbols are interned
+    once, and scopes are keyed by 32-bit `Spur`s instead of owned strings, so
+    binding a parameter no longer allocates. But `get` and `set` take `&str`
+    and the shared `Value` stores symbols as `Rc<str>`, so every lookup still
+    hashes the symbol's text in the interner before walking the chain with
+    the integer key. The one thing interning gives for free is that a symbol
+    never bound anywhere is rejected after that single interner lookup.
+    Refinement 5.
+35. **No end-of-input key (dialoguer).** `LineEditor::read_line` returns
+    `Ok(None)` at end of input, and the REPL loop relies on it to exit.
+    dialoguer ignores Ctrl-D as a control character, so on a terminal the
+    loop can only end through Ctrl-C, which ends the process. Checked on a
+    pseudo-terminal: the prompt is written verbatim, the up arrow recalls the
+    previous line, Ctrl-D does nothing, Ctrl-C exits with SIGINT. The trait
+    is not wrong here; the crate is answering a different question.
+36. **Depth safety cannot be one component's job (stacker).** With
+    `stacker::maybe_grow` around each nested form, the `std` parser reads
+    200,000 levels of nesting instead of aborting at about 5,000. The value
+    it returns still cannot be printed (every printer recurses) or dropped
+    (`Value`'s derived `Drop` recurses through `Rc<Vec<Value>>`) at that
+    depth, so the reader row fixes the crash only for input that is rejected
+    or never used. Refinement 13 is a property of the whole stack.
+37. **Bytes, not `str` (lexical).** `lexical-write-integer` formats into a
+    `&mut [u8]`, so the digits are UTF-8 checked before they can be appended
+    to the `String` the trait writes into. With `unsafe_code` denied in the
+    workspace the check stays; next to the `itoa` row it shows what that
+    costs.
+
+### Trait surface no row needed
+
+38. Across every row and the wiring: `Interpreter::host_language` is never
+    called (the wiring binds `*host-language*` directly);
+    `Implementation::supports` is never called; `Env::contains` is called
+    only by the shared checks; `CoreNamespace::symbols` is used only for the
+    benchmark's throughput figure. Ten of twelve readers are unit structs
+    and the other two (lalrpop's compiled parser, lexpr's options) only read
+    their state, so `read_str(&mut self)` is never used mutably. Refinement
+    15.
+
+### Candidates looked at and not implemented
+
+| crate | component | why not (yet) |
+|-------|-----------|---------------|
+| [pom], [grmtools] (`lrpar`) | reader | Same categories as nom/winnow (PEG combinators) and lalrpop (LR with a build script); worth adding for the numbers, not expected to show anything new about the traits. |
+| [tree-sitter] | reader | Needs Rust 1.90 (MSRV is 1.85), generates a C parser, and produces a concrete syntax tree for editors rather than values; a poor fit for "read one form". |
+| [sexp] | reader | Same kind of crate as lexpr (ready-made S-expression parser), less configurable. |
+| [compact_str], [smol_str] | printer | Blocked by `&mut String` output, refinement 7. |
+| [ryu] | printer | `Value` has no floats. |
+| [rapidhash] | env | Another hasher; would add a number, not a finding. |
+| [elsa] | env | `FrozenMap` never replaces a value (references into it must stay valid), and `Env::set` must replace an existing binding (rebinding with `def!`), so it cannot be a scope's map. |
+| [string-interner], [ustr] | env | Same finding as lasso. |
+| [num-bigint], [rug] | core | Need a number type other than `Value::Int(i64)`, refinement 10. |
+| [gc], [dumpster], [gc-arena], [bumpalo] | eval | Need their own value type, so their own reader and printer, refinement 8. A `stacker` evaluator was also considered: it would have to copy the whole 460-line `std` evaluator to wrap its recursive calls, since the evaluator has no extension points. |
+| [inquire], [linefeed] | line editor | inquire is another form-prompt crate (as dialoguer); linefeed has been unmaintained since 2019. |
+
+[pom]: https://github.com/J-F-Liu/pom
+[grmtools]: https://github.com/softdevteam/grmtools
+[tree-sitter]: https://github.com/tree-sitter/tree-sitter
+[sexp]: https://github.com/cgaebel/sexp
+[compact_str]: https://github.com/ParkMyCar/compact_str
+[smol_str]: https://github.com/rust-analyzer/smol_str
+[ryu]: https://github.com/dtolnay/ryu
+[rapidhash]: https://github.com/hoxxep/rapidhash
+[elsa]: https://github.com/Manishearth/elsa
+[string-interner]: https://github.com/robbepop/string-interner
+[ustr]: https://github.com/anderslanglands/ustr
+[num-bigint]: https://github.com/rust-num/num-bigint
+[rug]: https://gitlab.com/tspiteri/rug
+[gc]: https://github.com/Manishearth/rust-gc
+[dumpster]: https://github.com/claytonwramsey/dumpster
+[gc-arena]: https://github.com/kyren/gc-arena
+[bumpalo]: https://github.com/fitzgen/bumpalo
+[inquire]: https://github.com/mikaelmello/inquire
+[linefeed]: https://github.com/murarth/linefeed
 
 ## Dependency findings
 
