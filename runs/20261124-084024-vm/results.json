@@ -1,0 +1,3263 @@
+{
+  "schema": 1,
+  "id": "20261124-084024-vm",
+  "recorded_at": "2026-11-24T08:40:24Z",
+  "host": {
+    "name": "vm",
+    "os": "linux",
+    "arch": "x86_64",
+    "cpus": 4,
+    "cpu_model": "Intel(R) Xeon(R) Processor @ 2.30GHz"
+  },
+  "toolchain": {
+    "rustc": "rustc 1.97.0 (2d8144b78 2026-07-07)"
+  },
+  "commit": "0114190041ef",
+  "dirty": false,
+  "command": [
+    "cargo",
+    "bench",
+    "--package",
+    "mal",
+    "--bench",
+    "components",
+    "--",
+    "--noplot"
+  ],
+  "benchmarks": [
+    {
+      "id": "core/std/install",
+      "component": "core",
+      "implementation": "std",
+      "workload": "install",
+      "mean_ns": 6862.659297386111,
+      "median_ns": 6240.192923044218,
+      "std_dev_ns": 1095.9926152485095,
+      "throughput": {
+        "elements": 61
+      }
+    },
+    {
+      "id": "env/ahash/child",
+      "component": "env",
+      "implementation": "ahash",
+      "workload": "child",
+      "mean_ns": 21.699479985451553,
+      "median_ns": 21.70562038445181,
+      "std_dev_ns": 0.05884915455292743,
+      "throughput": null
+    },
+    {
+      "id": "env/ahash/eval/closures",
+      "component": "env",
+      "implementation": "ahash",
+      "workload": "eval/closures",
+      "mean_ns": 15780.31670329264,
+      "median_ns": 15373.736928104576,
+      "std_dev_ns": 1344.8249208649472,
+      "throughput": null
+    },
+    {
+      "id": "env/ahash/eval/fib",
+      "component": "env",
+      "implementation": "ahash",
+      "workload": "eval/fib",
+      "mean_ns": 154964.65546787274,
+      "median_ns": 150668.2500533049,
+      "std_dev_ns": 15501.714088952176,
+      "throughput": null
+    },
+    {
+      "id": "env/ahash/eval/sum-to",
+      "component": "env",
+      "implementation": "ahash",
+      "workload": "eval/sum-to",
+      "mean_ns": 400225.2484344358,
+      "median_ns": 380403.1228070175,
+      "std_dev_ns": 42796.43016560237,
+      "throughput": null
+    },
+    {
+      "id": "env/ahash/get-local/64",
+      "component": "env",
+      "implementation": "ahash",
+      "workload": "get-local/64",
+      "mean_ns": 568.7760383560133,
+      "median_ns": 511.0837116148113,
+      "std_dev_ns": 109.9074801130774,
+      "throughput": null
+    },
+    {
+      "id": "env/ahash/get-miss/8",
+      "component": "env",
+      "implementation": "ahash",
+      "workload": "get-miss/8",
+      "mean_ns": 12.353566038832671,
+      "median_ns": 12.343286950281366,
+      "std_dev_ns": 0.09289853565298058,
+      "throughput": null
+    },
+    {
+      "id": "env/ahash/get-outer/8",
+      "component": "env",
+      "implementation": "ahash",
+      "workload": "get-outer/8",
+      "mean_ns": 1060.7792281163202,
+      "median_ns": 1031.698755851195,
+      "std_dev_ns": 83.97686364873167,
+      "throughput": null
+    },
+    {
+      "id": "env/ahash/set/64",
+      "component": "env",
+      "implementation": "ahash",
+      "workload": "set/64",
+      "mean_ns": 3855.051616164537,
+      "median_ns": 3487.6408039055095,
+      "std_dev_ns": 762.8025226635235,
+      "throughput": null
+    },
+    {
+      "id": "env/fnv/child",
+      "component": "env",
+      "implementation": "fnv",
+      "workload": "child",
+      "mean_ns": 13.827065027515957,
+      "median_ns": 13.33290768720366,
+      "std_dev_ns": 1.314661741555195,
+      "throughput": null
+    },
+    {
+      "id": "env/fnv/eval/closures",
+      "component": "env",
+      "implementation": "fnv",
+      "workload": "eval/closures",
+      "mean_ns": 14641.897395052363,
+      "median_ns": 14200.78700980392,
+      "std_dev_ns": 1190.8112199395669,
+      "throughput": null
+    },
+    {
+      "id": "env/fnv/eval/fib",
+      "component": "env",
+      "implementation": "fnv",
+      "workload": "eval/fib",
+      "mean_ns": 149551.60399191474,
+      "median_ns": 145628.22338414274,
+      "std_dev_ns": 14027.940851406956,
+      "throughput": null
+    },
+    {
+      "id": "env/fnv/eval/sum-to",
+      "component": "env",
+      "implementation": "fnv",
+      "workload": "eval/sum-to",
+      "mean_ns": 387180.85249189544,
+      "median_ns": 374270.7178787879,
+      "std_dev_ns": 39392.26318692713,
+      "throughput": null
+    },
+    {
+      "id": "env/fnv/get-local/64",
+      "component": "env",
+      "implementation": "fnv",
+      "workload": "get-local/64",
+      "mean_ns": 731.7506295986462,
+      "median_ns": 669.2044487261551,
+      "std_dev_ns": 113.73566055219416,
+      "throughput": null
+    },
+    {
+      "id": "env/fnv/get-miss/8",
+      "component": "env",
+      "implementation": "fnv",
+      "workload": "get-miss/8",
+      "mean_ns": 14.229273657951994,
+      "median_ns": 13.703154089785825,
+      "std_dev_ns": 1.9141142372497433,
+      "throughput": null
+    },
+    {
+      "id": "env/fnv/get-outer/8",
+      "component": "env",
+      "implementation": "fnv",
+      "workload": "get-outer/8",
+      "mean_ns": 1081.6457754418834,
+      "median_ns": 987.3538729038668,
+      "std_dev_ns": 205.2535610542852,
+      "throughput": null
+    },
+    {
+      "id": "env/fnv/set/64",
+      "component": "env",
+      "implementation": "fnv",
+      "workload": "set/64",
+      "mean_ns": 3375.8294055730826,
+      "median_ns": 2896.293659437907,
+      "std_dev_ns": 772.0680799710299,
+      "throughput": null
+    },
+    {
+      "id": "env/foldhash/child",
+      "component": "env",
+      "implementation": "foldhash",
+      "workload": "child",
+      "mean_ns": 13.469926658237217,
+      "median_ns": 13.229834802519775,
+      "std_dev_ns": 0.900113035491831,
+      "throughput": null
+    },
+    {
+      "id": "env/foldhash/eval/closures",
+      "component": "env",
+      "implementation": "foldhash",
+      "workload": "eval/closures",
+      "mean_ns": 14275.859998269108,
+      "median_ns": 13925.781202307277,
+      "std_dev_ns": 1230.4713064541563,
+      "throughput": null
+    },
+    {
+      "id": "env/foldhash/eval/fib",
+      "component": "env",
+      "implementation": "foldhash",
+      "workload": "eval/fib",
+      "mean_ns": 150935.8749451802,
+      "median_ns": 146367.34946249402,
+      "std_dev_ns": 15860.637875274084,
+      "throughput": null
+    },
+    {
+      "id": "env/foldhash/eval/sum-to",
+      "component": "env",
+      "implementation": "foldhash",
+      "workload": "eval/sum-to",
+      "mean_ns": 373579.1877585937,
+      "median_ns": 366738.587211094,
+      "std_dev_ns": 33785.73029338989,
+      "throughput": null
+    },
+    {
+      "id": "env/foldhash/get-local/64",
+      "component": "env",
+      "implementation": "foldhash",
+      "workload": "get-local/64",
+      "mean_ns": 502.99473459403913,
+      "median_ns": 496.4216182587326,
+      "std_dev_ns": 38.59479300509961,
+      "throughput": null
+    },
+    {
+      "id": "env/foldhash/get-miss/8",
+      "component": "env",
+      "implementation": "foldhash",
+      "workload": "get-miss/8",
+      "mean_ns": 11.607059339946954,
+      "median_ns": 11.493042580369671,
+      "std_dev_ns": 0.4501006256844579,
+      "throughput": null
+    },
+    {
+      "id": "env/foldhash/get-outer/8",
+      "component": "env",
+      "implementation": "foldhash",
+      "workload": "get-outer/8",
+      "mean_ns": 1013.3265206170868,
+      "median_ns": 987.2406160887168,
+      "std_dev_ns": 77.65482344032067,
+      "throughput": null
+    },
+    {
+      "id": "env/foldhash/set/64",
+      "component": "env",
+      "implementation": "foldhash",
+      "workload": "set/64",
+      "mean_ns": 3681.892279399872,
+      "median_ns": 3328.6978627501726,
+      "std_dev_ns": 742.7699342442821,
+      "throughput": null
+    },
+    {
+      "id": "env/hashbrown/child",
+      "component": "env",
+      "implementation": "hashbrown",
+      "workload": "child",
+      "mean_ns": 14.06132848947684,
+      "median_ns": 12.990480960579388,
+      "std_dev_ns": 2.349231107735093,
+      "throughput": null
+    },
+    {
+      "id": "env/hashbrown/eval/closures",
+      "component": "env",
+      "implementation": "hashbrown",
+      "workload": "eval/closures",
+      "mean_ns": 14848.58056907943,
+      "median_ns": 14430.868462889768,
+      "std_dev_ns": 1039.926744969712,
+      "throughput": null
+    },
+    {
+      "id": "env/hashbrown/eval/fib",
+      "component": "env",
+      "implementation": "hashbrown",
+      "workload": "eval/fib",
+      "mean_ns": 151007.63300147626,
+      "median_ns": 147577.35336960337,
+      "std_dev_ns": 8965.84128453436,
+      "throughput": null
+    },
+    {
+      "id": "env/hashbrown/eval/sum-to",
+      "component": "env",
+      "implementation": "hashbrown",
+      "workload": "eval/sum-to",
+      "mean_ns": 368664.6534433062,
+      "median_ns": 364446.42123318184,
+      "std_dev_ns": 24276.277530599044,
+      "throughput": null
+    },
+    {
+      "id": "env/hashbrown/get-local/64",
+      "component": "env",
+      "implementation": "hashbrown",
+      "workload": "get-local/64",
+      "mean_ns": 528.784062415712,
+      "median_ns": 511.9818918253271,
+      "std_dev_ns": 63.49185851418532,
+      "throughput": null
+    },
+    {
+      "id": "env/hashbrown/get-miss/8",
+      "component": "env",
+      "implementation": "hashbrown",
+      "workload": "get-miss/8",
+      "mean_ns": 12.371874021700265,
+      "median_ns": 11.487299315364004,
+      "std_dev_ns": 2.195712562449161,
+      "throughput": null
+    },
+    {
+      "id": "env/hashbrown/get-outer/8",
+      "component": "env",
+      "implementation": "hashbrown",
+      "workload": "get-outer/8",
+      "mean_ns": 1173.0730744288803,
+      "median_ns": 1027.155769852195,
+      "std_dev_ns": 283.94541414405774,
+      "throughput": null
+    },
+    {
+      "id": "env/hashbrown/set/64",
+      "component": "env",
+      "implementation": "hashbrown",
+      "workload": "set/64",
+      "mean_ns": 3251.2386265093724,
+      "median_ns": 2878.601475455047,
+      "std_dev_ns": 754.9836900632217,
+      "throughput": null
+    },
+    {
+      "id": "env/imbl/child",
+      "component": "env",
+      "implementation": "imbl",
+      "workload": "child",
+      "mean_ns": 12.142002803650682,
+      "median_ns": 11.989622005970446,
+      "std_dev_ns": 0.48141354007180454,
+      "throughput": null
+    },
+    {
+      "id": "env/imbl/eval/closures",
+      "component": "env",
+      "implementation": "imbl",
+      "workload": "eval/closures",
+      "mean_ns": 19920.714671108937,
+      "median_ns": 19538.13192195214,
+      "std_dev_ns": 2451.845359803199,
+      "throughput": null
+    },
+    {
+      "id": "env/imbl/eval/fib",
+      "component": "env",
+      "implementation": "imbl",
+      "workload": "eval/fib",
+      "mean_ns": 205717.1816970745,
+      "median_ns": 196123.8306122449,
+      "std_dev_ns": 28834.80643708835,
+      "throughput": null
+    },
+    {
+      "id": "env/imbl/eval/sum-to",
+      "component": "env",
+      "implementation": "imbl",
+      "workload": "eval/sum-to",
+      "mean_ns": 488960.8700911011,
+      "median_ns": 489449.4482570806,
+      "std_dev_ns": 4502.551805773676,
+      "throughput": null
+    },
+    {
+      "id": "env/imbl/get-local/64",
+      "component": "env",
+      "implementation": "imbl",
+      "workload": "get-local/64",
+      "mean_ns": 1314.007505921479,
+      "median_ns": 1239.6797503242542,
+      "std_dev_ns": 238.59715674066877,
+      "throughput": null
+    },
+    {
+      "id": "env/imbl/get-miss/8",
+      "component": "env",
+      "implementation": "imbl",
+      "workload": "get-miss/8",
+      "mean_ns": 23.743350763574593,
+      "median_ns": 20.818679344989704,
+      "std_dev_ns": 5.3999821456151915,
+      "throughput": null
+    },
+    {
+      "id": "env/imbl/get-outer/8",
+      "component": "env",
+      "implementation": "imbl",
+      "workload": "get-outer/8",
+      "mean_ns": 1789.554140671249,
+      "median_ns": 1728.2498578782606,
+      "std_dev_ns": 180.35617245619045,
+      "throughput": null
+    },
+    {
+      "id": "env/imbl/set/64",
+      "component": "env",
+      "implementation": "imbl",
+      "workload": "set/64",
+      "mean_ns": 3587.856142597967,
+      "median_ns": 3507.8607864506994,
+      "std_dev_ns": 431.5233506481892,
+      "throughput": null
+    },
+    {
+      "id": "env/indexmap/child",
+      "component": "env",
+      "implementation": "indexmap",
+      "workload": "child",
+      "mean_ns": 13.35879630198175,
+      "median_ns": 13.30409781542506,
+      "std_dev_ns": 0.48054185813516526,
+      "throughput": null
+    },
+    {
+      "id": "env/indexmap/eval/closures",
+      "component": "env",
+      "implementation": "indexmap",
+      "workload": "eval/closures",
+      "mean_ns": 16951.378194058267,
+      "median_ns": 16390.264504142302,
+      "std_dev_ns": 1783.3691137372873,
+      "throughput": null
+    },
+    {
+      "id": "env/indexmap/eval/fib",
+      "component": "env",
+      "implementation": "indexmap",
+      "workload": "eval/fib",
+      "mean_ns": 170923.11308744267,
+      "median_ns": 163775.76866807116,
+      "std_dev_ns": 17522.615541131396,
+      "throughput": null
+    },
+    {
+      "id": "env/indexmap/eval/sum-to",
+      "component": "env",
+      "implementation": "indexmap",
+      "workload": "eval/sum-to",
+      "mean_ns": 489969.1886849148,
+      "median_ns": 485712.59549071616,
+      "std_dev_ns": 26519.351708545164,
+      "throughput": null
+    },
+    {
+      "id": "env/indexmap/get-local/64",
+      "component": "env",
+      "implementation": "indexmap",
+      "workload": "get-local/64",
+      "mean_ns": 1045.6394103278851,
+      "median_ns": 1016.0907742807344,
+      "std_dev_ns": 88.85397276599709,
+      "throughput": null
+    },
+    {
+      "id": "env/indexmap/get-miss/8",
+      "component": "env",
+      "implementation": "indexmap",
+      "workload": "get-miss/8",
+      "mean_ns": 19.057606151308686,
+      "median_ns": 18.9969945365115,
+      "std_dev_ns": 0.4925773762497628,
+      "throughput": null
+    },
+    {
+      "id": "env/indexmap/get-outer/8",
+      "component": "env",
+      "implementation": "indexmap",
+      "workload": "get-outer/8",
+      "mean_ns": 1478.134220966092,
+      "median_ns": 1435.2508744687807,
+      "std_dev_ns": 175.595267594962,
+      "throughput": null
+    },
+    {
+      "id": "env/indexmap/set/64",
+      "component": "env",
+      "implementation": "indexmap",
+      "workload": "set/64",
+      "mean_ns": 4273.7724632622785,
+      "median_ns": 3680.525927650986,
+      "std_dev_ns": 1008.204186082874,
+      "throughput": null
+    },
+    {
+      "id": "env/lasso/child",
+      "component": "env",
+      "implementation": "lasso",
+      "workload": "child",
+      "mean_ns": 14.642288625398358,
+      "median_ns": 14.508355936424532,
+      "std_dev_ns": 0.4640778841547638,
+      "throughput": null
+    },
+    {
+      "id": "env/lasso/eval/closures",
+      "component": "env",
+      "implementation": "lasso",
+      "workload": "eval/closures",
+      "mean_ns": 25340.120990789397,
+      "median_ns": 21767.319020958945,
+      "std_dev_ns": 5682.23929920126,
+      "throughput": null
+    },
+    {
+      "id": "env/lasso/eval/fib",
+      "component": "env",
+      "implementation": "lasso",
+      "workload": "eval/fib",
+      "mean_ns": 228344.6784902463,
+      "median_ns": 212243.765588363,
+      "std_dev_ns": 33810.52328232736,
+      "throughput": null
+    },
+    {
+      "id": "env/lasso/eval/sum-to",
+      "component": "env",
+      "implementation": "lasso",
+      "workload": "eval/sum-to",
+      "mean_ns": 560468.2515774902,
+      "median_ns": 540875.9987945998,
+      "std_dev_ns": 50745.044087890485,
+      "throughput": null
+    },
+    {
+      "id": "env/lasso/get-local/64",
+      "component": "env",
+      "implementation": "lasso",
+      "workload": "get-local/64",
+      "mean_ns": 1825.3620070436373,
+      "median_ns": 1707.221329899464,
+      "std_dev_ns": 277.39058903917703,
+      "throughput": null
+    },
+    {
+      "id": "env/lasso/get-miss/8",
+      "component": "env",
+      "implementation": "lasso",
+      "workload": "get-miss/8",
+      "mean_ns": 15.47943612348944,
+      "median_ns": 14.809098235207234,
+      "std_dev_ns": 1.6583014516498094,
+      "throughput": null
+    },
+    {
+      "id": "env/lasso/get-outer/8",
+      "component": "env",
+      "implementation": "lasso",
+      "workload": "get-outer/8",
+      "mean_ns": 2158.501291451318,
+      "median_ns": 2040.2669840050153,
+      "std_dev_ns": 303.77969712114873,
+      "throughput": null
+    },
+    {
+      "id": "env/lasso/set/64",
+      "component": "env",
+      "implementation": "lasso",
+      "workload": "set/64",
+      "mean_ns": 4469.812161463423,
+      "median_ns": 4376.758005174501,
+      "std_dev_ns": 452.9299430116839,
+      "throughput": null
+    },
+    {
+      "id": "env/rpds/child",
+      "component": "env",
+      "implementation": "rpds",
+      "workload": "child",
+      "mean_ns": 25.268513032208233,
+      "median_ns": 24.833137125536847,
+      "std_dev_ns": 2.0168822229801733,
+      "throughput": null
+    },
+    {
+      "id": "env/rpds/eval/closures",
+      "component": "env",
+      "implementation": "rpds",
+      "workload": "eval/closures",
+      "mean_ns": 21388.907318909583,
+      "median_ns": 20568.54219954649,
+      "std_dev_ns": 2522.896206889248,
+      "throughput": null
+    },
+    {
+      "id": "env/rpds/eval/fib",
+      "component": "env",
+      "implementation": "rpds",
+      "workload": "eval/fib",
+      "mean_ns": 208232.08973243047,
+      "median_ns": 201085.07366615857,
+      "std_dev_ns": 20536.36669804779,
+      "throughput": null
+    },
+    {
+      "id": "env/rpds/eval/sum-to",
+      "component": "env",
+      "implementation": "rpds",
+      "workload": "eval/sum-to",
+      "mean_ns": 556560.9185246244,
+      "median_ns": 544560.093335788,
+      "std_dev_ns": 38595.19859467418,
+      "throughput": null
+    },
+    {
+      "id": "env/rpds/get-local/64",
+      "component": "env",
+      "implementation": "rpds",
+      "workload": "get-local/64",
+      "mean_ns": 1423.2868533100827,
+      "median_ns": 1355.4471353489848,
+      "std_dev_ns": 178.8399851729472,
+      "throughput": null
+    },
+    {
+      "id": "env/rpds/get-miss/8",
+      "component": "env",
+      "implementation": "rpds",
+      "workload": "get-miss/8",
+      "mean_ns": 98.39581543946586,
+      "median_ns": 95.68005426858788,
+      "std_dev_ns": 9.408947833456622,
+      "throughput": null
+    },
+    {
+      "id": "env/rpds/get-outer/8",
+      "component": "env",
+      "implementation": "rpds",
+      "workload": "get-outer/8",
+      "mean_ns": 6859.496375791243,
+      "median_ns": 6580.715043821427,
+      "std_dev_ns": 754.3119662565073,
+      "throughput": null
+    },
+    {
+      "id": "env/rpds/set/64",
+      "component": "env",
+      "implementation": "rpds",
+      "workload": "set/64",
+      "mean_ns": 6133.866430421304,
+      "median_ns": 5146.719678298417,
+      "std_dev_ns": 3383.493416459261,
+      "throughput": null
+    },
+    {
+      "id": "env/rustc-hash/child",
+      "component": "env",
+      "implementation": "rustc-hash",
+      "workload": "child",
+      "mean_ns": 13.703979063489768,
+      "median_ns": 13.312532355240464,
+      "std_dev_ns": 1.127566357275736,
+      "throughput": null
+    },
+    {
+      "id": "env/rustc-hash/eval/closures",
+      "component": "env",
+      "implementation": "rustc-hash",
+      "workload": "eval/closures",
+      "mean_ns": 14418.06225657603,
+      "median_ns": 14354.813173750204,
+      "std_dev_ns": 387.4305231273521,
+      "throughput": null
+    },
+    {
+      "id": "env/rustc-hash/eval/fib",
+      "component": "env",
+      "implementation": "rustc-hash",
+      "workload": "eval/fib",
+      "mean_ns": 152101.19809050116,
+      "median_ns": 146900.36534518114,
+      "std_dev_ns": 13560.396255089228,
+      "throughput": null
+    },
+    {
+      "id": "env/rustc-hash/eval/sum-to",
+      "component": "env",
+      "implementation": "rustc-hash",
+      "workload": "eval/sum-to",
+      "mean_ns": 381810.5824592893,
+      "median_ns": 360208.5383838384,
+      "std_dev_ns": 54789.19359017291,
+      "throughput": null
+    },
+    {
+      "id": "env/rustc-hash/get-local/64",
+      "component": "env",
+      "implementation": "rustc-hash",
+      "workload": "get-local/64",
+      "mean_ns": 534.8788597142957,
+      "median_ns": 510.5585475578406,
+      "std_dev_ns": 75.06421774858319,
+      "throughput": null
+    },
+    {
+      "id": "env/rustc-hash/get-miss/8",
+      "component": "env",
+      "implementation": "rustc-hash",
+      "workload": "get-miss/8",
+      "mean_ns": 12.46692548256356,
+      "median_ns": 11.921420813080076,
+      "std_dev_ns": 1.1737504836980388,
+      "throughput": null
+    },
+    {
+      "id": "env/rustc-hash/get-outer/8",
+      "component": "env",
+      "implementation": "rustc-hash",
+      "workload": "get-outer/8",
+      "mean_ns": 945.2543097482152,
+      "median_ns": 928.4524972219292,
+      "std_dev_ns": 56.667458533206485,
+      "throughput": null
+    },
+    {
+      "id": "env/rustc-hash/set/64",
+      "component": "env",
+      "implementation": "rustc-hash",
+      "workload": "set/64",
+      "mean_ns": 3497.804646658027,
+      "median_ns": 3257.936824585704,
+      "std_dev_ns": 867.5910539422517,
+      "throughput": null
+    },
+    {
+      "id": "env/slotmap/child",
+      "component": "env",
+      "implementation": "slotmap",
+      "workload": "child",
+      "mean_ns": 32.99971571072764,
+      "median_ns": 32.54938766314875,
+      "std_dev_ns": 1.684538188847103,
+      "throughput": null
+    },
+    {
+      "id": "env/slotmap/eval/closures",
+      "component": "env",
+      "implementation": "slotmap",
+      "workload": "eval/closures",
+      "mean_ns": 21713.451059941304,
+      "median_ns": 20519.73322591951,
+      "std_dev_ns": 3245.09772606924,
+      "throughput": null
+    },
+    {
+      "id": "env/slotmap/eval/fib",
+      "component": "env",
+      "implementation": "slotmap",
+      "workload": "eval/fib",
+      "mean_ns": 196663.72470270804,
+      "median_ns": 192833.78933333332,
+      "std_dev_ns": 12122.70153115552,
+      "throughput": null
+    },
+    {
+      "id": "env/slotmap/eval/sum-to",
+      "component": "env",
+      "implementation": "slotmap",
+      "workload": "eval/sum-to",
+      "mean_ns": 616259.6290277186,
+      "median_ns": 524722.7585858586,
+      "std_dev_ns": 133656.21483517744,
+      "throughput": null
+    },
+    {
+      "id": "env/slotmap/get-local/64",
+      "component": "env",
+      "implementation": "slotmap",
+      "workload": "get-local/64",
+      "mean_ns": 974.7297686668092,
+      "median_ns": 916.8258142059552,
+      "std_dev_ns": 118.3902353616058,
+      "throughput": null
+    },
+    {
+      "id": "env/slotmap/get-miss/8",
+      "component": "env",
+      "implementation": "slotmap",
+      "workload": "get-miss/8",
+      "mean_ns": 26.89667390777613,
+      "median_ns": 26.089270629697857,
+      "std_dev_ns": 1.955648228892566,
+      "throughput": null
+    },
+    {
+      "id": "env/slotmap/get-outer/8",
+      "component": "env",
+      "implementation": "slotmap",
+      "workload": "get-outer/8",
+      "mean_ns": 1957.9723053143189,
+      "median_ns": 1809.6522249747684,
+      "std_dev_ns": 604.6239692321698,
+      "throughput": null
+    },
+    {
+      "id": "env/slotmap/set/64",
+      "component": "env",
+      "implementation": "slotmap",
+      "workload": "set/64",
+      "mean_ns": 4698.514123858564,
+      "median_ns": 4516.581764488741,
+      "std_dev_ns": 603.3812040950573,
+      "throughput": null
+    },
+    {
+      "id": "env/smallvec/child",
+      "component": "env",
+      "implementation": "smallvec",
+      "workload": "child",
+      "mean_ns": 18.97224044217572,
+      "median_ns": 18.286018130223155,
+      "std_dev_ns": 1.6642490876720808,
+      "throughput": null
+    },
+    {
+      "id": "env/smallvec/eval/closures",
+      "component": "env",
+      "implementation": "smallvec",
+      "workload": "eval/closures",
+      "mean_ns": 15254.08411177576,
+      "median_ns": 14583.394740802676,
+      "std_dev_ns": 1513.0147367970144,
+      "throughput": null
+    },
+    {
+      "id": "env/smallvec/eval/fib",
+      "component": "env",
+      "implementation": "smallvec",
+      "workload": "eval/fib",
+      "mean_ns": 163632.90881460515,
+      "median_ns": 162318.27958166698,
+      "std_dev_ns": 7135.448613080492,
+      "throughput": null
+    },
+    {
+      "id": "env/smallvec/eval/sum-to",
+      "component": "env",
+      "implementation": "smallvec",
+      "workload": "eval/sum-to",
+      "mean_ns": 446771.59143735474,
+      "median_ns": 427944.4333857167,
+      "std_dev_ns": 42997.03727560784,
+      "throughput": null
+    },
+    {
+      "id": "env/smallvec/get-local/64",
+      "component": "env",
+      "implementation": "smallvec",
+      "workload": "get-local/64",
+      "mean_ns": 3163.1646136122854,
+      "median_ns": 3073.3664081996435,
+      "std_dev_ns": 266.8350463887241,
+      "throughput": null
+    },
+    {
+      "id": "env/smallvec/get-miss/8",
+      "component": "env",
+      "implementation": "smallvec",
+      "workload": "get-miss/8",
+      "mean_ns": 46.82257223885681,
+      "median_ns": 43.809285895899166,
+      "std_dev_ns": 5.681524020487515,
+      "throughput": null
+    },
+    {
+      "id": "env/smallvec/get-outer/8",
+      "component": "env",
+      "implementation": "smallvec",
+      "workload": "get-outer/8",
+      "mean_ns": 3656.903738256482,
+      "median_ns": 3524.599033319142,
+      "std_dev_ns": 340.9814642333863,
+      "throughput": null
+    },
+    {
+      "id": "env/smallvec/set/64",
+      "component": "env",
+      "implementation": "smallvec",
+      "workload": "set/64",
+      "mean_ns": 4609.276166784443,
+      "median_ns": 4712.684664397311,
+      "std_dev_ns": 517.1462728586616,
+      "throughput": null
+    },
+    {
+      "id": "env/std/child",
+      "component": "env",
+      "implementation": "std",
+      "workload": "child",
+      "mean_ns": 13.738076554726431,
+      "median_ns": 13.55150811084538,
+      "std_dev_ns": 0.7202096024756183,
+      "throughput": null
+    },
+    {
+      "id": "env/std/eval/closures",
+      "component": "env",
+      "implementation": "std",
+      "workload": "eval/closures",
+      "mean_ns": 18366.248546058992,
+      "median_ns": 18102.93866311696,
+      "std_dev_ns": 1059.2044125352925,
+      "throughput": null
+    },
+    {
+      "id": "env/std/eval/fib",
+      "component": "env",
+      "implementation": "std",
+      "workload": "eval/fib",
+      "mean_ns": 179513.17043137873,
+      "median_ns": 176070.4339285714,
+      "std_dev_ns": 13001.50717849836,
+      "throughput": null
+    },
+    {
+      "id": "env/std/eval/sum-to",
+      "component": "env",
+      "implementation": "std",
+      "workload": "eval/sum-to",
+      "mean_ns": 490420.1707152559,
+      "median_ns": 466260.0037878788,
+      "std_dev_ns": 77324.33603506617,
+      "throughput": null
+    },
+    {
+      "id": "env/std/get-local/64",
+      "component": "env",
+      "implementation": "std",
+      "workload": "get-local/64",
+      "mean_ns": 898.2018580977974,
+      "median_ns": 867.2882282768944,
+      "std_dev_ns": 107.0829697897022,
+      "throughput": null
+    },
+    {
+      "id": "env/std/get-miss/8",
+      "component": "env",
+      "implementation": "std",
+      "workload": "get-miss/8",
+      "mean_ns": 20.41960218120683,
+      "median_ns": 19.153237511305313,
+      "std_dev_ns": 3.3457096244589533,
+      "throughput": null
+    },
+    {
+      "id": "env/std/get-outer/8",
+      "component": "env",
+      "implementation": "std",
+      "workload": "get-outer/8",
+      "mean_ns": 1305.3407540534688,
+      "median_ns": 1275.1855024431404,
+      "std_dev_ns": 95.0634036510136,
+      "throughput": null
+    },
+    {
+      "id": "env/std/set/64",
+      "component": "env",
+      "implementation": "std",
+      "workload": "set/64",
+      "mean_ns": 4794.345423147178,
+      "median_ns": 4446.031212904742,
+      "std_dev_ns": 698.0194386383484,
+      "throughput": null
+    },
+    {
+      "id": "eval/echo/rep/atom",
+      "component": "eval",
+      "implementation": "echo",
+      "workload": "rep/atom",
+      "mean_ns": 8.483299824123703,
+      "median_ns": 8.23566962312659,
+      "std_dev_ns": 0.8490108513064702,
+      "throughput": {
+        "bytes": 2
+      }
+    },
+    {
+      "id": "eval/echo/rep/collections",
+      "component": "eval",
+      "implementation": "echo",
+      "workload": "rep/collections",
+      "mean_ns": 9.394825310247624,
+      "median_ns": 8.796560853683928,
+      "std_dev_ns": 1.3452666661022534,
+      "throughput": {
+        "bytes": 58
+      }
+    },
+    {
+      "id": "eval/echo/rep/list",
+      "component": "eval",
+      "implementation": "echo",
+      "workload": "rep/list",
+      "mean_ns": 9.208511103725687,
+      "median_ns": 8.487412035771442,
+      "std_dev_ns": 1.673951864698841,
+      "throughput": {
+        "bytes": 24
+      }
+    },
+    {
+      "id": "eval/echo/rep/nested",
+      "component": "eval",
+      "implementation": "echo",
+      "workload": "rep/nested",
+      "mean_ns": 9.913789477061812,
+      "median_ns": 9.399954154131729,
+      "std_dev_ns": 1.439832512272302,
+      "throughput": {
+        "bytes": 67
+      }
+    },
+    {
+      "id": "eval/echo/rep/program",
+      "component": "eval",
+      "implementation": "echo",
+      "workload": "rep/program",
+      "mean_ns": 30.981459478563075,
+      "median_ns": 28.983771153458832,
+      "std_dev_ns": 4.484287799356002,
+      "throughput": {
+        "bytes": 1245
+      }
+    },
+    {
+      "id": "eval/echo/rep/quoting",
+      "component": "eval",
+      "implementation": "echo",
+      "workload": "rep/quoting",
+      "mean_ns": 8.500911003173961,
+      "median_ns": 8.34763510744183,
+      "std_dev_ns": 0.5097272886744403,
+      "throughput": {
+        "bytes": 54
+      }
+    },
+    {
+      "id": "eval/echo/rep/string",
+      "component": "eval",
+      "implementation": "echo",
+      "workload": "rep/string",
+      "mean_ns": 8.909846001365551,
+      "median_ns": 8.820454342214905,
+      "std_dev_ns": 0.3468561115121191,
+      "throughput": {
+        "bytes": 59
+      }
+    },
+    {
+      "id": "eval/echo/rep/symbol",
+      "component": "eval",
+      "implementation": "echo",
+      "workload": "rep/symbol",
+      "mean_ns": 9.479032804387652,
+      "median_ns": 8.884730184469944,
+      "std_dev_ns": 1.4606985352384014,
+      "throughput": {
+        "bytes": 15
+      }
+    },
+    {
+      "id": "eval/echo/repl-session",
+      "component": "eval",
+      "implementation": "echo",
+      "workload": "repl-session",
+      "mean_ns": 347.6008525757138,
+      "median_ns": 342.15386061134177,
+      "std_dev_ns": 19.14258118200324,
+      "throughput": {
+        "bytes": 1570
+      }
+    },
+    {
+      "id": "eval/std/eval/closures",
+      "component": "eval",
+      "implementation": "std",
+      "workload": "eval/closures",
+      "mean_ns": 19144.74098872269,
+      "median_ns": 17827.315051909143,
+      "std_dev_ns": 3105.3098862099296,
+      "throughput": null
+    },
+    {
+      "id": "eval/std/eval/fib",
+      "component": "eval",
+      "implementation": "std",
+      "workload": "eval/fib",
+      "mean_ns": 208462.36630671073,
+      "median_ns": 184229.8520282859,
+      "std_dev_ns": 43899.4570902114,
+      "throughput": null
+    },
+    {
+      "id": "eval/std/eval/sum-to",
+      "component": "eval",
+      "implementation": "std",
+      "workload": "eval/sum-to",
+      "mean_ns": 461945.4423737165,
+      "median_ns": 458026.2989361702,
+      "std_dev_ns": 21413.24147099825,
+      "throughput": null
+    },
+    {
+      "id": "eval/std/rep/atom",
+      "component": "eval",
+      "implementation": "std",
+      "workload": "rep/atom",
+      "mean_ns": 63.587218042138595,
+      "median_ns": 58.818404938906895,
+      "std_dev_ns": 9.07847127314644,
+      "throughput": {
+        "bytes": 2
+      }
+    },
+    {
+      "id": "eval/std/rep/collections",
+      "component": "eval",
+      "implementation": "std",
+      "workload": "rep/collections",
+      "mean_ns": 1594.6479099892883,
+      "median_ns": 1570.3077022258417,
+      "std_dev_ns": 155.99627946499567,
+      "throughput": {
+        "bytes": 58
+      }
+    },
+    {
+      "id": "eval/std/rep/list",
+      "component": "eval",
+      "implementation": "std",
+      "workload": "rep/list",
+      "mean_ns": 717.6101224358459,
+      "median_ns": 671.5318445702889,
+      "std_dev_ns": 126.41608932302132,
+      "throughput": {
+        "bytes": 24
+      }
+    },
+    {
+      "id": "eval/std/rep/nested",
+      "component": "eval",
+      "implementation": "std",
+      "workload": "rep/nested",
+      "mean_ns": 1144.24779493577,
+      "median_ns": 1078.736406794139,
+      "std_dev_ns": 144.40321651520807,
+      "throughput": {
+        "bytes": 67
+      }
+    },
+    {
+      "id": "eval/std/rep/program",
+      "component": "eval",
+      "implementation": "std",
+      "workload": "rep/program",
+      "mean_ns": 25004.5826993735,
+      "median_ns": 23035.414191147614,
+      "std_dev_ns": 5040.7567221199115,
+      "throughput": {
+        "bytes": 1245
+      }
+    },
+    {
+      "id": "eval/std/rep/quoting",
+      "component": "eval",
+      "implementation": "std",
+      "workload": "rep/quoting",
+      "mean_ns": 4624.923465448154,
+      "median_ns": 4411.259982259018,
+      "std_dev_ns": 545.5224004225582,
+      "throughput": {
+        "bytes": 54
+      }
+    },
+    {
+      "id": "eval/std/rep/string",
+      "component": "eval",
+      "implementation": "std",
+      "workload": "rep/string",
+      "mean_ns": 455.8673795091034,
+      "median_ns": 436.057082072665,
+      "std_dev_ns": 67.94334603489183,
+      "throughput": {
+        "bytes": 59
+      }
+    },
+    {
+      "id": "eval/std/rep/symbol",
+      "component": "eval",
+      "implementation": "std",
+      "workload": "rep/symbol",
+      "mean_ns": 138.82642769216966,
+      "median_ns": 125.5655108523028,
+      "std_dev_ns": 22.773889279269323,
+      "throughput": {
+        "bytes": 15
+      }
+    },
+    {
+      "id": "eval/std/repl-session",
+      "component": "eval",
+      "implementation": "std",
+      "workload": "repl-session",
+      "mean_ns": 47725.6199410295,
+      "median_ns": 44361.636072938694,
+      "std_dev_ns": 6972.689207240329,
+      "throughput": {
+        "bytes": 1570
+      }
+    },
+    {
+      "id": "printer/itoa/pr_str-raw/atom",
+      "component": "printer",
+      "implementation": "itoa",
+      "workload": "pr_str-raw/atom",
+      "mean_ns": 4.46348672346268,
+      "median_ns": 4.318595461871322,
+      "std_dev_ns": 0.3626687249039115,
+      "throughput": null
+    },
+    {
+      "id": "printer/itoa/pr_str-raw/collections",
+      "component": "printer",
+      "implementation": "itoa",
+      "workload": "pr_str-raw/collections",
+      "mean_ns": 113.90001817771044,
+      "median_ns": 110.80108219144282,
+      "std_dev_ns": 10.934748185428278,
+      "throughput": null
+    },
+    {
+      "id": "printer/itoa/pr_str-raw/list",
+      "component": "printer",
+      "implementation": "itoa",
+      "workload": "pr_str-raw/list",
+      "mean_ns": 60.642336193436016,
+      "median_ns": 60.00168077148921,
+      "std_dev_ns": 3.7576983298711664,
+      "throughput": null
+    },
+    {
+      "id": "printer/itoa/pr_str-raw/nested",
+      "component": "printer",
+      "implementation": "itoa",
+      "workload": "pr_str-raw/nested",
+      "mean_ns": 136.4042213130455,
+      "median_ns": 135.42458643091555,
+      "std_dev_ns": 5.345779987338151,
+      "throughput": null
+    },
+    {
+      "id": "printer/itoa/pr_str-raw/program",
+      "component": "printer",
+      "implementation": "itoa",
+      "workload": "pr_str-raw/program",
+      "mean_ns": 1383.852769638428,
+      "median_ns": 1354.7582196091753,
+      "std_dev_ns": 125.18836209132311,
+      "throughput": null
+    },
+    {
+      "id": "printer/itoa/pr_str-raw/quoting",
+      "component": "printer",
+      "implementation": "itoa",
+      "workload": "pr_str-raw/quoting",
+      "mean_ns": 129.9188686007207,
+      "median_ns": 126.34154568599104,
+      "std_dev_ns": 12.931006640960534,
+      "throughput": null
+    },
+    {
+      "id": "printer/itoa/pr_str-raw/string",
+      "component": "printer",
+      "implementation": "itoa",
+      "workload": "pr_str-raw/string",
+      "mean_ns": 3.507031682798616,
+      "median_ns": 3.358969050373866,
+      "std_dev_ns": 0.4229568447246333,
+      "throughput": null
+    },
+    {
+      "id": "printer/itoa/pr_str-raw/symbol",
+      "component": "printer",
+      "implementation": "itoa",
+      "workload": "pr_str-raw/symbol",
+      "mean_ns": 3.2533336412193097,
+      "median_ns": 3.1539951358776412,
+      "std_dev_ns": 0.2718760133415245,
+      "throughput": null
+    },
+    {
+      "id": "printer/itoa/pr_str-readably/atom",
+      "component": "printer",
+      "implementation": "itoa",
+      "workload": "pr_str-readably/atom",
+      "mean_ns": 4.606259337640089,
+      "median_ns": 4.47372504113865,
+      "std_dev_ns": 0.37509149640939654,
+      "throughput": null
+    },
+    {
+      "id": "printer/itoa/pr_str-readably/collections",
+      "component": "printer",
+      "implementation": "itoa",
+      "workload": "pr_str-readably/collections",
+      "mean_ns": 121.0199953652982,
+      "median_ns": 115.3897878838591,
+      "std_dev_ns": 12.31703525198559,
+      "throughput": null
+    },
+    {
+      "id": "printer/itoa/pr_str-readably/list",
+      "component": "printer",
+      "implementation": "itoa",
+      "workload": "pr_str-readably/list",
+      "mean_ns": 65.15848180607779,
+      "median_ns": 60.94112530264729,
+      "std_dev_ns": 9.080304536083826,
+      "throughput": null
+    },
+    {
+      "id": "printer/itoa/pr_str-readably/nested",
+      "component": "printer",
+      "implementation": "itoa",
+      "workload": "pr_str-readably/nested",
+      "mean_ns": 133.51737963440974,
+      "median_ns": 133.56941074063687,
+      "std_dev_ns": 4.757962686117391,
+      "throughput": null
+    },
+    {
+      "id": "printer/itoa/pr_str-readably/program",
+      "component": "printer",
+      "implementation": "itoa",
+      "workload": "pr_str-readably/program",
+      "mean_ns": 1405.2766237728802,
+      "median_ns": 1395.3585017382993,
+      "std_dev_ns": 58.768264828368274,
+      "throughput": null
+    },
+    {
+      "id": "printer/itoa/pr_str-readably/quoting",
+      "component": "printer",
+      "implementation": "itoa",
+      "workload": "pr_str-readably/quoting",
+      "mean_ns": 135.41147468193734,
+      "median_ns": 129.90952052089926,
+      "std_dev_ns": 13.877199600866271,
+      "throughput": null
+    },
+    {
+      "id": "printer/itoa/pr_str-readably/string",
+      "component": "printer",
+      "implementation": "itoa",
+      "workload": "pr_str-readably/string",
+      "mean_ns": 76.93471867107318,
+      "median_ns": 72.83735501247729,
+      "std_dev_ns": 9.99300495513628,
+      "throughput": null
+    },
+    {
+      "id": "printer/itoa/pr_str-readably/symbol",
+      "component": "printer",
+      "implementation": "itoa",
+      "workload": "pr_str-readably/symbol",
+      "mean_ns": 3.0645241831897927,
+      "median_ns": 2.941691164187475,
+      "std_dev_ns": 0.29699960977208983,
+      "throughput": null
+    },
+    {
+      "id": "printer/lexical/pr_str-raw/atom",
+      "component": "printer",
+      "implementation": "lexical",
+      "workload": "pr_str-raw/atom",
+      "mean_ns": 6.191934154003016,
+      "median_ns": 6.090420521550975,
+      "std_dev_ns": 0.32433434817152645,
+      "throughput": null
+    },
+    {
+      "id": "printer/lexical/pr_str-raw/collections",
+      "component": "printer",
+      "implementation": "lexical",
+      "workload": "pr_str-raw/collections",
+      "mean_ns": 118.96882555585012,
+      "median_ns": 112.99580483555032,
+      "std_dev_ns": 13.675828263857014,
+      "throughput": null
+    },
+    {
+      "id": "printer/lexical/pr_str-raw/list",
+      "component": "printer",
+      "implementation": "lexical",
+      "workload": "pr_str-raw/list",
+      "mean_ns": 69.59265769422322,
+      "median_ns": 65.12714881206051,
+      "std_dev_ns": 11.793615024572295,
+      "throughput": null
+    },
+    {
+      "id": "printer/lexical/pr_str-raw/nested",
+      "component": "printer",
+      "implementation": "lexical",
+      "workload": "pr_str-raw/nested",
+      "mean_ns": 114.490935554557,
+      "median_ns": 108.16770819709852,
+      "std_dev_ns": 13.596150593268224,
+      "throughput": null
+    },
+    {
+      "id": "printer/lexical/pr_str-raw/program",
+      "component": "printer",
+      "implementation": "lexical",
+      "workload": "pr_str-raw/program",
+      "mean_ns": 1271.0212811634026,
+      "median_ns": 1264.2943478199836,
+      "std_dev_ns": 42.87468135190101,
+      "throughput": null
+    },
+    {
+      "id": "printer/lexical/pr_str-raw/quoting",
+      "component": "printer",
+      "implementation": "lexical",
+      "workload": "pr_str-raw/quoting",
+      "mean_ns": 135.7914817013162,
+      "median_ns": 130.77373465042325,
+      "std_dev_ns": 12.975933628188155,
+      "throughput": null
+    },
+    {
+      "id": "printer/lexical/pr_str-raw/string",
+      "component": "printer",
+      "implementation": "lexical",
+      "workload": "pr_str-raw/string",
+      "mean_ns": 3.438416749197643,
+      "median_ns": 3.3600221249561013,
+      "std_dev_ns": 0.2890473998358299,
+      "throughput": null
+    },
+    {
+      "id": "printer/lexical/pr_str-raw/symbol",
+      "component": "printer",
+      "implementation": "lexical",
+      "workload": "pr_str-raw/symbol",
+      "mean_ns": 3.327460155345033,
+      "median_ns": 3.1809106815576653,
+      "std_dev_ns": 0.3647142531287057,
+      "throughput": null
+    },
+    {
+      "id": "printer/lexical/pr_str-readably/atom",
+      "component": "printer",
+      "implementation": "lexical",
+      "workload": "pr_str-readably/atom",
+      "mean_ns": 5.98987322892102,
+      "median_ns": 5.857166044992393,
+      "std_dev_ns": 0.4771791481768825,
+      "throughput": null
+    },
+    {
+      "id": "printer/lexical/pr_str-readably/collections",
+      "component": "printer",
+      "implementation": "lexical",
+      "workload": "pr_str-readably/collections",
+      "mean_ns": 116.94138845204716,
+      "median_ns": 112.1493655584966,
+      "std_dev_ns": 12.050255118067373,
+      "throughput": null
+    },
+    {
+      "id": "printer/lexical/pr_str-readably/list",
+      "component": "printer",
+      "implementation": "lexical",
+      "workload": "pr_str-readably/list",
+      "mean_ns": 69.436800217697,
+      "median_ns": 64.79925122042172,
+      "std_dev_ns": 13.2037816272631,
+      "throughput": null
+    },
+    {
+      "id": "printer/lexical/pr_str-readably/nested",
+      "component": "printer",
+      "implementation": "lexical",
+      "workload": "pr_str-readably/nested",
+      "mean_ns": 109.54877426976186,
+      "median_ns": 107.49634726593362,
+      "std_dev_ns": 7.073303718621179,
+      "throughput": null
+    },
+    {
+      "id": "printer/lexical/pr_str-readably/program",
+      "component": "printer",
+      "implementation": "lexical",
+      "workload": "pr_str-readably/program",
+      "mean_ns": 1320.4450955865896,
+      "median_ns": 1313.597201309945,
+      "std_dev_ns": 50.83914693803894,
+      "throughput": null
+    },
+    {
+      "id": "printer/lexical/pr_str-readably/quoting",
+      "component": "printer",
+      "implementation": "lexical",
+      "workload": "pr_str-readably/quoting",
+      "mean_ns": 130.85015112862615,
+      "median_ns": 131.12186274460583,
+      "std_dev_ns": 1.8559954237791416,
+      "throughput": null
+    },
+    {
+      "id": "printer/lexical/pr_str-readably/string",
+      "component": "printer",
+      "implementation": "lexical",
+      "workload": "pr_str-readably/string",
+      "mean_ns": 79.27888103303604,
+      "median_ns": 76.62784382284383,
+      "std_dev_ns": 9.749316135436244,
+      "throughput": null
+    },
+    {
+      "id": "printer/lexical/pr_str-readably/symbol",
+      "component": "printer",
+      "implementation": "lexical",
+      "workload": "pr_str-readably/symbol",
+      "mean_ns": 3.2364596905012117,
+      "median_ns": 3.159333337067788,
+      "std_dev_ns": 0.2377532100614748,
+      "throughput": null
+    },
+    {
+      "id": "printer/memchr/pr_str-raw/atom",
+      "component": "printer",
+      "implementation": "memchr",
+      "workload": "pr_str-raw/atom",
+      "mean_ns": 12.661699532720684,
+      "median_ns": 12.18857629832452,
+      "std_dev_ns": 1.5610076231591317,
+      "throughput": null
+    },
+    {
+      "id": "printer/memchr/pr_str-raw/collections",
+      "component": "printer",
+      "implementation": "memchr",
+      "workload": "pr_str-raw/collections",
+      "mean_ns": 151.7149833343854,
+      "median_ns": 150.16436839715973,
+      "std_dev_ns": 4.666443374607966,
+      "throughput": null
+    },
+    {
+      "id": "printer/memchr/pr_str-raw/list",
+      "component": "printer",
+      "implementation": "memchr",
+      "workload": "pr_str-raw/list",
+      "mean_ns": 146.32229814616232,
+      "median_ns": 138.58060414120868,
+      "std_dev_ns": 16.9068996819265,
+      "throughput": null
+    },
+    {
+      "id": "printer/memchr/pr_str-raw/nested",
+      "component": "printer",
+      "implementation": "memchr",
+      "workload": "pr_str-raw/nested",
+      "mean_ns": 128.33783785728073,
+      "median_ns": 126.6318066408239,
+      "std_dev_ns": 6.235314227136106,
+      "throughput": null
+    },
+    {
+      "id": "printer/memchr/pr_str-raw/program",
+      "component": "printer",
+      "implementation": "memchr",
+      "workload": "pr_str-raw/program",
+      "mean_ns": 2172.023324146037,
+      "median_ns": 2147.903712128581,
+      "std_dev_ns": 88.89030175674675,
+      "throughput": null
+    },
+    {
+      "id": "printer/memchr/pr_str-raw/quoting",
+      "component": "printer",
+      "implementation": "memchr",
+      "workload": "pr_str-raw/quoting",
+      "mean_ns": 182.32864504329933,
+      "median_ns": 175.74564255746077,
+      "std_dev_ns": 19.069485389489984,
+      "throughput": null
+    },
+    {
+      "id": "printer/memchr/pr_str-raw/string",
+      "component": "printer",
+      "implementation": "memchr",
+      "workload": "pr_str-raw/string",
+      "mean_ns": 3.813365992181061,
+      "median_ns": 3.595649444928957,
+      "std_dev_ns": 0.5183179147795604,
+      "throughput": null
+    },
+    {
+      "id": "printer/memchr/pr_str-raw/symbol",
+      "component": "printer",
+      "implementation": "memchr",
+      "workload": "pr_str-raw/symbol",
+      "mean_ns": 3.5008777251189427,
+      "median_ns": 3.48631057373611,
+      "std_dev_ns": 0.09196638086472238,
+      "throughput": null
+    },
+    {
+      "id": "printer/memchr/pr_str-readably/atom",
+      "component": "printer",
+      "implementation": "memchr",
+      "workload": "pr_str-readably/atom",
+      "mean_ns": 12.491031427322516,
+      "median_ns": 12.06158076715626,
+      "std_dev_ns": 1.3528645633484186,
+      "throughput": null
+    },
+    {
+      "id": "printer/memchr/pr_str-readably/collections",
+      "component": "printer",
+      "implementation": "memchr",
+      "workload": "pr_str-readably/collections",
+      "mean_ns": 159.53122305118347,
+      "median_ns": 152.30204356894873,
+      "std_dev_ns": 20.29442887165925,
+      "throughput": null
+    },
+    {
+      "id": "printer/memchr/pr_str-readably/list",
+      "component": "printer",
+      "implementation": "memchr",
+      "workload": "pr_str-readably/list",
+      "mean_ns": 140.37547326584453,
+      "median_ns": 138.38298289677894,
+      "std_dev_ns": 12.659263573566108,
+      "throughput": null
+    },
+    {
+      "id": "printer/memchr/pr_str-readably/nested",
+      "component": "printer",
+      "implementation": "memchr",
+      "workload": "pr_str-readably/nested",
+      "mean_ns": 127.10358790450285,
+      "median_ns": 124.46127027589526,
+      "std_dev_ns": 11.886076572637172,
+      "throughput": null
+    },
+    {
+      "id": "printer/memchr/pr_str-readably/program",
+      "component": "printer",
+      "implementation": "memchr",
+      "workload": "pr_str-readably/program",
+      "mean_ns": 2003.6480780022264,
+      "median_ns": 1959.9582255356968,
+      "std_dev_ns": 150.75860639545584,
+      "throughput": null
+    },
+    {
+      "id": "printer/memchr/pr_str-readably/quoting",
+      "component": "printer",
+      "implementation": "memchr",
+      "workload": "pr_str-readably/quoting",
+      "mean_ns": 180.7274233723352,
+      "median_ns": 176.2307785439616,
+      "std_dev_ns": 15.69174602153202,
+      "throughput": null
+    },
+    {
+      "id": "printer/memchr/pr_str-readably/string",
+      "component": "printer",
+      "implementation": "memchr",
+      "workload": "pr_str-readably/string",
+      "mean_ns": 40.42202946023578,
+      "median_ns": 39.50343251863764,
+      "std_dev_ns": 3.115878501560129,
+      "throughput": null
+    },
+    {
+      "id": "printer/memchr/pr_str-readably/symbol",
+      "component": "printer",
+      "implementation": "memchr",
+      "workload": "pr_str-readably/symbol",
+      "mean_ns": 3.272896633752546,
+      "median_ns": 3.188485443039487,
+      "std_dev_ns": 0.3114459537402454,
+      "throughput": null
+    },
+    {
+      "id": "printer/pretty/pr_str-raw/atom",
+      "component": "printer",
+      "implementation": "pretty",
+      "workload": "pr_str-raw/atom",
+      "mean_ns": 53.10684111915731,
+      "median_ns": 51.36426207164241,
+      "std_dev_ns": 6.055419662782888,
+      "throughput": null
+    },
+    {
+      "id": "printer/pretty/pr_str-raw/collections",
+      "component": "printer",
+      "implementation": "pretty",
+      "workload": "pr_str-raw/collections",
+      "mean_ns": 3080.3101453552795,
+      "median_ns": 2979.989095484412,
+      "std_dev_ns": 242.3216477155825,
+      "throughput": null
+    },
+    {
+      "id": "printer/pretty/pr_str-raw/list",
+      "component": "printer",
+      "implementation": "pretty",
+      "workload": "pr_str-raw/list",
+      "mean_ns": 1352.8373132169245,
+      "median_ns": 1331.2308179297186,
+      "std_dev_ns": 92.230341149637,
+      "throughput": null
+    },
+    {
+      "id": "printer/pretty/pr_str-raw/nested",
+      "component": "printer",
+      "implementation": "pretty",
+      "workload": "pr_str-raw/nested",
+      "mean_ns": 3404.0692797550714,
+      "median_ns": 3397.370715811966,
+      "std_dev_ns": 112.94861438827276,
+      "throughput": null
+    },
+    {
+      "id": "printer/pretty/pr_str-raw/program",
+      "component": "printer",
+      "implementation": "pretty",
+      "workload": "pr_str-raw/program",
+      "mean_ns": 44234.95859575575,
+      "median_ns": 43144.24463831867,
+      "std_dev_ns": 3765.826283654624,
+      "throughput": null
+    },
+    {
+      "id": "printer/pretty/pr_str-raw/quoting",
+      "component": "printer",
+      "implementation": "pretty",
+      "workload": "pr_str-raw/quoting",
+      "mean_ns": 3871.827276665874,
+      "median_ns": 3804.4647205684655,
+      "std_dev_ns": 260.7731027065947,
+      "throughput": null
+    },
+    {
+      "id": "printer/pretty/pr_str-raw/string",
+      "component": "printer",
+      "implementation": "pretty",
+      "workload": "pr_str-raw/string",
+      "mean_ns": 35.300854787290845,
+      "median_ns": 34.570356242663664,
+      "std_dev_ns": 3.0169696324273167,
+      "throughput": null
+    },
+    {
+      "id": "printer/pretty/pr_str-raw/symbol",
+      "component": "printer",
+      "implementation": "pretty",
+      "workload": "pr_str-raw/symbol",
+      "mean_ns": 35.168055848902256,
+      "median_ns": 33.766878904494234,
+      "std_dev_ns": 4.151263579155489,
+      "throughput": null
+    },
+    {
+      "id": "printer/pretty/pr_str-readably/atom",
+      "component": "printer",
+      "implementation": "pretty",
+      "workload": "pr_str-readably/atom",
+      "mean_ns": 54.92460075634881,
+      "median_ns": 51.51551329520035,
+      "std_dev_ns": 7.576856467774775,
+      "throughput": null
+    },
+    {
+      "id": "printer/pretty/pr_str-readably/collections",
+      "component": "printer",
+      "implementation": "pretty",
+      "workload": "pr_str-readably/collections",
+      "mean_ns": 3116.1813254786807,
+      "median_ns": 3000.972998260503,
+      "std_dev_ns": 317.59108085595204,
+      "throughput": null
+    },
+    {
+      "id": "printer/pretty/pr_str-readably/list",
+      "component": "printer",
+      "implementation": "pretty",
+      "workload": "pr_str-readably/list",
+      "mean_ns": 1368.883029281712,
+      "median_ns": 1314.216567926075,
+      "std_dev_ns": 136.04432537672966,
+      "throughput": null
+    },
+    {
+      "id": "printer/pretty/pr_str-readably/nested",
+      "component": "printer",
+      "implementation": "pretty",
+      "workload": "pr_str-readably/nested",
+      "mean_ns": 3565.963681057441,
+      "median_ns": 3426.525994537953,
+      "std_dev_ns": 359.5943257674236,
+      "throughput": null
+    },
+    {
+      "id": "printer/pretty/pr_str-readably/program",
+      "component": "printer",
+      "implementation": "pretty",
+      "workload": "pr_str-readably/program",
+      "mean_ns": 46527.5536850622,
+      "median_ns": 44183.41656272164,
+      "std_dev_ns": 6395.497093883429,
+      "throughput": null
+    },
+    {
+      "id": "printer/pretty/pr_str-readably/quoting",
+      "component": "printer",
+      "implementation": "pretty",
+      "workload": "pr_str-readably/quoting",
+      "mean_ns": 4068.623913913256,
+      "median_ns": 3881.28369744901,
+      "std_dev_ns": 420.0758976600945,
+      "throughput": null
+    },
+    {
+      "id": "printer/pretty/pr_str-readably/string",
+      "component": "printer",
+      "implementation": "pretty",
+      "workload": "pr_str-readably/string",
+      "mean_ns": 166.38228334219318,
+      "median_ns": 151.73449566061356,
+      "std_dev_ns": 31.21685849719736,
+      "throughput": null
+    },
+    {
+      "id": "printer/pretty/pr_str-readably/symbol",
+      "component": "printer",
+      "implementation": "pretty",
+      "workload": "pr_str-readably/symbol",
+      "mean_ns": 35.62241999858097,
+      "median_ns": 33.64775234551342,
+      "std_dev_ns": 5.124615786255855,
+      "throughput": null
+    },
+    {
+      "id": "printer/std/pr_str-raw/atom",
+      "component": "printer",
+      "implementation": "std",
+      "workload": "pr_str-raw/atom",
+      "mean_ns": 11.85786162333213,
+      "median_ns": 11.73922333556242,
+      "std_dev_ns": 0.7374164381049095,
+      "throughput": null
+    },
+    {
+      "id": "printer/std/pr_str-raw/collections",
+      "component": "printer",
+      "implementation": "std",
+      "workload": "pr_str-raw/collections",
+      "mean_ns": 165.38044370587903,
+      "median_ns": 152.80155788686375,
+      "std_dev_ns": 28.350648038376203,
+      "throughput": null
+    },
+    {
+      "id": "printer/std/pr_str-raw/list",
+      "component": "printer",
+      "implementation": "std",
+      "workload": "pr_str-raw/list",
+      "mean_ns": 146.9609612894952,
+      "median_ns": 139.00676166156552,
+      "std_dev_ns": 20.60269874783185,
+      "throughput": null
+    },
+    {
+      "id": "printer/std/pr_str-raw/nested",
+      "component": "printer",
+      "implementation": "std",
+      "workload": "pr_str-raw/nested",
+      "mean_ns": 132.35966889771194,
+      "median_ns": 131.5331285322852,
+      "std_dev_ns": 7.387154365867452,
+      "throughput": null
+    },
+    {
+      "id": "printer/std/pr_str-raw/program",
+      "component": "printer",
+      "implementation": "std",
+      "workload": "pr_str-raw/program",
+      "mean_ns": 1621.926202637822,
+      "median_ns": 1577.4633434363127,
+      "std_dev_ns": 135.47896824690898,
+      "throughput": null
+    },
+    {
+      "id": "printer/std/pr_str-raw/quoting",
+      "component": "printer",
+      "implementation": "std",
+      "workload": "pr_str-raw/quoting",
+      "mean_ns": 198.10195886379705,
+      "median_ns": 180.00300808422634,
+      "std_dev_ns": 36.538169942747416,
+      "throughput": null
+    },
+    {
+      "id": "printer/std/pr_str-raw/string",
+      "component": "printer",
+      "implementation": "std",
+      "workload": "pr_str-raw/string",
+      "mean_ns": 3.478684550765222,
+      "median_ns": 3.367185510953451,
+      "std_dev_ns": 0.3054137757952535,
+      "throughput": null
+    },
+    {
+      "id": "printer/std/pr_str-raw/symbol",
+      "component": "printer",
+      "implementation": "std",
+      "workload": "pr_str-raw/symbol",
+      "mean_ns": 3.223469129064824,
+      "median_ns": 3.1731616132677516,
+      "std_dev_ns": 0.1945425481756597,
+      "throughput": null
+    },
+    {
+      "id": "printer/std/pr_str-readably/atom",
+      "component": "printer",
+      "implementation": "std",
+      "workload": "pr_str-readably/atom",
+      "mean_ns": 11.959494664245783,
+      "median_ns": 11.9486958912073,
+      "std_dev_ns": 0.3676741642629056,
+      "throughput": null
+    },
+    {
+      "id": "printer/std/pr_str-readably/collections",
+      "component": "printer",
+      "implementation": "std",
+      "workload": "pr_str-readably/collections",
+      "mean_ns": 152.29105942764252,
+      "median_ns": 149.14831710158984,
+      "std_dev_ns": 12.5147919554465,
+      "throughput": null
+    },
+    {
+      "id": "printer/std/pr_str-readably/list",
+      "component": "printer",
+      "implementation": "std",
+      "workload": "pr_str-readably/list",
+      "mean_ns": 147.22131994350573,
+      "median_ns": 139.2828778299761,
+      "std_dev_ns": 24.550350144125183,
+      "throughput": null
+    },
+    {
+      "id": "printer/std/pr_str-readably/nested",
+      "component": "printer",
+      "implementation": "std",
+      "workload": "pr_str-readably/nested",
+      "mean_ns": 126.62088871769193,
+      "median_ns": 125.74655396199184,
+      "std_dev_ns": 5.251420574099616,
+      "throughput": null
+    },
+    {
+      "id": "printer/std/pr_str-readably/program",
+      "component": "printer",
+      "implementation": "std",
+      "workload": "pr_str-readably/program",
+      "mean_ns": 1656.469721218494,
+      "median_ns": 1624.1381085535663,
+      "std_dev_ns": 128.24560677670163,
+      "throughput": null
+    },
+    {
+      "id": "printer/std/pr_str-readably/quoting",
+      "component": "printer",
+      "implementation": "std",
+      "workload": "pr_str-readably/quoting",
+      "mean_ns": 180.50350134574052,
+      "median_ns": 175.73141863185907,
+      "std_dev_ns": 18.458526980661212,
+      "throughput": null
+    },
+    {
+      "id": "printer/std/pr_str-readably/string",
+      "component": "printer",
+      "implementation": "std",
+      "workload": "pr_str-readably/string",
+      "mean_ns": 75.63354096739906,
+      "median_ns": 72.94451431325987,
+      "std_dev_ns": 8.349589097546211,
+      "throughput": null
+    },
+    {
+      "id": "printer/std/pr_str-readably/symbol",
+      "component": "printer",
+      "implementation": "std",
+      "workload": "pr_str-readably/symbol",
+      "mean_ns": 3.071522498101939,
+      "median_ns": 2.909561040218184,
+      "std_dev_ns": 0.48057116133831695,
+      "throughput": null
+    },
+    {
+      "id": "printer/ufmt/pr_str-raw/atom",
+      "component": "printer",
+      "implementation": "ufmt",
+      "workload": "pr_str-raw/atom",
+      "mean_ns": 7.3827986948207105,
+      "median_ns": 7.302894208633905,
+      "std_dev_ns": 0.41594316037859647,
+      "throughput": null
+    },
+    {
+      "id": "printer/ufmt/pr_str-raw/collections",
+      "component": "printer",
+      "implementation": "ufmt",
+      "workload": "pr_str-raw/collections",
+      "mean_ns": 119.18050164388848,
+      "median_ns": 113.77951823197095,
+      "std_dev_ns": 11.990901127722656,
+      "throughput": null
+    },
+    {
+      "id": "printer/ufmt/pr_str-raw/list",
+      "component": "printer",
+      "implementation": "ufmt",
+      "workload": "pr_str-raw/list",
+      "mean_ns": 53.03270572763736,
+      "median_ns": 52.62988530897289,
+      "std_dev_ns": 1.637272923752143,
+      "throughput": null
+    },
+    {
+      "id": "printer/ufmt/pr_str-raw/nested",
+      "component": "printer",
+      "implementation": "ufmt",
+      "workload": "pr_str-raw/nested",
+      "mean_ns": 123.23345039220348,
+      "median_ns": 119.5102631352542,
+      "std_dev_ns": 10.067347129415134,
+      "throughput": null
+    },
+    {
+      "id": "printer/ufmt/pr_str-raw/program",
+      "component": "printer",
+      "implementation": "ufmt",
+      "workload": "pr_str-raw/program",
+      "mean_ns": 1946.1238425870424,
+      "median_ns": 1933.6700847665693,
+      "std_dev_ns": 82.20209513784529,
+      "throughput": null
+    },
+    {
+      "id": "printer/ufmt/pr_str-raw/quoting",
+      "component": "printer",
+      "implementation": "ufmt",
+      "workload": "pr_str-raw/quoting",
+      "mean_ns": 130.80936049640482,
+      "median_ns": 127.82845631577322,
+      "std_dev_ns": 9.267373709149156,
+      "throughput": null
+    },
+    {
+      "id": "printer/ufmt/pr_str-raw/string",
+      "component": "printer",
+      "implementation": "ufmt",
+      "workload": "pr_str-raw/string",
+      "mean_ns": 3.887735415816388,
+      "median_ns": 3.6157496687673967,
+      "std_dev_ns": 0.5245684093973733,
+      "throughput": null
+    },
+    {
+      "id": "printer/ufmt/pr_str-raw/symbol",
+      "component": "printer",
+      "implementation": "ufmt",
+      "workload": "pr_str-raw/symbol",
+      "mean_ns": 3.47488316238969,
+      "median_ns": 3.4316203941518615,
+      "std_dev_ns": 0.2999324719432838,
+      "throughput": null
+    },
+    {
+      "id": "printer/ufmt/pr_str-readably/atom",
+      "component": "printer",
+      "implementation": "ufmt",
+      "workload": "pr_str-readably/atom",
+      "mean_ns": 7.507664091100167,
+      "median_ns": 7.331636875575253,
+      "std_dev_ns": 0.5887003595179605,
+      "throughput": null
+    },
+    {
+      "id": "printer/ufmt/pr_str-readably/collections",
+      "component": "printer",
+      "implementation": "ufmt",
+      "workload": "pr_str-readably/collections",
+      "mean_ns": 115.86791723075464,
+      "median_ns": 110.0789814183402,
+      "std_dev_ns": 13.58446110088446,
+      "throughput": null
+    },
+    {
+      "id": "printer/ufmt/pr_str-readably/list",
+      "component": "printer",
+      "implementation": "ufmt",
+      "workload": "pr_str-readably/list",
+      "mean_ns": 56.002727033149185,
+      "median_ns": 52.422935212120464,
+      "std_dev_ns": 7.864392760893475,
+      "throughput": null
+    },
+    {
+      "id": "printer/ufmt/pr_str-readably/nested",
+      "component": "printer",
+      "implementation": "ufmt",
+      "workload": "pr_str-readably/nested",
+      "mean_ns": 120.28555567942088,
+      "median_ns": 118.36523892773891,
+      "std_dev_ns": 6.339929223543098,
+      "throughput": null
+    },
+    {
+      "id": "printer/ufmt/pr_str-readably/program",
+      "component": "printer",
+      "implementation": "ufmt",
+      "workload": "pr_str-readably/program",
+      "mean_ns": 2082.0849202499817,
+      "median_ns": 2068.9952102301427,
+      "std_dev_ns": 53.42619843254325,
+      "throughput": null
+    },
+    {
+      "id": "printer/ufmt/pr_str-readably/quoting",
+      "component": "printer",
+      "implementation": "ufmt",
+      "workload": "pr_str-readably/quoting",
+      "mean_ns": 133.8633338366737,
+      "median_ns": 130.4920176964123,
+      "std_dev_ns": 11.283660131791937,
+      "throughput": null
+    },
+    {
+      "id": "printer/ufmt/pr_str-readably/string",
+      "component": "printer",
+      "implementation": "ufmt",
+      "workload": "pr_str-readably/string",
+      "mean_ns": 77.35307704824028,
+      "median_ns": 75.84392323423086,
+      "std_dev_ns": 6.106041219932498,
+      "throughput": null
+    },
+    {
+      "id": "printer/ufmt/pr_str-readably/symbol",
+      "component": "printer",
+      "implementation": "ufmt",
+      "workload": "pr_str-readably/symbol",
+      "mean_ns": 3.5349724966310503,
+      "median_ns": 3.4475756423515973,
+      "std_dev_ns": 0.3468531012911344,
+      "throughput": null
+    },
+    {
+      "id": "reader/chumsky/read_str/atom",
+      "component": "reader",
+      "implementation": "chumsky",
+      "workload": "read_str/atom",
+      "mean_ns": 817.7208105875143,
+      "median_ns": 793.4605049422825,
+      "std_dev_ns": 63.6151516603233,
+      "throughput": {
+        "bytes": 2
+      }
+    },
+    {
+      "id": "reader/chumsky/read_str/collections",
+      "component": "reader",
+      "implementation": "chumsky",
+      "workload": "read_str/collections",
+      "mean_ns": 14279.747445600016,
+      "median_ns": 13497.91487750307,
+      "std_dev_ns": 1402.976658222113,
+      "throughput": {
+        "bytes": 58
+      }
+    },
+    {
+      "id": "reader/chumsky/read_str/list",
+      "component": "reader",
+      "implementation": "chumsky",
+      "workload": "read_str/list",
+      "mean_ns": 7540.900998750888,
+      "median_ns": 7454.63701242771,
+      "std_dev_ns": 505.4667725152749,
+      "throughput": {
+        "bytes": 24
+      }
+    },
+    {
+      "id": "reader/chumsky/read_str/nested",
+      "component": "reader",
+      "implementation": "chumsky",
+      "workload": "read_str/nested",
+      "mean_ns": 21061.560537788755,
+      "median_ns": 20611.96029281278,
+      "std_dev_ns": 1580.5439582003062,
+      "throughput": {
+        "bytes": 67
+      }
+    },
+    {
+      "id": "reader/chumsky/read_str/program",
+      "component": "reader",
+      "implementation": "chumsky",
+      "workload": "read_str/program",
+      "mean_ns": 255150.0948902274,
+      "median_ns": 253488.03937110188,
+      "std_dev_ns": 13066.618812881732,
+      "throughput": {
+        "bytes": 1245
+      }
+    },
+    {
+      "id": "reader/chumsky/read_str/quoting",
+      "component": "reader",
+      "implementation": "chumsky",
+      "workload": "read_str/quoting",
+      "mean_ns": 14235.680168350247,
+      "median_ns": 13641.315476190475,
+      "std_dev_ns": 1530.3723537527487,
+      "throughput": {
+        "bytes": 54
+      }
+    },
+    {
+      "id": "reader/chumsky/read_str/string",
+      "component": "reader",
+      "implementation": "chumsky",
+      "workload": "read_str/string",
+      "mean_ns": 1371.3301683682914,
+      "median_ns": 1307.7272576757075,
+      "std_dev_ns": 148.23794040548884,
+      "throughput": {
+        "bytes": 59
+      }
+    },
+    {
+      "id": "reader/chumsky/read_str/symbol",
+      "component": "reader",
+      "implementation": "chumsky",
+      "workload": "read_str/symbol",
+      "mean_ns": 1155.0686817909154,
+      "median_ns": 1107.142693997732,
+      "std_dev_ns": 110.65892794965664,
+      "throughput": {
+        "bytes": 15
+      }
+    },
+    {
+      "id": "reader/combine/read_str/atom",
+      "component": "reader",
+      "implementation": "combine",
+      "workload": "read_str/atom",
+      "mean_ns": 393.264558791104,
+      "median_ns": 390.3639391781937,
+      "std_dev_ns": 16.06810871867269,
+      "throughput": {
+        "bytes": 2
+      }
+    },
+    {
+      "id": "reader/combine/read_str/collections",
+      "component": "reader",
+      "implementation": "combine",
+      "workload": "read_str/collections",
+      "mean_ns": 8814.366255848347,
+      "median_ns": 8655.39790357551,
+      "std_dev_ns": 439.2203407779789,
+      "throughput": {
+        "bytes": 58
+      }
+    },
+    {
+      "id": "reader/combine/read_str/list",
+      "component": "reader",
+      "implementation": "combine",
+      "workload": "read_str/list",
+      "mean_ns": 4686.777587843326,
+      "median_ns": 4611.204795597485,
+      "std_dev_ns": 310.6810863971656,
+      "throughput": {
+        "bytes": 24
+      }
+    },
+    {
+      "id": "reader/combine/read_str/nested",
+      "component": "reader",
+      "implementation": "combine",
+      "workload": "read_str/nested",
+      "mean_ns": 12254.100966805468,
+      "median_ns": 12095.536521084336,
+      "std_dev_ns": 520.2658844921591,
+      "throughput": {
+        "bytes": 67
+      }
+    },
+    {
+      "id": "reader/combine/read_str/program",
+      "component": "reader",
+      "implementation": "combine",
+      "workload": "read_str/program",
+      "mean_ns": 139303.37692262314,
+      "median_ns": 139130.81071104045,
+      "std_dev_ns": 5542.515242121838,
+      "throughput": {
+        "bytes": 1245
+      }
+    },
+    {
+      "id": "reader/combine/read_str/quoting",
+      "component": "reader",
+      "implementation": "combine",
+      "workload": "read_str/quoting",
+      "mean_ns": 9121.456434596335,
+      "median_ns": 8964.705568535825,
+      "std_dev_ns": 427.34996919081914,
+      "throughput": {
+        "bytes": 54
+      }
+    },
+    {
+      "id": "reader/combine/read_str/string",
+      "component": "reader",
+      "implementation": "combine",
+      "workload": "read_str/string",
+      "mean_ns": 1977.7124190757877,
+      "median_ns": 1960.6576446692047,
+      "std_dev_ns": 89.86023817969543,
+      "throughput": {
+        "bytes": 59
+      }
+    },
+    {
+      "id": "reader/combine/read_str/symbol",
+      "component": "reader",
+      "implementation": "combine",
+      "workload": "read_str/symbol",
+      "mean_ns": 512.2787405644367,
+      "median_ns": 505.5951804694041,
+      "std_dev_ns": 26.482544756824876,
+      "throughput": {
+        "bytes": 15
+      }
+    },
+    {
+      "id": "reader/lalrpop/read_str/atom",
+      "component": "reader",
+      "implementation": "lalrpop",
+      "workload": "read_str/atom",
+      "mean_ns": 2414.816861463658,
+      "median_ns": 2288.0463577329992,
+      "std_dev_ns": 308.6700357887182,
+      "throughput": {
+        "bytes": 2
+      }
+    },
+    {
+      "id": "reader/lalrpop/read_str/collections",
+      "component": "reader",
+      "implementation": "lalrpop",
+      "workload": "read_str/collections",
+      "mean_ns": 16028.71423545764,
+      "median_ns": 15282.91481421804,
+      "std_dev_ns": 1994.8414676707469,
+      "throughput": {
+        "bytes": 58
+      }
+    },
+    {
+      "id": "reader/lalrpop/read_str/list",
+      "component": "reader",
+      "implementation": "lalrpop",
+      "workload": "read_str/list",
+      "mean_ns": 4851.902885131623,
+      "median_ns": 4841.613392386724,
+      "std_dev_ns": 214.10701776617148,
+      "throughput": {
+        "bytes": 24
+      }
+    },
+    {
+      "id": "reader/lalrpop/read_str/nested",
+      "component": "reader",
+      "implementation": "lalrpop",
+      "workload": "read_str/nested",
+      "mean_ns": 11564.464870209093,
+      "median_ns": 11160.99959893048,
+      "std_dev_ns": 1013.837209507826,
+      "throughput": {
+        "bytes": 67
+      }
+    },
+    {
+      "id": "reader/lalrpop/read_str/program",
+      "component": "reader",
+      "implementation": "lalrpop",
+      "workload": "read_str/program",
+      "mean_ns": 66461.48426483996,
+      "median_ns": 64823.824688416425,
+      "std_dev_ns": 5289.0732802331695,
+      "throughput": {
+        "bytes": 1245
+      }
+    },
+    {
+      "id": "reader/lalrpop/read_str/quoting",
+      "component": "reader",
+      "implementation": "lalrpop",
+      "workload": "read_str/quoting",
+      "mean_ns": 16223.027341905816,
+      "median_ns": 15475.537293956044,
+      "std_dev_ns": 2053.1759418446313,
+      "throughput": {
+        "bytes": 54
+      }
+    },
+    {
+      "id": "reader/lalrpop/read_str/string",
+      "component": "reader",
+      "implementation": "lalrpop",
+      "workload": "read_str/string",
+      "mean_ns": 5139.489855265367,
+      "median_ns": 4976.251414781297,
+      "std_dev_ns": 481.47371889458566,
+      "throughput": {
+        "bytes": 59
+      }
+    },
+    {
+      "id": "reader/lalrpop/read_str/symbol",
+      "component": "reader",
+      "implementation": "lalrpop",
+      "workload": "read_str/symbol",
+      "mean_ns": 2977.880823439966,
+      "median_ns": 2918.681712962963,
+      "std_dev_ns": 276.61127651272665,
+      "throughput": {
+        "bytes": 15
+      }
+    },
+    {
+      "id": "reader/logos/read_str/atom",
+      "component": "reader",
+      "implementation": "logos",
+      "workload": "read_str/atom",
+      "mean_ns": 23.66196431902388,
+      "median_ns": 22.89415301159304,
+      "std_dev_ns": 1.8204832818449672,
+      "throughput": {
+        "bytes": 2
+      }
+    },
+    {
+      "id": "reader/logos/read_str/collections",
+      "component": "reader",
+      "implementation": "logos",
+      "workload": "read_str/collections",
+      "mean_ns": 769.3798113568887,
+      "median_ns": 746.3652397454773,
+      "std_dev_ns": 54.30603002588775,
+      "throughput": {
+        "bytes": 58
+      }
+    },
+    {
+      "id": "reader/logos/read_str/list",
+      "component": "reader",
+      "implementation": "logos",
+      "workload": "read_str/list",
+      "mean_ns": 358.12979228277646,
+      "median_ns": 350.6179636570412,
+      "std_dev_ns": 17.09609370110207,
+      "throughput": {
+        "bytes": 24
+      }
+    },
+    {
+      "id": "reader/logos/read_str/nested",
+      "component": "reader",
+      "implementation": "logos",
+      "workload": "read_str/nested",
+      "mean_ns": 929.2336175342156,
+      "median_ns": 875.5314815793038,
+      "std_dev_ns": 111.33756135838016,
+      "throughput": {
+        "bytes": 67
+      }
+    },
+    {
+      "id": "reader/logos/read_str/program",
+      "component": "reader",
+      "implementation": "logos",
+      "workload": "read_str/program",
+      "mean_ns": 10573.655900159703,
+      "median_ns": 10504.788920454546,
+      "std_dev_ns": 845.8558495764967,
+      "throughput": {
+        "bytes": 1245
+      }
+    },
+    {
+      "id": "reader/logos/read_str/quoting",
+      "component": "reader",
+      "implementation": "logos",
+      "workload": "read_str/quoting",
+      "mean_ns": 864.7845255760673,
+      "median_ns": 833.186058684703,
+      "std_dev_ns": 95.92181282871702,
+      "throughput": {
+        "bytes": 54
+      }
+    },
+    {
+      "id": "reader/logos/read_str/string",
+      "component": "reader",
+      "implementation": "logos",
+      "workload": "read_str/string",
+      "mean_ns": 105.55366810988431,
+      "median_ns": 103.1133578184308,
+      "std_dev_ns": 9.602253366022028,
+      "throughput": {
+        "bytes": 59
+      }
+    },
+    {
+      "id": "reader/logos/read_str/symbol",
+      "component": "reader",
+      "implementation": "logos",
+      "workload": "read_str/symbol",
+      "mean_ns": 29.31912265918932,
+      "median_ns": 29.123152173054287,
+      "std_dev_ns": 1.419821642048812,
+      "throughput": {
+        "bytes": 15
+      }
+    },
+    {
+      "id": "reader/nom/read_str/atom",
+      "component": "reader",
+      "implementation": "nom",
+      "workload": "read_str/atom",
+      "mean_ns": 119.38003156944497,
+      "median_ns": 115.81858999355735,
+      "std_dev_ns": 8.407968391866001,
+      "throughput": {
+        "bytes": 2
+      }
+    },
+    {
+      "id": "reader/nom/read_str/collections",
+      "component": "reader",
+      "implementation": "nom",
+      "workload": "read_str/collections",
+      "mean_ns": 3178.8863620094153,
+      "median_ns": 3186.1283988382156,
+      "std_dev_ns": 32.798269200743086,
+      "throughput": {
+        "bytes": 58
+      }
+    },
+    {
+      "id": "reader/nom/read_str/list",
+      "component": "reader",
+      "implementation": "nom",
+      "workload": "read_str/list",
+      "mean_ns": 1619.3193515980506,
+      "median_ns": 1594.8746354770865,
+      "std_dev_ns": 64.77163965686843,
+      "throughput": {
+        "bytes": 24
+      }
+    },
+    {
+      "id": "reader/nom/read_str/nested",
+      "component": "reader",
+      "implementation": "nom",
+      "workload": "read_str/nested",
+      "mean_ns": 4903.210971509289,
+      "median_ns": 4789.32116873065,
+      "std_dev_ns": 352.4870618338807,
+      "throughput": {
+        "bytes": 67
+      }
+    },
+    {
+      "id": "reader/nom/read_str/program",
+      "component": "reader",
+      "implementation": "nom",
+      "workload": "read_str/program",
+      "mean_ns": 56981.77000068576,
+      "median_ns": 55248.61866830065,
+      "std_dev_ns": 4400.97828549229,
+      "throughput": {
+        "bytes": 1245
+      }
+    },
+    {
+      "id": "reader/nom/read_str/quoting",
+      "component": "reader",
+      "implementation": "nom",
+      "workload": "read_str/quoting",
+      "mean_ns": 3294.9654376165004,
+      "median_ns": 3219.895090551819,
+      "std_dev_ns": 177.25727430322047,
+      "throughput": {
+        "bytes": 54
+      }
+    },
+    {
+      "id": "reader/nom/read_str/string",
+      "component": "reader",
+      "implementation": "nom",
+      "workload": "read_str/string",
+      "mean_ns": 275.5985307480343,
+      "median_ns": 276.3232720749128,
+      "std_dev_ns": 2.3139669737294843,
+      "throughput": {
+        "bytes": 59
+      }
+    },
+    {
+      "id": "reader/nom/read_str/symbol",
+      "component": "reader",
+      "implementation": "nom",
+      "workload": "read_str/symbol",
+      "mean_ns": 175.36232586914355,
+      "median_ns": 171.18254356381777,
+      "std_dev_ns": 12.292645876022444,
+      "throughput": {
+        "bytes": 15
+      }
+    },
+    {
+      "id": "reader/peg/read_str/atom",
+      "component": "reader",
+      "implementation": "peg",
+      "workload": "read_str/atom",
+      "mean_ns": 33.72520929167649,
+      "median_ns": 33.13349172704383,
+      "std_dev_ns": 2.198382634999521,
+      "throughput": {
+        "bytes": 2
+      }
+    },
+    {
+      "id": "reader/peg/read_str/collections",
+      "component": "reader",
+      "implementation": "peg",
+      "workload": "read_str/collections",
+      "mean_ns": 1129.5855650876974,
+      "median_ns": 1120.5157323308893,
+      "std_dev_ns": 53.35654842119243,
+      "throughput": {
+        "bytes": 58
+      }
+    },
+    {
+      "id": "reader/peg/read_str/list",
+      "component": "reader",
+      "implementation": "peg",
+      "workload": "read_str/list",
+      "mean_ns": 533.2208328208568,
+      "median_ns": 513.1084371450638,
+      "std_dev_ns": 48.054043216320274,
+      "throughput": {
+        "bytes": 24
+      }
+    },
+    {
+      "id": "reader/peg/read_str/nested",
+      "component": "reader",
+      "implementation": "peg",
+      "workload": "read_str/nested",
+      "mean_ns": 1658.1586300616048,
+      "median_ns": 1626.2117921659942,
+      "std_dev_ns": 108.44380259949726,
+      "throughput": {
+        "bytes": 67
+      }
+    },
+    {
+      "id": "reader/peg/read_str/program",
+      "component": "reader",
+      "implementation": "peg",
+      "workload": "read_str/program",
+      "mean_ns": 22029.133345701914,
+      "median_ns": 21658.76053403756,
+      "std_dev_ns": 974.8979161914824,
+      "throughput": {
+        "bytes": 1245
+      }
+    },
+    {
+      "id": "reader/peg/read_str/quoting",
+      "component": "reader",
+      "implementation": "peg",
+      "workload": "read_str/quoting",
+      "mean_ns": 1233.0965909204422,
+      "median_ns": 1222.6026354360415,
+      "std_dev_ns": 47.581313593520086,
+      "throughput": {
+        "bytes": 54
+      }
+    },
+    {
+      "id": "reader/peg/read_str/string",
+      "component": "reader",
+      "implementation": "peg",
+      "workload": "read_str/string",
+      "mean_ns": 386.04808430456774,
+      "median_ns": 368.9316697080827,
+      "std_dev_ns": 45.50627042351581,
+      "throughput": {
+        "bytes": 59
+      }
+    },
+    {
+      "id": "reader/peg/read_str/symbol",
+      "component": "reader",
+      "implementation": "peg",
+      "workload": "read_str/symbol",
+      "mean_ns": 95.18690832566224,
+      "median_ns": 93.03251269257704,
+      "std_dev_ns": 7.489521288739654,
+      "throughput": {
+        "bytes": 15
+      }
+    },
+    {
+      "id": "reader/pest/read_str/atom",
+      "component": "reader",
+      "implementation": "pest",
+      "workload": "read_str/atom",
+      "mean_ns": 457.4905927544772,
+      "median_ns": 437.85320521905874,
+      "std_dev_ns": 55.67329218051721,
+      "throughput": {
+        "bytes": 2
+      }
+    },
+    {
+      "id": "reader/pest/read_str/collections",
+      "component": "reader",
+      "implementation": "pest",
+      "workload": "read_str/collections",
+      "mean_ns": 9047.03369618092,
+      "median_ns": 8844.454036587636,
+      "std_dev_ns": 547.346118988339,
+      "throughput": {
+        "bytes": 58
+      }
+    },
+    {
+      "id": "reader/pest/read_str/list",
+      "component": "reader",
+      "implementation": "pest",
+      "workload": "read_str/list",
+      "mean_ns": 4330.748259082043,
+      "median_ns": 4264.285919575448,
+      "std_dev_ns": 247.13990415128515,
+      "throughput": {
+        "bytes": 24
+      }
+    },
+    {
+      "id": "reader/pest/read_str/nested",
+      "component": "reader",
+      "implementation": "pest",
+      "workload": "read_str/nested",
+      "mean_ns": 14450.824333691222,
+      "median_ns": 14138.711750073164,
+      "std_dev_ns": 896.6274233915809,
+      "throughput": {
+        "bytes": 67
+      }
+    },
+    {
+      "id": "reader/pest/read_str/program",
+      "component": "reader",
+      "implementation": "pest",
+      "workload": "read_str/program",
+      "mean_ns": 176316.06724478633,
+      "median_ns": 172091.66078431375,
+      "std_dev_ns": 10725.845609342152,
+      "throughput": {
+        "bytes": 1245
+      }
+    },
+    {
+      "id": "reader/pest/read_str/quoting",
+      "component": "reader",
+      "implementation": "pest",
+      "workload": "read_str/quoting",
+      "mean_ns": 9836.880181686942,
+      "median_ns": 9488.202286176604,
+      "std_dev_ns": 890.4776238225666,
+      "throughput": {
+        "bytes": 54
+      }
+    },
+    {
+      "id": "reader/pest/read_str/string",
+      "component": "reader",
+      "implementation": "pest",
+      "workload": "read_str/string",
+      "mean_ns": 1374.5669333654491,
+      "median_ns": 1326.9096221387913,
+      "std_dev_ns": 133.0790181163833,
+      "throughput": {
+        "bytes": 59
+      }
+    },
+    {
+      "id": "reader/pest/read_str/symbol",
+      "component": "reader",
+      "implementation": "pest",
+      "workload": "read_str/symbol",
+      "mean_ns": 1207.916376137925,
+      "median_ns": 1173.8018141283442,
+      "std_dev_ns": 86.59904209873476,
+      "throughput": {
+        "bytes": 15
+      }
+    },
+    {
+      "id": "reader/regex/read_str/atom",
+      "component": "reader",
+      "implementation": "regex",
+      "workload": "read_str/atom",
+      "mean_ns": 271.426563176826,
+      "median_ns": 264.88410030783297,
+      "std_dev_ns": 21.210501933815216,
+      "throughput": {
+        "bytes": 2
+      }
+    },
+    {
+      "id": "reader/regex/read_str/collections",
+      "component": "reader",
+      "implementation": "regex",
+      "workload": "read_str/collections",
+      "mean_ns": 4364.082010213796,
+      "median_ns": 4248.3480860016425,
+      "std_dev_ns": 423.8914711491956,
+      "throughput": {
+        "bytes": 58
+      }
+    },
+    {
+      "id": "reader/regex/read_str/list",
+      "component": "reader",
+      "implementation": "regex",
+      "workload": "read_str/list",
+      "mean_ns": 2212.9532423235737,
+      "median_ns": 2147.140891256242,
+      "std_dev_ns": 245.18689399727936,
+      "throughput": {
+        "bytes": 24
+      }
+    },
+    {
+      "id": "reader/regex/read_str/nested",
+      "component": "reader",
+      "implementation": "regex",
+      "workload": "read_str/nested",
+      "mean_ns": 6221.388776777795,
+      "median_ns": 5947.401175333583,
+      "std_dev_ns": 850.813601364727,
+      "throughput": {
+        "bytes": 67
+      }
+    },
+    {
+      "id": "reader/regex/read_str/program",
+      "component": "reader",
+      "implementation": "regex",
+      "workload": "read_str/program",
+      "mean_ns": 73387.61510702172,
+      "median_ns": 72089.0318877551,
+      "std_dev_ns": 4559.568299021532,
+      "throughput": {
+        "bytes": 1245
+      }
+    },
+    {
+      "id": "reader/regex/read_str/quoting",
+      "component": "reader",
+      "implementation": "regex",
+      "workload": "read_str/quoting",
+      "mean_ns": 4858.355435002351,
+      "median_ns": 4696.9327070531435,
+      "std_dev_ns": 405.84307323119697,
+      "throughput": {
+        "bytes": 54
+      }
+    },
+    {
+      "id": "reader/regex/read_str/string",
+      "component": "reader",
+      "implementation": "regex",
+      "workload": "read_str/string",
+      "mean_ns": 1790.8046785301876,
+      "median_ns": 1680.035051345667,
+      "std_dev_ns": 264.5274834806269,
+      "throughput": {
+        "bytes": 59
+      }
+    },
+    {
+      "id": "reader/regex/read_str/symbol",
+      "component": "reader",
+      "implementation": "regex",
+      "workload": "read_str/symbol",
+      "mean_ns": 487.5472633927433,
+      "median_ns": 468.61147289464714,
+      "std_dev_ns": 51.81940357179701,
+      "throughput": {
+        "bytes": 15
+      }
+    },
+    {
+      "id": "reader/stacker/read_str/atom",
+      "component": "reader",
+      "implementation": "stacker",
+      "workload": "read_str/atom",
+      "mean_ns": 22.232441365581312,
+      "median_ns": 22.008766934343654,
+      "std_dev_ns": 1.0223688448447037,
+      "throughput": {
+        "bytes": 2
+      }
+    },
+    {
+      "id": "reader/stacker/read_str/collections",
+      "component": "reader",
+      "implementation": "stacker",
+      "workload": "read_str/collections",
+      "mean_ns": 922.577300154006,
+      "median_ns": 873.4848777267644,
+      "std_dev_ns": 111.53741429409762,
+      "throughput": {
+        "bytes": 58
+      }
+    },
+    {
+      "id": "reader/stacker/read_str/list",
+      "component": "reader",
+      "implementation": "stacker",
+      "workload": "read_str/list",
+      "mean_ns": 359.03779824346907,
+      "median_ns": 352.6165033482812,
+      "std_dev_ns": 22.492900187207784,
+      "throughput": {
+        "bytes": 24
+      }
+    },
+    {
+      "id": "reader/stacker/read_str/nested",
+      "component": "reader",
+      "implementation": "stacker",
+      "workload": "read_str/nested",
+      "mean_ns": 1050.8049097783444,
+      "median_ns": 1012.1642171328474,
+      "std_dev_ns": 92.31451324547436,
+      "throughput": {
+        "bytes": 67
+      }
+    },
+    {
+      "id": "reader/stacker/read_str/program",
+      "component": "reader",
+      "implementation": "stacker",
+      "workload": "read_str/program",
+      "mean_ns": 15041.67791281891,
+      "median_ns": 14669.697463672968,
+      "std_dev_ns": 1248.2896387514336,
+      "throughput": {
+        "bytes": 1245
+      }
+    },
+    {
+      "id": "reader/stacker/read_str/quoting",
+      "component": "reader",
+      "implementation": "stacker",
+      "workload": "read_str/quoting",
+      "mean_ns": 948.1232649099436,
+      "median_ns": 911.5010177045176,
+      "std_dev_ns": 87.3867729234404,
+      "throughput": {
+        "bytes": 54
+      }
+    },
+    {
+      "id": "reader/stacker/read_str/string",
+      "component": "reader",
+      "implementation": "stacker",
+      "workload": "read_str/string",
+      "mean_ns": 284.9906578132785,
+      "median_ns": 278.7971754636234,
+      "std_dev_ns": 17.483326677046904,
+      "throughput": {
+        "bytes": 59
+      }
+    },
+    {
+      "id": "reader/stacker/read_str/symbol",
+      "component": "reader",
+      "implementation": "stacker",
+      "workload": "read_str/symbol",
+      "mean_ns": 69.60620253586674,
+      "median_ns": 68.94615158185809,
+      "std_dev_ns": 2.4862805699724175,
+      "throughput": {
+        "bytes": 15
+      }
+    },
+    {
+      "id": "reader/std/read_str/atom",
+      "component": "reader",
+      "implementation": "std",
+      "workload": "read_str/atom",
+      "mean_ns": 21.55106504120683,
+      "median_ns": 20.66523407902177,
+      "std_dev_ns": 1.9607467646283003,
+      "throughput": {
+        "bytes": 2
+      }
+    },
+    {
+      "id": "reader/std/read_str/collections",
+      "component": "reader",
+      "implementation": "std",
+      "workload": "read_str/collections",
+      "mean_ns": 879.9026526637961,
+      "median_ns": 854.7208255538173,
+      "std_dev_ns": 59.32912102173514,
+      "throughput": {
+        "bytes": 58
+      }
+    },
+    {
+      "id": "reader/std/read_str/list",
+      "component": "reader",
+      "implementation": "std",
+      "workload": "read_str/list",
+      "mean_ns": 362.7728408828422,
+      "median_ns": 331.4033110584731,
+      "std_dev_ns": 73.85726834814633,
+      "throughput": {
+        "bytes": 24
+      }
+    },
+    {
+      "id": "reader/std/read_str/nested",
+      "component": "reader",
+      "implementation": "std",
+      "workload": "read_str/nested",
+      "mean_ns": 933.7996524977972,
+      "median_ns": 919.6551058072572,
+      "std_dev_ns": 73.29131798000579,
+      "throughput": {
+        "bytes": 67
+      }
+    },
+    {
+      "id": "reader/std/read_str/program",
+      "component": "reader",
+      "implementation": "std",
+      "workload": "read_str/program",
+      "mean_ns": 15159.554071134147,
+      "median_ns": 14244.985814570393,
+      "std_dev_ns": 1875.4969622378908,
+      "throughput": {
+        "bytes": 1245
+      }
+    },
+    {
+      "id": "reader/std/read_str/quoting",
+      "component": "reader",
+      "implementation": "std",
+      "workload": "read_str/quoting",
+      "mean_ns": 880.7762270140402,
+      "median_ns": 855.3488961354815,
+      "std_dev_ns": 54.38292890365514,
+      "throughput": {
+        "bytes": 54
+      }
+    },
+    {
+      "id": "reader/std/read_str/string",
+      "component": "reader",
+      "implementation": "std",
+      "workload": "read_str/string",
+      "mean_ns": 248.42672908799435,
+      "median_ns": 244.33209810361433,
+      "std_dev_ns": 9.982812325141794,
+      "throughput": {
+        "bytes": 59
+      }
+    },
+    {
+      "id": "reader/std/read_str/symbol",
+      "component": "reader",
+      "implementation": "std",
+      "workload": "read_str/symbol",
+      "mean_ns": 69.35487632091365,
+      "median_ns": 67.9367436173832,
+      "std_dev_ns": 4.043247175554655,
+      "throughput": {
+        "bytes": 15
+      }
+    },
+    {
+      "id": "reader/winnow/read_str/atom",
+      "component": "reader",
+      "implementation": "winnow",
+      "workload": "read_str/atom",
+      "mean_ns": 45.60791890089645,
+      "median_ns": 43.719799991942,
+      "std_dev_ns": 4.328826944274256,
+      "throughput": {
+        "bytes": 2
+      }
+    },
+    {
+      "id": "reader/winnow/read_str/collections",
+      "component": "reader",
+      "implementation": "winnow",
+      "workload": "read_str/collections",
+      "mean_ns": 1473.6631668674268,
+      "median_ns": 1418.5851649845451,
+      "std_dev_ns": 123.61885725474048,
+      "throughput": {
+        "bytes": 58
+      }
+    },
+    {
+      "id": "reader/winnow/read_str/list",
+      "component": "reader",
+      "implementation": "winnow",
+      "workload": "read_str/list",
+      "mean_ns": 571.2279956393802,
+      "median_ns": 565.2743068424489,
+      "std_dev_ns": 29.71356306272001,
+      "throughput": {
+        "bytes": 24
+      }
+    },
+    {
+      "id": "reader/winnow/read_str/nested",
+      "component": "reader",
+      "implementation": "winnow",
+      "workload": "read_str/nested",
+      "mean_ns": 2208.5029911942197,
+      "median_ns": 2215.641793901026,
+      "std_dev_ns": 41.47952621695372,
+      "throughput": {
+        "bytes": 67
+      }
+    },
+    {
+      "id": "reader/winnow/read_str/program",
+      "component": "reader",
+      "implementation": "winnow",
+      "workload": "read_str/program",
+      "mean_ns": 35545.68398585044,
+      "median_ns": 35113.09041035769,
+      "std_dev_ns": 1907.751857937721,
+      "throughput": {
+        "bytes": 1245
+      }
+    },
+    {
+      "id": "reader/winnow/read_str/quoting",
+      "component": "reader",
+      "implementation": "winnow",
+      "workload": "read_str/quoting",
+      "mean_ns": 1542.4600511802946,
+      "median_ns": 1488.6376853170837,
+      "std_dev_ns": 134.2122099379184,
+      "throughput": {
+        "bytes": 54
+      }
+    },
+    {
+      "id": "reader/winnow/read_str/string",
+      "component": "reader",
+      "implementation": "winnow",
+      "workload": "read_str/string",
+      "mean_ns": 135.30782013049156,
+      "median_ns": 131.683755787555,
+      "std_dev_ns": 10.882208188423306,
+      "throughput": {
+        "bytes": 59
+      }
+    },
+    {
+      "id": "reader/winnow/read_str/symbol",
+      "component": "reader",
+      "implementation": "winnow",
+      "workload": "read_str/symbol",
+      "mean_ns": 96.76948130380022,
+      "median_ns": 94.19091912567384,
+      "std_dev_ns": 7.778499389266155,
+      "throughput": {
+        "bytes": 15
+      }
+    }
+  ]
+}
