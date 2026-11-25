@@ -15,9 +15,10 @@ implementations and the published results.
 
 > **Status:** 12 readers, 6 printers, 13 environments, the `std` evaluator
 > and core namespace, and 4 line editors, each checked against the upstream
-> mal test suite. Every row except the line editors is benchmarked (`lexpr`
-> cannot read the corpus, and `rapidhash` is not yet in a recorded run), and
-> any combination of reader, printer, environment, evaluator and core rows
+> mal test suite. Every row is benchmarked except the line editors (not
+> timed) and `lexpr` (cannot read the corpus); `rapidhash` is benchmarked
+> but not yet in a recorded run. Any
+> combination of reader, printer, environment, evaluator and core rows
 > can be built and benchmarked as a stack. Where the traits forced crates
 > away from their idioms, and which
 > parts of them no row needed, is recorded in [Trait notes][trait-notes],

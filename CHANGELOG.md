@@ -48,10 +48,11 @@ All notable changes to this project are recorded here. The format follows
 - Documentation site scaffold: mdBook under `docs/` and oranda configuration.
 - CI: format, clippy, test, docs, `cargo deny`, and the oranda site build.
 - Benchmarking: `mal-bench` (fixed workloads and one generic Criterion
-  benchmark per component trait), a bench list in `crates/mal/benches/`
-  that takes one line per implementation, and `cargo xtask bench | report |
-  compare` to record runs as `runs/<id>/results.json` and generate
-  `docs/src/results.md` from the newest one. CI checks the page is current
+  benchmark per component trait), bench lists in `crates/mal/benches/`
+  that visit every row in `crates/mal/src/stack.rs`, and `cargo xtask bench
+  | report | compare` to record runs as `runs/<id>/results.json` and
+  generate `docs/src/results.md` from the newest component run and the
+  newest stack run. CI checks the page is current
   and runs the benchmarks once as a smoke test. First run recorded for the
   `echo` baseline.
 - `Component::title()` for headings; `mal` now also exposes its baselines

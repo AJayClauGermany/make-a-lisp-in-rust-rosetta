@@ -5,9 +5,10 @@ traits in `mal-traits` (or the shared value type in `mal-types`) forced a row
 away from that, the friction is recorded here, with the rows it affects, so
 the traits can be refined and the rows updated together afterwards.
 
-The traits themselves were changed in one place only while the first rows
-were written; everything else below is worked around in the rows and listed
-as a candidate refinement.
+The traits themselves were changed in one place while the first rows were
+written, and gained one addition (`Row`) when rows became combinable;
+everything else below is worked around in the rows and listed as a
+candidate refinement.
 
 A second batch of rows (readers `stacker`, `combine`, `lexpr`; printers
 `pretty`, `lexical`; environments `fnv`, `smallvec`, `lasso`, `slotmap`;
@@ -24,6 +25,7 @@ trait change. What they showed is under
 |--------|-----|
 | `run_repl` accepts `I: Interpreter + ?Sized` | The binary chooses its rows at run time and holds the interpreter as `Box<dyn Interpreter<Error = _>>`. Backwards compatible. |
 | New crate `mal-types` (not a trait change) | The traits are generic over `Value`, so rows only interoperate if they agree on one. `mal-types` is that agreement: an `Rc`-based `Value`, `MalError`, equality and function application. Dependency-free, like `mal-traits`. |
+| New trait `Row` (an addition; no existing trait changed) | Each row type carries its own `Implementation`, so generic code (stacks, benchmarks, consistency tests) can name the rows it was built from. To be part of a stack a row must also be `Default` (printers also `Clone`). See [Stacks](stacks.md). |
 | New `--read-print` mode (wiring, not a trait change) | `step1_read_print.mal` expects symbols to print back unevaluated, so reader and printer rows are checked against it without an evaluator. |
 
 ## Proposed refinements
@@ -46,7 +48,7 @@ Ordered roughly by how many rows they would simplify.
 | 12 | Require `Env: Default` (or add `fn new()`), since every caller needs a root environment. | the wiring, benchmarks |
 | 13 | A nesting limit readers (and printers) honour, reported as an error instead of a stack overflow. The stacker row shows that fixing the reader alone is not enough: printing or dropping the value it reads still recurses. | 6 of 12 readers, all printers, `Value`'s `Drop` |
 | 14 | Report the fraction of each step's cases a row passes next to the highest unbroken step, so a row that implements most of the grammar is not indistinguishable from one that implements none. | lexpr |
-| 15 | Drop trait surface no row uses: `Interpreter::host_language` (the wiring binds `*host-language*` itself), `Implementation::supports`, and `Env::contains` (only the shared checks call it); make `Reader::read_str` take `&self` unless a row needs state. | the traits |
+| 15 | Drop trait surface no row uses: `Interpreter::host_language` (the wiring binds `*host-language*` itself) and `Env::contains` (only the shared checks call it); make `Reader::read_str` take `&self` unless a row needs state. | the traits |
 
 ## Notes by component
 
@@ -314,7 +316,9 @@ suite rather than of the traits.
 
 38. Across every row and the wiring: `Interpreter::host_language` is never
     called (the wiring binds `*host-language*` directly);
-    `Implementation::supports` is never called; `Env::contains` is called
+    `Implementation::supports` was never called until stacks used it to
+    pick rows reaching a step (the sweep, `*` in a stack spec, and leaving
+    `lexpr` out of the reader benchmarks); `Env::contains` is called
     only by the shared checks; `CoreNamespace::symbols` is used only for the
     benchmark's throughput figure. Ten of twelve readers are unit structs
     and the other two (lalrpop's compiled parser, lexpr's options) only read
