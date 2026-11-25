@@ -13,16 +13,14 @@
 
 use criterion::{Criterion, criterion_group, criterion_main};
 use mal::baseline;
-use mal::interpreter::Mal;
 use mal::stack::{
-    self, EnvRow, PickEnv, PickPrinter, PickReader, PrinterRow, ReaderRow, StdEnv, StdPrinter,
-    StdReader,
+    self, CoreRow, EnvRow, EvalRow, PickCore, PickEnv, PickEval, PickPrinter, PickReader,
+    PrinterRow, ReaderRow, StdCoreRow, StdEnv, StdPrinter, StdReader,
 };
 use mal_bench::corpus::{self, Form};
 use mal_traits::{CoreNamespace, Interpreter, ReadOutcome, Reader, Step};
 use mal_types::Value;
 
-use core_std::StdCore;
 use eval_std::StdEvaluator;
 
 /// `forms` read with the `std` reader, for the components that take values.
@@ -37,11 +35,10 @@ fn parse(forms: &[Form]) -> Vec<(&'static str, Value)> {
 }
 
 /// The `std` evaluator and an environment of type `E` with the `std` core
-/// namespace installed: what the evaluator and environment rows run
-/// programs in.
+/// namespace installed: what the environment rows run programs in.
 fn setup<E: EnvRow>() -> (StdEvaluator<E>, E) {
     let env = E::default();
-    StdCore::<E, StdReader, StdPrinter>::new(StdPrinter).install(&env);
+    StdCoreRow::new::<E, StdReader, StdPrinter>(StdPrinter).install(&env);
     (StdEvaluator::new(), env)
 }
 
@@ -113,37 +110,72 @@ fn envs(c: &mut Criterion) {
     }
 }
 
+struct BenchEval<'a> {
+    c: &'a mut Criterion,
+    programs: &'a [(&'static str, Value)],
+}
+
+impl PickEval for BenchEval<'_> {
+    type Output = ();
+    fn eval<Ev: EvalRow>(self) {
+        // The programs on the `std` environment with the `std` core.
+        mal_bench::evaluator(
+            self.c,
+            Ev::IMPLEMENTATION,
+            || {
+                let env = StdEnv::default();
+                StdCoreRow::new::<StdEnv, StdReader, StdPrinter>(StdPrinter).install(&env);
+                (Ev::For::<StdEnv>::default(), env)
+            },
+            self.programs,
+        );
+        // The whole stack with this evaluator, read-eval-print, as the REPL
+        // runs it, with the corpus's free symbols bound so every form
+        // evaluates.
+        mal_bench::interpreter(self.c, Ev::IMPLEMENTATION, || {
+            let mut mal = stack::build::<StdReader, StdPrinter, StdEnv, Ev, StdCoreRow>(&[]);
+            for binding in corpus::BINDINGS {
+                if let Err(e) = mal.rep(binding) {
+                    panic!("corpus binding {binding} fails: {e}");
+                }
+            }
+            mal
+        });
+    }
+}
+
 fn evaluators(c: &mut Criterion) {
     mal_bench::interpreter(c, &baseline::ECHO, || baseline::EchoInterpreter);
     let programs = parse(corpus::PROGRAMS);
-    mal_bench::evaluator(c, &eval_std::IMPLEMENTATION, setup::<StdEnv>, &programs);
-    // The whole std stack, read-eval-print, as the REPL runs it, with the
-    // corpus's free symbols bound so every form evaluates.
-    mal_bench::interpreter(c, &eval_std::IMPLEMENTATION, || {
-        let mut mal = Mal::new(
-            StdReader,
-            StdPrinter,
-            StdEvaluator::new(),
-            StdEnv::new(),
-            &StdCore::<_, StdReader, _>::new(StdPrinter),
-            &[],
+    for imp in stack::EVALS {
+        stack::pick_eval(
+            imp.name,
+            BenchEval {
+                c,
+                programs: &programs,
+            },
         );
-        for binding in corpus::BINDINGS {
-            if let Err(e) = mal.rep(binding) {
-                panic!("corpus binding {binding} fails: {e}");
-            }
-        }
-        mal
-    });
+    }
+}
+
+struct BenchCore<'a>(&'a mut Criterion);
+
+impl PickCore for BenchCore<'_> {
+    type Output = ();
+    fn core<C: CoreRow>(self) {
+        mal_bench::core_namespace(
+            self.0,
+            C::IMPLEMENTATION,
+            || C::new::<StdEnv, StdReader, StdPrinter>(StdPrinter),
+            StdEnv::new,
+        );
+    }
 }
 
 fn cores(c: &mut Criterion) {
-    mal_bench::core_namespace(
-        c,
-        &core_std::IMPLEMENTATION,
-        || StdCore::<StdEnv, StdReader, StdPrinter>::new(StdPrinter),
-        StdEnv::new,
-    );
+    for imp in stack::CORES {
+        stack::pick_core(imp.name, BenchCore(c));
+    }
 }
 
 criterion_group!(benches, readers, printers, envs, evaluators, cores);

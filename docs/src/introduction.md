@@ -29,10 +29,12 @@ crate, built and measured identically, presented in a table.
 ## Status
 
 The comparison has 12 readers, 6 printers, 13 environments, the `std`
-evaluator and core namespace, and 4 line editors, and any combination of
-them can be built, checked and timed as a [stack](stacks.md). Each row's
-step is checked by `cargo test` against the mal test suite, and every row
-except the line editors is timed on the results page. The
+evaluator and core namespace, and 4 line editors. Any combination of
+reader, printer, environment, evaluator and core rows can be built,
+checked and timed as a [stack](stacks.md). Each row's step is checked by
+`cargo test` against the mal test suite, and every row is timed on the
+results page except the line editors (not timed), `lexpr` (cannot read the
+benchmark corpus) and `rapidhash` (not yet in a recorded run). The
 evaluator and core namespace have only their `std` rows so far; the
 [trait notes](trait-notes.md) explain what blocks the other candidates.
 
