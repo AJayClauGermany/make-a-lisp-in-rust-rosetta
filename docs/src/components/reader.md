@@ -55,6 +55,12 @@ refinements.
 | [pom] | PEG combinators | in source | library | | |
 | [grmtools] (`lrpar`) | LR(1), Yacc grammar | in grammar | build script | | |
 | [tree-sitter] | GLR, generated C parser | in source | build script | | |
+| [parol] | LL(k) / LALR(1) generator | in grammar | build script | | |
+| [lelwel] | resilient LL(1) generator (error recovery) | in grammar | build script | | |
+| [pomelo] | Lemon-style LALR | in grammar | proc macro | | |
+| [rowan] / [cstree] | lossless syntax tree, lowered to values | in source | library | | |
+| [lexical-parse-integer] / [atoi_simd] | integer parsing inside the `std` reader | in source | library | | |
+| [memchr] / [bstr] | SIMD scanning of strings and comments inside the `std` reader | in source | library | | |
 
 [nom]: https://github.com/rust-bakery/nom
 [winnow]: https://github.com/winnow-rs/winnow
@@ -70,3 +76,12 @@ refinements.
 [pom]: https://github.com/J-F-Liu/pom
 [grmtools]: https://github.com/softdevteam/grmtools
 [tree-sitter]: https://github.com/tree-sitter/tree-sitter
+[parol]: https://crates.io/crates/parol
+[lelwel]: https://crates.io/crates/lelwel
+[pomelo]: https://crates.io/crates/pomelo
+[rowan]: https://crates.io/crates/rowan
+[cstree]: https://crates.io/crates/cstree
+[lexical-parse-integer]: https://crates.io/crates/lexical-parse-integer
+[atoi_simd]: https://crates.io/crates/atoi_simd
+[memchr]: https://crates.io/crates/memchr
+[bstr]: https://crates.io/crates/bstr

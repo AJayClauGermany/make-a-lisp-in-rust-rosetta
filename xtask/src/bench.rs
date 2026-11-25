@@ -12,6 +12,7 @@ use crate::{Result, report, workspace_root};
 pub fn run(args: &[String]) -> Result<()> {
     let mut host_override = None;
     let mut report_after = true;
+    let mut stacks: Option<String> = None;
     let mut criterion_args = Vec::new();
     let mut iter = args.iter();
     while let Some(arg) = iter.next() {
@@ -20,6 +21,13 @@ pub fn run(args: &[String]) -> Result<()> {
                 host_override = Some(iter.next().ok_or("--host needs a value")?.clone());
             }
             "--no-report" => report_after = false,
+            "--stacks" => {
+                stacks = Some(
+                    iter.next()
+                        .ok_or("--stacks needs a spec, e.g. `sweep`")?
+                        .clone(),
+                );
+            }
             "--" => {
                 criterion_args.extend(iter.by_ref().cloned());
             }
@@ -36,20 +44,40 @@ pub fn run(args: &[String]) -> Result<()> {
         fs::remove_dir_all(&criterion_dir)?;
     }
 
-    let mut command = vec![
+    // `--stacks SPEC` benchmarks combinations of rows instead of the
+    // components; the spec is checked here so a typo fails before building.
+    let mut env = Vec::new();
+    let target = match &stacks {
+        None => vec!["--bench".to_owned(), "components".to_owned()],
+        Some(spec) => {
+            let set = mal::stack::StackSet::parse(spec)?.with_singles();
+            eprintln!("benchmarking {} stacks", set.stacks().len());
+            env.push(("MAL_STACKS".to_owned(), spec.clone()));
+            let mut target = vec!["--bench".to_owned(), "stacks".to_owned()];
+            if set.needs_matrix() {
+                target.extend(["--features".to_owned(), "matrix".to_owned()]);
+            }
+            target
+        }
+    };
+    let mut command: Vec<String> = env.iter().map(|(k, v)| format!("{k}={v:?}")).collect();
+    command.extend([
         "cargo".to_owned(),
         "bench".to_owned(),
         "--package".to_owned(),
         "mal".to_owned(),
-        "--bench".to_owned(),
-        "components".to_owned(),
-        "--".to_owned(),
-        "--noplot".to_owned(),
-    ];
+    ]);
+    command.extend(target);
+    command.extend(["--".to_owned(), "--noplot".to_owned()]);
     command.extend(criterion_args);
     eprintln!("$ {}", command.join(" "));
+    let cargo_at = command
+        .iter()
+        .position(|a| a == "cargo")
+        .expect("command runs cargo");
     let status = Command::new(&cargo)
-        .args(&command[1..])
+        .args(&command[cargo_at + 1..])
+        .envs(env)
         .current_dir(&root)
         .status()
         .map_err(|e| format!("running cargo bench: {e}"))?;

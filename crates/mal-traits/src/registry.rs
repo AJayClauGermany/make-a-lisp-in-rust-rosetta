@@ -35,6 +35,22 @@ pub struct Implementation {
     pub notes: &'static str,
 }
 
+/// A type that is one row of a comparison table.
+///
+/// Every component implementation exports an [`Implementation`] constant;
+/// implementing `Row` attaches that constant to the type itself, so code that
+/// is generic over a component (a benchmark, a stack of rows wired into an
+/// interpreter, a consistency check) can name the rows it was instantiated
+/// with without being told separately. That is what lets any combination of
+/// rows be assembled, measured and labelled from the types alone.
+///
+/// Generic rows implement it for every instantiation, e.g.
+/// `impl<V> Row for StdEnv<V>`.
+pub trait Row {
+    /// This row's table entry.
+    const IMPLEMENTATION: &'static Implementation;
+}
+
 impl Implementation {
     /// Whether this implementation reaches at least `step`.
     pub fn supports(&self, step: Step) -> bool {

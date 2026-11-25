@@ -3,8 +3,8 @@
 //!
 //! * `bench`: run the Criterion benchmarks, store the results as one run
 //!   under `runs/`, and regenerate the results page.
-//! * `report`: regenerate `docs/src/results.md` from the newest run (or
-//!   check that it is current, for CI).
+//! * `report`: regenerate `docs/src/results.md` from the newest component
+//!   run and the newest stack run (or check that it is current, for CI).
 //! * `compare`: print two recorded runs side by side.
 //!
 //! The binary and library crates of the comparison are kept dependency-free;
@@ -14,6 +14,7 @@ mod bench;
 mod chart;
 mod report;
 mod run;
+mod stacks;
 
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
@@ -27,11 +28,15 @@ const USAGE: &str = "\
 Usage: cargo xtask <COMMAND>
 
 Commands:
-  bench [--host NAME] [--no-report] [-- <criterion args>]
+  bench [--host NAME] [--no-report] [--stacks SPEC] [-- <criterion args>]
           Run `cargo bench -p mal`, record the results under runs/<id>/,
-          and regenerate docs/src/results.md
+          and regenerate docs/src/results.md. With --stacks, benchmark whole
+          interpreters built from combinations of rows instead of the
+          components: SPEC is `sweep` (each row swapped into std alone),
+          `all`, or e.g. 'reader=nom,winnow env=*' (see docs/src/stacks.md)
   report [--check]
-          Regenerate docs/src/results.md from the newest run under runs/.
+          Regenerate docs/src/results.md from the newest component run and
+          the newest stack run under runs/.
           With --check, exit 1 instead if the page would change
   compare <RUN> <RUN>
           Print the benchmarks two runs have in common, with the change

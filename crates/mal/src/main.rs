@@ -1,9 +1,11 @@
 //! The `mal` binary: a stepA Make-a-Lisp interpreter assembled from the
 //! comparison rows, plus a listing of everything available for comparison.
 //!
-//! By default every component is its `std` baseline row. One row at a time
-//! can be swapped in with `--<component> <name>` (see `mal --list`), which
-//! is how the conformance tests run the mal test suite against each row.
+//! By default every component is its `std` baseline row. Rows are swapped in
+//! with `--<component> <name>` (see `mal --list`), which is how the
+//! conformance tests run the mal test suite against each row. A default
+//! build compiles the stacks with one non-`std` row; with the `matrix`
+//! feature any combination can be selected (see `mal::stack`).
 //!
 //! Argument parsing is done by hand so that it adds nothing to the size and
 //! build-time columns of the comparison tables. The binary links every row
@@ -26,7 +28,9 @@ Usage: mal [ROWS] [FILE [ARGS...]]
 
 With no FILE, start the REPL. With FILE, run it with ARGS as *ARGV* and exit.
 
-Rows (default std; at most one of reader/printer/env/eval/core may differ):
+Rows (default std). A default build runs at most one non-std row among
+reader/printer/env/eval/core; a build with `--features matrix` runs any
+combination:
       --reader NAME       --printer NAME      --env NAME
       --eval NAME         --core NAME         --line-editor NAME
       --read-print        step1 mode: read and print without evaluating

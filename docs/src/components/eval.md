@@ -35,9 +35,17 @@ can build any representation; see
 | std   | `Arc<Value>` enum | atomic reference counting | | |
 | [bumpalo] | arena references | bump allocation per REPL line | | |
 | [gc] | `Gc<Value>` | tracing mark-and-sweep | | |
-| [rust-gc] alternatives, e.g. [shredder] | `Gc<Value>` | concurrent tracing | | |
+| [rust-gc] alternatives, e.g. [shredder] (last release 2021) | `Gc<Value>` | concurrent tracing | | |
+| [jrsonnet-gcmodule] | `Cc<Value>` | reference counting plus cycle collection | | |
+| [boa_gc] | `Gc<Value>` | tracing (the Boa JS engine's collector) | | |
+| [gc-arena] | `Gc<'gc, Value>` | incremental tracing with branded lifetimes | | |
+| [thin-vec] | `Rc<ThinVec<Value>>` lists | reference counting, one less indirection | | |
 
 [bumpalo]: https://github.com/fitzgen/bumpalo
 [gc]: https://github.com/Manishearth/rust-gc
 [rust-gc]: https://github.com/Manishearth/rust-gc
 [shredder]: https://github.com/Others/shredder
+[jrsonnet-gcmodule]: https://crates.io/crates/jrsonnet-gcmodule
+[boa_gc]: https://crates.io/crates/boa_gc
+[gc-arena]: https://crates.io/crates/gc-arena
+[thin-vec]: https://crates.io/crates/thin-vec

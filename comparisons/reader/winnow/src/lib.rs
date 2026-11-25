@@ -38,6 +38,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "winnow combinator fns, dispatch! on the first char, cut_err + ContextError labels",
 };
 
+impl mal_traits::Row for WinnowReader {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// Reads mal source with winnow parser combinators.
 #[derive(Debug, Default, Clone, Copy)]
 pub struct WinnowReader;

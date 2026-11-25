@@ -7,6 +7,18 @@ All notable changes to this project are recorded here. The format follows
 
 ### Added
 
+- Stacks: any combination of reader, printer, env, eval and core rows as
+  one monomorphised interpreter. `mal_traits::Row` attaches each row's
+  `Implementation` to its type; `crates/mal/src/stack.rs` is now the single
+  list of rows (registry, `mal` flags and component benchmarks all derive
+  from it); the `matrix` feature compiles every combination; a `stacks`
+  bench target and `cargo xtask bench --stacks SPEC` time whole stacks; the
+  results page reports each combination's interaction (measured over the
+  product of its single-row ratios); `tests/stacks.rs` checks every stack
+  prints what `std` prints; `MAL_CONFORMANCE_STACKS` runs the mal suite on
+  stacks. See `docs/src/stacks.md`, which also lists cross-component
+  candidate crates.
+- Environment row `rapidhash`.
 - Comparison rows, each verified against the mal test suite and
   benchmarked: readers (std, nom, winnow, chumsky, pest, peg, lalrpop,
   logos, regex), printers (std, itoa, memchr, ufmt), environments (std,
@@ -36,10 +48,11 @@ All notable changes to this project are recorded here. The format follows
 - Documentation site scaffold: mdBook under `docs/` and oranda configuration.
 - CI: format, clippy, test, docs, `cargo deny`, and the oranda site build.
 - Benchmarking: `mal-bench` (fixed workloads and one generic Criterion
-  benchmark per component trait), a bench list in `crates/mal/benches/`
-  that takes one line per implementation, and `cargo xtask bench | report |
-  compare` to record runs as `runs/<id>/results.json` and generate
-  `docs/src/results.md` from the newest one. CI checks the page is current
+  benchmark per component trait), bench lists in `crates/mal/benches/`
+  that visit every row in `crates/mal/src/stack.rs`, and `cargo xtask bench
+  | report | compare` to record runs as `runs/<id>/results.json` and
+  generate `docs/src/results.md` from the newest component run and the
+  newest stack run. CI checks the page is current
   and runs the benchmarks once as a smoke test. First run recorded for the
   `echo` baseline.
 - `Component::title()` for headings; `mal` now also exposes its baselines

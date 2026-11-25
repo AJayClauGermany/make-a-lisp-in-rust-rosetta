@@ -28,6 +28,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "the guide's single tokenizer regex, then recursive descent over the token list",
 };
 
+impl mal_traits::Row for RegexReader {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// The tokenizer from the mal guide. Group 1 is the token; the leading
 /// `[\s,]*` swallows trivia.
 static TOKEN: LazyLock<Regex> = LazyLock::new(|| {

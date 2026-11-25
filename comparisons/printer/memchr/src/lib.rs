@@ -25,6 +25,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "std printer; readable strings escaped by copying runs between memchr3 hits",
 };
 
+impl mal_traits::Row for MemchrPrinter {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// Prints values; see the crate documentation for what differs from `std`.
 #[derive(Debug, Default, Clone)]
 pub struct MemchrPrinter;

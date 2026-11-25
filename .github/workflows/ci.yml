@@ -36,6 +36,8 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
       - run: cargo test --workspace
+      # Every combination of rows must print what the std stack prints.
+      - run: cargo test -p mal --features matrix --test stacks
 
   msrv:
     name: MSRV

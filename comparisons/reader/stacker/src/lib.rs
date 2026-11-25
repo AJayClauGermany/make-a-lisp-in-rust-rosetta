@@ -28,6 +28,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "std recursive descent with stacker::maybe_grow per form: deep nesting cannot overflow",
 };
 
+impl mal_traits::Row for StackerReader {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// Reads mal source by recursive descent on a growable stack.
 #[derive(Debug, Default, Clone, Copy)]
 pub struct StackerReader;

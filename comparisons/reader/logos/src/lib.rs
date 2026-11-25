@@ -26,6 +26,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "#[derive(Logos)] token enum with literal callbacks; hand-written recursive descent over the lexer",
 };
 
+impl mal_traits::Row for LogosReader {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// Reads mal source with a logos-generated lexer.
 #[derive(Debug, Default, Clone, Copy)]
 pub struct LogosReader;

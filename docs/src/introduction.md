@@ -24,15 +24,17 @@ crate, built and measured identically, presented in a table.
   crate's idioms, and the refinements proposed.
 - **Components**: one page per component with the candidate crates, the
   qualitative comparison table and notes on what the job demands.
-- **Results**: the measured tables from the most recent run.
+- **Results**: the measured tables from the most recent runs.
 
 ## Status
 
-The first comparison rows are in place: 9 readers, 4 printers, 8
-environments, the `std` evaluator and core namespace, and 3 line editors.
-Every new row reaches `stepA_mal` of the mal test suite (checked by `cargo
-test`), and every row except the line editors is timed on the results
-page. The
+The comparison has 12 readers, 6 printers, 13 environments, the `std`
+evaluator and core namespace, and 4 line editors. Any combination of
+reader, printer, environment, evaluator and core rows can be built,
+checked and timed as a [stack](stacks.md). Each row's step is checked by
+`cargo test` against the mal test suite, and every row is timed on the
+results page except the line editors (not timed), `lexpr` (cannot read the
+benchmark corpus) and `rapidhash` (not yet in a recorded run). The
 evaluator and core namespace have only their `std` rows so far; the
 [trait notes](trait-notes.md) explain what blocks the other candidates.
 

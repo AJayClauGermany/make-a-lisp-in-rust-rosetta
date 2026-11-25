@@ -31,8 +31,16 @@ See [Trait notes](../trait-notes.md#core-namespace).
 | [num-bigint] / [num-rational] | arbitrary precision and rational arithmetic | | |
 | [rug] | GMP-backed numbers | | |
 | [unicode-segmentation] | grapheme-aware string functions | | |
+| [dashu-int] / [malachite] | pure-Rust big integers (malachite is LGPL) | | |
+| [bnum] | fixed-width `i256`, no heap | | |
+| [jiff] / [quanta] | `time-ms` from a calendar library / a TSC clock | | |
 
 [num-bigint]: https://github.com/rust-num/num-bigint
 [num-rational]: https://github.com/rust-num/num-rational
 [rug]: https://gitlab.com/tspiteri/rug
 [unicode-segmentation]: https://github.com/unicode-rs/unicode-segmentation
+[dashu-int]: https://crates.io/crates/dashu-int
+[malachite]: https://crates.io/crates/malachite
+[bnum]: https://crates.io/crates/bnum
+[jiff]: https://crates.io/crates/jiff
+[quanta]: https://crates.io/crates/quanta

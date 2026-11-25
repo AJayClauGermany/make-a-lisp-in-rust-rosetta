@@ -30,6 +30,11 @@ it as a constructor argument (unbounded for the REPL and the tests, since
 the mal suite expects one line per value), which turned out to need no trait
 change.
 
+Further candidates: [numtoa] (a third integer formatter), [aho-corasick]
+(one pass for `"`, `\` and newline, against `memchr3`), [writeable]
+(exact length hints, to pre-size the output) and [elegance] (an
+Oppen-style pretty printer, against `pretty`).
+
 Not yet rows: [ryu] has nothing to format because the shared value type
 has no floats, and [compact_str] / [smol_str] cannot be the output buffer
 while `Printer::pr_str_into` appends to a `String`; see
@@ -43,3 +48,7 @@ while `Printer::pr_str_into` appends to a `String`; see
 [lexical]: https://github.com/Alexhuszagh/rust-lexical
 [compact_str]: https://github.com/ParkMyCar/compact_str
 [smol_str]: https://github.com/rust-analyzer/smol_str
+[numtoa]: https://crates.io/crates/numtoa
+[aho-corasick]: https://crates.io/crates/aho-corasick
+[writeable]: https://crates.io/crates/writeable
+[elegance]: https://crates.io/crates/elegance

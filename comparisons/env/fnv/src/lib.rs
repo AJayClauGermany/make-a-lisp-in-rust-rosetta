@@ -26,6 +26,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "std HashMap with the byte-at-a-time FNV-1a hasher per scope",
 };
 
+impl<V> mal_traits::Row for FnvEnv<V> {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// A shared handle to one scope of bindings.
 pub struct FnvEnv<V>(Rc<Scope<V>>);
 

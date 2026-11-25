@@ -39,6 +39,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "all scopes in one SlotMap arena, handles are keys; Clone handles force hand-written refcounts",
 };
 
+impl<V> mal_traits::Row for SlotMapEnv<V> {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 type Arena<V> = Rc<RefCell<SlotMap<DefaultKey, Scope<V>>>>;
 
 /// A handle to one scope in a shared arena.

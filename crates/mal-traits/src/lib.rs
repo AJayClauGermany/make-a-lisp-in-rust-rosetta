@@ -16,7 +16,8 @@
 //!   [`Evaluator`], [`CoreNamespace`], [`LineEditor`] and [`Interpreter`];
 //! * [`Implementation`] metadata so a binary or a report generator can list
 //!   what has been implemented, with which crates, and how far up the step
-//!   ladder it gets;
+//!   ladder it gets, and the [`Row`] trait that attaches it to the
+//!   implementing type so generic code can label any combination of rows;
 //! * [`run_repl`], the one piece of shared behaviour: the read-eval-print
 //!   loop driver, generic over a line editor and an interpreter.
 //!
@@ -41,5 +42,5 @@ pub use env::Env;
 pub use eval::Evaluator;
 pub use printer::Printer;
 pub use reader::{ReadOutcome, Reader};
-pub use registry::{CrateRef, Implementation};
+pub use registry::{CrateRef, Implementation, Row};
 pub use repl::{Interpreter, LineEditor, ReplOutcome, run_repl};

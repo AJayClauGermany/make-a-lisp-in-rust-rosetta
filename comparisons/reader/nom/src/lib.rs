@@ -38,6 +38,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "nom 8 combinator fns with cut after openers; custom ParseError for EOF messages",
 };
 
+impl mal_traits::Row for NomReader {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// Reads mal source with nom parser combinators.
 #[derive(Debug, Default, Clone, Copy)]
 pub struct NomReader;

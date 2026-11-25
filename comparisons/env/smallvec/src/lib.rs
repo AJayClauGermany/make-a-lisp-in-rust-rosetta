@@ -31,6 +31,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "linear scan over up to 8 inline (symbol, value) pairs per scope, no hashing",
 };
 
+impl<V> mal_traits::Row for SmallVecEnv<V> {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// Bindings stored inline before a scope spills to the heap.
 const INLINE: usize = 8;
 

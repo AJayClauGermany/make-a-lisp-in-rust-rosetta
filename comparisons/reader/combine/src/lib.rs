@@ -40,6 +40,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "LL(1) combinators generic over the stream; commit-on-consume replaces cut; easy errors made owned",
 };
 
+impl mal_traits::Row for CombineReader {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// Reads mal source with combine parser combinators.
 #[derive(Debug, Default, Clone, Copy)]
 pub struct CombineReader;

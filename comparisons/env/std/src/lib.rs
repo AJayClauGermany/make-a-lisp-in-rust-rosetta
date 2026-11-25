@@ -20,6 +20,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "HashMap<String, V> (SipHash) per scope, Rc<RefCell<_>> handles, outer-scope chain",
 };
 
+impl<V> mal_traits::Row for StdEnv<V> {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// A shared handle to one scope of bindings.
 pub struct StdEnv<V>(Rc<Scope<V>>);
 

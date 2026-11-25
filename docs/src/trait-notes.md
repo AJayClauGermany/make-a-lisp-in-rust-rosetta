@@ -5,9 +5,10 @@ traits in `mal-traits` (or the shared value type in `mal-types`) forced a row
 away from that, the friction is recorded here, with the rows it affects, so
 the traits can be refined and the rows updated together afterwards.
 
-The traits themselves were changed in one place only while the first rows
-were written; everything else below is worked around in the rows and listed
-as a candidate refinement.
+The traits themselves were changed in one place while the first rows were
+written, and gained one addition (`Row`) when rows became combinable;
+everything else below is worked around in the rows and listed as a
+candidate refinement.
 
 A second batch of rows (readers `stacker`, `combine`, `lexpr`; printers
 `pretty`, `lexical`; environments `fnv`, `smallvec`, `lasso`, `slotmap`;
@@ -24,6 +25,7 @@ trait change. What they showed is under
 |--------|-----|
 | `run_repl` accepts `I: Interpreter + ?Sized` | The binary chooses its rows at run time and holds the interpreter as `Box<dyn Interpreter<Error = _>>`. Backwards compatible. |
 | New crate `mal-types` (not a trait change) | The traits are generic over `Value`, so rows only interoperate if they agree on one. `mal-types` is that agreement: an `Rc`-based `Value`, `MalError`, equality and function application. Dependency-free, like `mal-traits`. |
+| New trait `Row` (an addition; no existing trait changed) | Each row type carries its own `Implementation`, so generic code (stacks, benchmarks, consistency tests) can name the rows it was built from. To be part of a stack, readers, printers and environments must also be `Default`, printers and evaluators `Clone` (evaluators also `Default`), and core rows are built from a printer; evaluator and core rows join through a family marker (`EvalRow`, `CoreRow`). See [Stacks](stacks.md). |
 | New `--read-print` mode (wiring, not a trait change) | `step1_read_print.mal` expects symbols to print back unevaluated, so reader and printer rows are checked against it without an evaluator. |
 
 ## Proposed refinements
@@ -36,7 +38,7 @@ Ordered roughly by how many rows they would simplify.
 | 2 | `read_str` returns the form *and* where it ended, `(ReadOutcome<V>, usize)`, so grammars need not be bent into "parse one form, ignore the rest", and `load-file` can read form by form instead of wrapping the file in `(do ...)`. | pest, peg, lalrpop, winnow |
 | 3 | Give the core namespace the components it calls: `install(&self, env, ctx)` with a context offering read, print and apply/eval, or make `CoreNamespace` generic over them explicitly. | core, eval, the wiring |
 | 4 | `Evaluator::eval(&self, ...)` rather than `&mut self`: built-ins (`eval`, `apply`, `map`, `swap!`) and macros re-enter the evaluator, so it cannot hold mutable state anyway. | eval |
-| 5 | An owned symbol type for `Env` (`type Symbol`, or `Rc<str>`) instead of `&str`, so binding a parameter does not allocate a new key on every call, and an interned symbol is hashed once by the reader instead of on every lookup. | all 12 envs, lasso most |
+| 5 | An owned symbol type for `Env` (`type Symbol`, or `Rc<str>`) instead of `&str`, so binding a parameter does not allocate a new key on every call, and an interned symbol is hashed once by the reader instead of on every lookup. | all 13 envs, lasso most |
 | 6 | Separate "define in this scope" from "make a child scope with these bindings" (`fn bind(&self, pairs) -> Self`). Function calls and `let*` only need the latter, which a persistent map can implement with a structurally shared snapshot. | imbl, rpds |
 | 7 | `Printer` writes to any `fmt::Write` (or is generic over the output buffer) instead of `&mut String`. pretty renders to any `fmt::Write` or `io::Write` already. | printer candidates `compact_str`, `smol_str`, pretty |
 | 8 | A value-builder (serde-style visitor) between readers and values, so an evaluator with its own representation (`Arc`, arena, tracing GC) can reuse every reader row. | future eval rows |
@@ -46,7 +48,7 @@ Ordered roughly by how many rows they would simplify.
 | 12 | Require `Env: Default` (or add `fn new()`), since every caller needs a root environment. | the wiring, benchmarks |
 | 13 | A nesting limit readers (and printers) honour, reported as an error instead of a stack overflow. The stacker row shows that fixing the reader alone is not enough: printing or dropping the value it reads still recurses. | 6 of 12 readers, all printers, `Value`'s `Drop` |
 | 14 | Report the fraction of each step's cases a row passes next to the highest unbroken step, so a row that implements most of the grammar is not indistinguishable from one that implements none. | lexpr |
-| 15 | Drop trait surface no row uses: `Interpreter::host_language` (the wiring binds `*host-language*` itself), `Implementation::supports`, and `Env::contains` (only the shared checks call it); make `Reader::read_str` take `&self` unless a row needs state. | the traits |
+| 15 | Drop trait surface no row uses: `Interpreter::host_language` (the wiring binds `*host-language*` itself) and `Env::contains` (only the shared checks call it); make `Reader::read_str` take `&self` unless a row needs state. | the traits |
 
 ## Notes by component
 
@@ -207,8 +209,16 @@ Ordered roughly by how many rows they would simplify.
 ### Interpreter and wiring
 
 26. **Run-time selection multiplies code.** Every row is generic, so every
-    combination the binary can run is a monomorphised copy. The binary allows
-    one row to differ from `std` at a time, which keeps the copies linear.
+    combination the binary can run is a monomorphised copy. A default build
+    allows one row to differ from `std` at a time, which keeps the copies
+    linear; the `matrix` feature compiles the product, about 900 copies,
+    which costs seconds in a debug build and minutes under the release
+    profile's fat LTO. The copies are the point: each is optimised as a
+    whole, which is what [stack benchmarks](stacks.md) measure. Evaluators
+    and core namespaces are generic over other rows, so they are plugged in
+    as families (a generic associated type picks the member for the rest of
+    the stack). That needed no trait change, only a marker type per row in
+    the wiring.
 27. **Rendered errors.** `run_repl` prints `Error: {e}` with `Display`, which
     cannot print a thrown mal value with the printer row, so the wiring's
     error type is a pre-rendered `String`. Refinement 9.
@@ -306,7 +316,9 @@ suite rather than of the traits.
 
 38. Across every row and the wiring: `Interpreter::host_language` is never
     called (the wiring binds `*host-language*` directly);
-    `Implementation::supports` is never called; `Env::contains` is called
+    `Implementation::supports` was never called until stacks used it to
+    pick rows reaching a step (the sweep, `*` in a stack spec, and leaving
+    `lexpr` out of the reader benchmarks); `Env::contains` is called
     only by the shared checks; `CoreNamespace::symbols` is used only for the
     benchmark's throughput figure. Ten of twelve readers are unit structs
     and the other two (lalrpop's compiled parser, lexpr's options) only read
@@ -322,7 +334,6 @@ suite rather than of the traits.
 | [sexp] | reader | Same kind of crate as lexpr (ready-made S-expression parser), less configurable. |
 | [compact_str], [smol_str] | printer | Blocked by `&mut String` output, refinement 7. |
 | [ryu] | printer | `Value` has no floats. |
-| [rapidhash] | env | Another hasher; would add a number, not a finding. |
 | [elsa] | env | `FrozenMap` never replaces a value (references into it must stay valid), and `Env::set` must replace an existing binding (rebinding with `def!`), so it cannot be a scope's map. |
 | [string-interner], [ustr] | env | Same finding as lasso. |
 | [num-bigint], [rug] | core | Need a number type other than `Value::Int(i64)`, refinement 10. |
@@ -336,7 +347,6 @@ suite rather than of the traits.
 [compact_str]: https://github.com/ParkMyCar/compact_str
 [smol_str]: https://github.com/rust-analyzer/smol_str
 [ryu]: https://github.com/dtolnay/ryu
-[rapidhash]: https://github.com/hoxxep/rapidhash
 [elsa]: https://github.com/Manishearth/elsa
 [string-interner]: https://github.com/robbepop/string-interner
 [ustr]: https://github.com/anderslanglands/ustr

@@ -7,9 +7,10 @@ comparison crates.
 crates/mal-traits      traits, Component/Step vocabulary, Implementation metadata, run_repl
 crates/mal-types       the shared Rc-based Value and MalError rows agree on
 crates/mal-testkit     unit checks every reader, printer and env row runs (dev-only)
-crates/mal             the stepA binary assembled from rows; run-time row selection;
-                       the implementation registry; benches/components.rs, the list of
-                       what gets benchmarked; tests/conformance.rs, the mal test suite
+crates/mal             the stepA binary assembled from rows; stack.rs, the single list
+                       of rows and how any combination of them is built; run-time row
+                       selection; the registry; benches/ (components, stacks);
+                       tests/conformance.rs, the mal test suite; tests/stacks.rs
 crates/mal-bench       the benchmark harness: fixed workloads, one Criterion bench per trait
 comparisons/<c>/<x>    one crate per component/crate pair: mal-traits, mal-types and the crate
 xtask                  cargo xtask bench | report | compare: runs/ in, docs/src/results.md out
@@ -40,7 +41,9 @@ Alongside the traits:
 - `Implementation` and `CrateRef` describe a table row: the crates used with
   exact versions, the highest step reached and one line of notes. Every
   comparison crate exports one `Implementation` constant so the tables are
-  generated from the code rather than maintained by hand.
+  generated from the code rather than maintained by hand, and implements
+  `Row` to attach it to its type, so generic code knows which rows it was
+  instantiated with.
 - `run_repl` is the one shared piece of behaviour: the loop that reads a
   line, calls `Interpreter::rep`, prints the result or `Error: ...`, and
   stops at end of input. All interpreters share it so the measurements stay
@@ -69,20 +72,26 @@ generator read.
   printer around a top-level environment with the core namespace, the
   `eval` built-in, `*ARGV*`, `*host-language*` and the mal prelude (`not`,
   `load-file`, `cond`). `ReadPrint` is step1: read and print only.
-- `select` builds an interpreter from row names: `mal --reader nom` runs
-  the `nom` reader with `std` everywhere else. Only one of reader, printer,
-  env, eval and core may differ from `std` at a time, so the number of
-  monomorphised interpreters grows with the number of rows rather than
-  their product. `--line-editor` is chosen separately, and `--read-print`
-  composes with any reader or printer row.
+- `stack` is the single list of reader, printer, env, eval and core rows,
+  and turns a choice of row names into the row types through a visitor
+  (`StackVisitor`), so a whole interpreter of any combination of rows is
+  one monomorphised type. By default only the stacks with at most one
+  non-`std` row are compiled, so the number of interpreter copies grows
+  with the number of rows; the `matrix` feature compiles every
+  combination. See [Stacks](stacks.md).
+- `select` builds an interpreter from row names through `stack`:
+  `mal --reader nom` runs the `nom` reader with `std` everywhere else.
+  `--line-editor` is chosen separately, and `--read-print` composes with
+  any reader or printer row.
 - `tests/conformance.rs` runs the vendored mal test suite (`tests/mal/`)
   against every registered row through the binary and fails if a row does
   not reach exactly the step it claims. `step0_repl` runs only for the echo
   evaluator and `step1_read_print` in `--read-print` mode, because those
   files test the shape of their own step.
 
-Comparison crates are timed from here too: `benches/components.rs` is one
-line per implementation, calling the matching harness function. Criterion,
+Comparison crates are timed from here too: `benches/components.rs` runs
+the matching harness function for every row in the `stack` lists, and
+`benches/stacks.rs` times whole stacks. Criterion,
 `mal-bench` and the test dependencies are dev-dependencies only, so they
 never reach the binary.
 
@@ -92,7 +101,7 @@ never reach the binary.
 benchmark per component trait, each recording under the group
 `<component>/<implementation>` so results can be joined back to the registry.
 `xtask` is the runner: `cargo xtask bench` records a run as
-`runs/<id>/results.json`, `cargo xtask report` renders the newest run and the
+`runs/<id>/results.json`, `cargo xtask report` renders the newest runs and the
 registry into `docs/src/results.md`, and `cargo xtask compare` diffs two
 runs. Their third-party dependencies (Criterion, serde) never reach the
 `mal` binary. See [Benchmarking](benchmarking.md).

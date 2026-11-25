@@ -42,6 +42,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "LR(1) + built-in regex lexer; grammar and actions in a .lalrpop file compiled by build.rs",
 };
 
+impl mal_traits::Row for LalrpopReader {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// Reads mal source with a LALRPOP-generated parser.
 ///
 /// Holds the generated parser, whose constructor compiles the lexer's

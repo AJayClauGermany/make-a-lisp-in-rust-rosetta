@@ -38,6 +38,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "ready-made Scheme/Elisp S-expression parser + conversion; fits the trait, not mal's grammar ({}, ~, @, ^)",
 };
 
+impl mal_traits::Row for LexprReader {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// Reads S-expressions with lexpr and converts them to mal values.
 #[derive(Debug, Clone, Copy)]
 pub struct LexprReader {

@@ -6,11 +6,17 @@ One crate per `<component>/<crate>` pair, for example `reader/nom`,
 - depends on `mal-traits`, `mal-types` and the crate(s) being compared,
   nothing else (plus `mal-testkit` for tests);
 - implements exactly one component trait;
-- exports `pub const IMPLEMENTATION: mal_traits::Implementation`;
-- is listed in the root `Cargo.toml`, in `crates/mal/src/registry.rs` and in
-  `crates/mal/src/select.rs`, so the conformance tests run the mal test
-  suite against it;
-- has one line in `crates/mal/benches/components.rs` so it gets measured.
+- exports `pub const IMPLEMENTATION: mal_traits::Implementation` and
+  implements `mal_traits::Row` for its type, so the type names its own row;
+- is listed in the root `Cargo.toml`, as a dependency of `crates/mal`, and
+  once in the row lists of `crates/mal/src/stack.rs`. That one entry makes
+  it selectable (`mal --env <name>`), registered (`mal --list`, the results
+  page), benchmarked, run against the mal test suite, and combinable with
+  every other row (see `docs/src/stacks.md`). Evaluator and core rows also
+  need a family marker next to `StdEvalRow` / `StdCoreRow` there. Line
+  editors are not part of a stack: they are listed in `LINE_EDITORS` in
+  `crates/mal/src/registry.rs` and constructed in the `--line-editor` match
+  in `crates/mal/src/main.rs`, and are not benchmarked.
 
 See [CONTRIBUTING.md](../CONTRIBUTING.md) for the step-by-step version.
 

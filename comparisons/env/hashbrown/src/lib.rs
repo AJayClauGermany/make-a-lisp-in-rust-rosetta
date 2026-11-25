@@ -26,6 +26,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "hashbrown::HashMap (SwissTable, foldhash) per scope; entry_ref avoids key allocation on rebind",
 };
 
+impl<V> mal_traits::Row for HashbrownEnv<V> {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// A shared handle to one scope of bindings.
 pub struct HashbrownEnv<V>(Rc<Scope<V>>);
 

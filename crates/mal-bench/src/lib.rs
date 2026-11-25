@@ -1,11 +1,11 @@
 //! Benchmark harness for the Make-a-Lisp rosetta comparison.
 //!
-//! One function per component trait, each generic over the implementation,
-//! so that benchmarking a new row is a single line in
-//! `crates/mal/benches/components.rs`:
+//! One function per component trait, each generic over the implementation.
+//! `crates/mal/benches/components.rs` calls them for every row listed in
+//! `crates/mal/src/stack.rs`, with the row's type:
 //!
 //! ```ignore
-//! mal_bench::reader(c, &reader_nom::IMPLEMENTATION, reader_nom::NomReader::default);
+//! mal_bench::reader(c, R::IMPLEMENTATION, R::default);
 //! ```
 //!
 //! Every function records its measurements under the Criterion group
@@ -14,6 +14,9 @@
 //! numbers back to the [`Implementation`] metadata without any extra
 //! bookkeeping. The corpus is fixed; the same inputs are used for every row
 //! so the rows are comparable with each other and across runs.
+//!
+//! [`stack`] benchmarks a whole interpreter built from any combination of
+//! rows, under the group `stack/<label>`.
 //!
 //! Line editors have no time benchmark: they are measured on binary size,
 //! and their run time is dominated by the terminal.
@@ -236,6 +239,59 @@ where
         });
     }
 
+    group.throughput(Throughput::Bytes(corpus::session_bytes()));
+    group.bench_function("repl-session", |b| {
+        let mut interpreter = new();
+        let mut out = Vec::new();
+        b.iter(|| {
+            out.clear();
+            let mut editor = ScriptedLineEditor::new(corpus::session());
+            run_repl(&mut editor, &mut interpreter, &mut out)
+        });
+    });
+    group.finish();
+}
+
+/// The Criterion group of a stack benchmark: `stack/<label>`, where the
+/// label names the stack's non-`std` rows (`reader=nom,env=fnv`) or is
+/// `std`. Stacks are not one component's row, so they get a group of their
+/// own that the report reads separately.
+pub fn stack_group_id(label: &str) -> String {
+    format!("stack/{label}")
+}
+
+/// Benchmark a whole stack of rows: `rep` on every program in
+/// [`corpus::PROGRAMS`] and one [`corpus::session`] through [`run_repl`].
+///
+/// This is where rows meet: reading, evaluating with the environment and
+/// core rows, and printing, in one monomorphised interpreter, so the
+/// numbers include whatever the compiler made of the combination. Comparing
+/// a stack with the stacks that each swap in only one of its rows shows
+/// whether the rows interact.
+///
+/// `new` must return an interpreter in which every program and session
+/// form evaluates (run [`corpus::BINDINGS`] first).
+///
+/// # Panics
+///
+/// If `rep` fails on a program, checked once before timing.
+pub fn stack<I, F>(c: &mut Criterion, label: &str, mut new: F)
+where
+    I: Interpreter,
+    F: FnMut() -> I,
+{
+    let group_id = stack_group_id(label);
+    let mut group = c.benchmark_group(&group_id);
+    for program in corpus::PROGRAMS {
+        group.throughput(Throughput::Bytes(program.source.len() as u64));
+        group.bench_function(BenchmarkId::new("rep", program.name), |b| {
+            let mut interpreter = new();
+            if let Err(e) = interpreter.rep(program.source) {
+                panic!("{group_id}: `rep` fails on {}: {e}", program.name);
+            }
+            b.iter(|| interpreter.rep(black_box(program.source)));
+        });
+    }
     group.throughput(Throughput::Bytes(corpus::session_bytes()));
     group.bench_function("repl-session", |b| {
         let mut interpreter = new();
