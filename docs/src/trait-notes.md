@@ -25,7 +25,7 @@ trait change. What they showed is under
 |--------|-----|
 | `run_repl` accepts `I: Interpreter + ?Sized` | The binary chooses its rows at run time and holds the interpreter as `Box<dyn Interpreter<Error = _>>`. Backwards compatible. |
 | New crate `mal-types` (not a trait change) | The traits are generic over `Value`, so rows only interoperate if they agree on one. `mal-types` is that agreement: an `Rc`-based `Value`, `MalError`, equality and function application. Dependency-free, like `mal-traits`. |
-| New trait `Row` (an addition; no existing trait changed) | Each row type carries its own `Implementation`, so generic code (stacks, benchmarks, consistency tests) can name the rows it was built from. To be part of a stack a row must also be `Default` (printers also `Clone`). See [Stacks](stacks.md). |
+| New trait `Row` (an addition; no existing trait changed) | Each row type carries its own `Implementation`, so generic code (stacks, benchmarks, consistency tests) can name the rows it was built from. To be part of a stack, readers, printers and environments must also be `Default`, printers and evaluators `Clone` (evaluators also `Default`), and core rows are built from a printer; evaluator and core rows join through a family marker (`EvalRow`, `CoreRow`). See [Stacks](stacks.md). |
 | New `--read-print` mode (wiring, not a trait change) | `step1_read_print.mal` expects symbols to print back unevaluated, so reader and printer rows are checked against it without an evaluator. |
 
 ## Proposed refinements

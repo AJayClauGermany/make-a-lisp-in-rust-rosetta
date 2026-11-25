@@ -50,8 +50,9 @@ contribution is a new row: another crate doing one of the component jobs.
    }
    ```
 
-   The type must also be `Default` (and printers `Clone`) so a stack can
-   build it. Readers, printers and environments call the shared checks
+   So a stack can build it, a reader, printer or environment must also be
+   `Default` and a printer `Clone`; an evaluator must be `Default` and
+   `Clone`, and a core namespace is built from a printer (see step 5). Readers, printers and environments call the shared checks
    from a test: `mal_testkit::check_reader(NomReader::default)`.
 
 5. **Register it** by adding it as a dependency of `crates/mal` and its
