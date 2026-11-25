@@ -1,0 +1,1184 @@
+{
+  "schema": 1,
+  "id": "20261125-015831-vm",
+  "recorded_at": "2026-11-25T01:58:31Z",
+  "host": {
+    "name": "vm",
+    "os": "linux",
+    "arch": "x86_64",
+    "cpus": 4,
+    "cpu_model": "Intel(R) Xeon(R) Processor @ 2.10GHz"
+  },
+  "toolchain": {
+    "rustc": "rustc 1.97.0 (2d8144b78 2026-07-07)"
+  },
+  "commit": "90b555bc0ef7",
+  "dirty": false,
+  "command": [
+    "MAL_STACKS=\"reader=std,nom,logos printer=std,itoa env=std,rustc-hash,smallvec,imbl\"",
+    "cargo",
+    "bench",
+    "--package",
+    "mal",
+    "--bench",
+    "stacks",
+    "--features",
+    "matrix",
+    "--",
+    "--noplot"
+  ],
+  "benchmarks": [
+    {
+      "id": "stack/env=imbl/rep/closures",
+      "component": "stack",
+      "implementation": "env=imbl",
+      "workload": "rep/closures",
+      "mean_ns": 30527.4905202028,
+      "median_ns": 30219.4065159077,
+      "std_dev_ns": 1368.932269181331,
+      "throughput": {
+        "bytes": 154
+      }
+    },
+    {
+      "id": "stack/env=imbl/rep/fib",
+      "component": "stack",
+      "implementation": "env=imbl",
+      "workload": "rep/fib",
+      "mean_ns": 260512.6203588637,
+      "median_ns": 259459.5940016103,
+      "std_dev_ns": 8292.897673753736,
+      "throughput": {
+        "bytes": 81
+      }
+    },
+    {
+      "id": "stack/env=imbl/rep/sum-to",
+      "component": "stack",
+      "implementation": "env=imbl",
+      "workload": "rep/sum-to",
+      "mean_ns": 716249.219103416,
+      "median_ns": 687247.405737705,
+      "std_dev_ns": 105215.16362264343,
+      "throughput": {
+        "bytes": 92
+      }
+    },
+    {
+      "id": "stack/env=imbl/repl-session",
+      "component": "stack",
+      "implementation": "env=imbl",
+      "workload": "repl-session",
+      "mean_ns": 62217.60973795959,
+      "median_ns": 60177.87912210339,
+      "std_dev_ns": 5559.653270131653,
+      "throughput": {
+        "bytes": 1570
+      }
+    },
+    {
+      "id": "stack/env=rustc-hash/rep/closures",
+      "component": "stack",
+      "implementation": "env=rustc-hash",
+      "workload": "rep/closures",
+      "mean_ns": 20363.5156468872,
+      "median_ns": 20117.780998389695,
+      "std_dev_ns": 1091.364210062737,
+      "throughput": {
+        "bytes": 154
+      }
+    },
+    {
+      "id": "stack/env=rustc-hash/rep/fib",
+      "component": "stack",
+      "implementation": "env=rustc-hash",
+      "workload": "rep/fib",
+      "mean_ns": 183354.61340997333,
+      "median_ns": 180325.918627451,
+      "std_dev_ns": 11890.037610856,
+      "throughput": {
+        "bytes": 81
+      }
+    },
+    {
+      "id": "stack/env=rustc-hash/rep/sum-to",
+      "component": "stack",
+      "implementation": "env=rustc-hash",
+      "workload": "rep/sum-to",
+      "mean_ns": 458060.48816107854,
+      "median_ns": 445609.7668604651,
+      "std_dev_ns": 42960.322520501264,
+      "throughput": {
+        "bytes": 92
+      }
+    },
+    {
+      "id": "stack/env=rustc-hash/repl-session",
+      "component": "stack",
+      "implementation": "env=rustc-hash",
+      "workload": "repl-session",
+      "mean_ns": 54712.77523537815,
+      "median_ns": 53698.44342105263,
+      "std_dev_ns": 3906.128364035405,
+      "throughput": {
+        "bytes": 1570
+      }
+    },
+    {
+      "id": "stack/env=smallvec/rep/closures",
+      "component": "stack",
+      "implementation": "env=smallvec",
+      "workload": "rep/closures",
+      "mean_ns": 20887.043033120823,
+      "median_ns": 20434.136604532163,
+      "std_dev_ns": 1561.6296486630683,
+      "throughput": {
+        "bytes": 154
+      }
+    },
+    {
+      "id": "stack/env=smallvec/rep/fib",
+      "component": "stack",
+      "implementation": "env=smallvec",
+      "workload": "rep/fib",
+      "mean_ns": 207006.938173481,
+      "median_ns": 201887.43218390807,
+      "std_dev_ns": 15995.25955767054,
+      "throughput": {
+        "bytes": 81
+      }
+    },
+    {
+      "id": "stack/env=smallvec/rep/sum-to",
+      "component": "stack",
+      "implementation": "env=smallvec",
+      "workload": "rep/sum-to",
+      "mean_ns": 517392.4239721364,
+      "median_ns": 517412.0486842105,
+      "std_dev_ns": 15650.25244787636,
+      "throughput": {
+        "bytes": 92
+      }
+    },
+    {
+      "id": "stack/env=smallvec/repl-session",
+      "component": "stack",
+      "implementation": "env=smallvec",
+      "workload": "repl-session",
+      "mean_ns": 55722.86585743373,
+      "median_ns": 54528.56858108108,
+      "std_dev_ns": 3598.067030394517,
+      "throughput": {
+        "bytes": 1570
+      }
+    },
+    {
+      "id": "stack/printer=itoa,env=imbl/rep/closures",
+      "component": "stack",
+      "implementation": "printer=itoa,env=imbl",
+      "workload": "rep/closures",
+      "mean_ns": 30134.84609324429,
+      "median_ns": 29792.634895833333,
+      "std_dev_ns": 1698.7500606232618,
+      "throughput": {
+        "bytes": 154
+      }
+    },
+    {
+      "id": "stack/printer=itoa,env=imbl/rep/fib",
+      "component": "stack",
+      "implementation": "printer=itoa,env=imbl",
+      "workload": "rep/fib",
+      "mean_ns": 273037.67365277,
+      "median_ns": 267239.4130434783,
+      "std_dev_ns": 22664.354438042006,
+      "throughput": {
+        "bytes": 81
+      }
+    },
+    {
+      "id": "stack/printer=itoa,env=imbl/rep/sum-to",
+      "component": "stack",
+      "implementation": "printer=itoa,env=imbl",
+      "workload": "rep/sum-to",
+      "mean_ns": 697108.1158530101,
+      "median_ns": 674303.0738095238,
+      "std_dev_ns": 62428.920688443366,
+      "throughput": {
+        "bytes": 92
+      }
+    },
+    {
+      "id": "stack/printer=itoa,env=imbl/repl-session",
+      "component": "stack",
+      "implementation": "printer=itoa,env=imbl",
+      "workload": "repl-session",
+      "mean_ns": 60844.041618255054,
+      "median_ns": 59056.04608294931,
+      "std_dev_ns": 4520.334054489018,
+      "throughput": {
+        "bytes": 1570
+      }
+    },
+    {
+      "id": "stack/printer=itoa,env=rustc-hash/rep/closures",
+      "component": "stack",
+      "implementation": "printer=itoa,env=rustc-hash",
+      "workload": "rep/closures",
+      "mean_ns": 21732.1770793141,
+      "median_ns": 20864.42918350455,
+      "std_dev_ns": 2217.66915281391,
+      "throughput": {
+        "bytes": 154
+      }
+    },
+    {
+      "id": "stack/printer=itoa,env=rustc-hash/rep/fib",
+      "component": "stack",
+      "implementation": "printer=itoa,env=rustc-hash",
+      "workload": "rep/fib",
+      "mean_ns": 185179.3212838663,
+      "median_ns": 182191.86259920636,
+      "std_dev_ns": 9302.359964688638,
+      "throughput": {
+        "bytes": 81
+      }
+    },
+    {
+      "id": "stack/printer=itoa,env=rustc-hash/rep/sum-to",
+      "component": "stack",
+      "implementation": "printer=itoa,env=rustc-hash",
+      "workload": "rep/sum-to",
+      "mean_ns": 458479.6005683452,
+      "median_ns": 439139.1087301588,
+      "std_dev_ns": 50043.55257954933,
+      "throughput": {
+        "bytes": 92
+      }
+    },
+    {
+      "id": "stack/printer=itoa,env=rustc-hash/repl-session",
+      "component": "stack",
+      "implementation": "printer=itoa,env=rustc-hash",
+      "workload": "repl-session",
+      "mean_ns": 53058.37668913777,
+      "median_ns": 52532.50579033792,
+      "std_dev_ns": 1580.6857928089166,
+      "throughput": {
+        "bytes": 1570
+      }
+    },
+    {
+      "id": "stack/printer=itoa,env=smallvec/rep/closures",
+      "component": "stack",
+      "implementation": "printer=itoa,env=smallvec",
+      "workload": "rep/closures",
+      "mean_ns": 21009.840265432675,
+      "median_ns": 20738.338876570582,
+      "std_dev_ns": 996.1696139097284,
+      "throughput": {
+        "bytes": 154
+      }
+    },
+    {
+      "id": "stack/printer=itoa,env=smallvec/rep/fib",
+      "component": "stack",
+      "implementation": "printer=itoa,env=smallvec",
+      "workload": "rep/fib",
+      "mean_ns": 211288.2729399836,
+      "median_ns": 206140.34107142856,
+      "std_dev_ns": 12684.372382622098,
+      "throughput": {
+        "bytes": 81
+      }
+    },
+    {
+      "id": "stack/printer=itoa,env=smallvec/rep/sum-to",
+      "component": "stack",
+      "implementation": "printer=itoa,env=smallvec",
+      "workload": "rep/sum-to",
+      "mean_ns": 528593.8744711239,
+      "median_ns": 513717.4985902256,
+      "std_dev_ns": 39358.750986780135,
+      "throughput": {
+        "bytes": 92
+      }
+    },
+    {
+      "id": "stack/printer=itoa,env=smallvec/repl-session",
+      "component": "stack",
+      "implementation": "printer=itoa,env=smallvec",
+      "workload": "repl-session",
+      "mean_ns": 56288.3253722335,
+      "median_ns": 54888.73888888889,
+      "std_dev_ns": 4311.5701712427335,
+      "throughput": {
+        "bytes": 1570
+      }
+    },
+    {
+      "id": "stack/printer=itoa/rep/closures",
+      "component": "stack",
+      "implementation": "printer=itoa",
+      "workload": "rep/closures",
+      "mean_ns": 25986.872876876183,
+      "median_ns": 25077.103256536153,
+      "std_dev_ns": 3274.735159954752,
+      "throughput": {
+        "bytes": 154
+      }
+    },
+    {
+      "id": "stack/printer=itoa/rep/fib",
+      "component": "stack",
+      "implementation": "printer=itoa",
+      "workload": "rep/fib",
+      "mean_ns": 220103.2212292027,
+      "median_ns": 216755.8802122016,
+      "std_dev_ns": 10323.57165564562,
+      "throughput": {
+        "bytes": 81
+      }
+    },
+    {
+      "id": "stack/printer=itoa/rep/sum-to",
+      "component": "stack",
+      "implementation": "printer=itoa",
+      "workload": "rep/sum-to",
+      "mean_ns": 583484.4661471817,
+      "median_ns": 564050.263670065,
+      "std_dev_ns": 61799.5322862728,
+      "throughput": {
+        "bytes": 92
+      }
+    },
+    {
+      "id": "stack/printer=itoa/repl-session",
+      "component": "stack",
+      "implementation": "printer=itoa",
+      "workload": "repl-session",
+      "mean_ns": 54918.349484247265,
+      "median_ns": 54299.77352160099,
+      "std_dev_ns": 2721.373241311951,
+      "throughput": {
+        "bytes": 1570
+      }
+    },
+    {
+      "id": "stack/reader=logos,env=imbl/rep/closures",
+      "component": "stack",
+      "implementation": "reader=logos,env=imbl",
+      "workload": "rep/closures",
+      "mean_ns": 30333.63179079619,
+      "median_ns": 29489.61900252525,
+      "std_dev_ns": 3459.542432765954,
+      "throughput": {
+        "bytes": 154
+      }
+    },
+    {
+      "id": "stack/reader=logos,env=imbl/rep/fib",
+      "component": "stack",
+      "implementation": "reader=logos,env=imbl",
+      "workload": "rep/fib",
+      "mean_ns": 264241.4391807303,
+      "median_ns": 261518.24306001284,
+      "std_dev_ns": 12005.212212081882,
+      "throughput": {
+        "bytes": 81
+      }
+    },
+    {
+      "id": "stack/reader=logos,env=imbl/rep/sum-to",
+      "component": "stack",
+      "implementation": "reader=logos,env=imbl",
+      "workload": "rep/sum-to",
+      "mean_ns": 691310.3989868466,
+      "median_ns": 672502.0869666049,
+      "std_dev_ns": 49030.94954010426,
+      "throughput": {
+        "bytes": 92
+      }
+    },
+    {
+      "id": "stack/reader=logos,env=imbl/repl-session",
+      "component": "stack",
+      "implementation": "reader=logos,env=imbl",
+      "workload": "repl-session",
+      "mean_ns": 57877.175333413936,
+      "median_ns": 56168.600975975976,
+      "std_dev_ns": 4858.335743838534,
+      "throughput": {
+        "bytes": 1570
+      }
+    },
+    {
+      "id": "stack/reader=logos,env=rustc-hash/rep/closures",
+      "component": "stack",
+      "implementation": "reader=logos,env=rustc-hash",
+      "workload": "rep/closures",
+      "mean_ns": 20418.873223844756,
+      "median_ns": 19869.524690241225,
+      "std_dev_ns": 1811.0368503314955,
+      "throughput": {
+        "bytes": 154
+      }
+    },
+    {
+      "id": "stack/reader=logos,env=rustc-hash/rep/fib",
+      "component": "stack",
+      "implementation": "reader=logos,env=rustc-hash",
+      "workload": "rep/fib",
+      "mean_ns": 187223.39719202745,
+      "median_ns": 184183.21761017665,
+      "std_dev_ns": 12839.410780136192,
+      "throughput": {
+        "bytes": 81
+      }
+    },
+    {
+      "id": "stack/reader=logos,env=rustc-hash/rep/sum-to",
+      "component": "stack",
+      "implementation": "reader=logos,env=rustc-hash",
+      "workload": "rep/sum-to",
+      "mean_ns": 439358.74324684,
+      "median_ns": 433060.0526041667,
+      "std_dev_ns": 22970.63099236171,
+      "throughput": {
+        "bytes": 92
+      }
+    },
+    {
+      "id": "stack/reader=logos,env=rustc-hash/repl-session",
+      "component": "stack",
+      "implementation": "reader=logos,env=rustc-hash",
+      "workload": "repl-session",
+      "mean_ns": 49826.80952922734,
+      "median_ns": 48556.02511235955,
+      "std_dev_ns": 4922.90911048105,
+      "throughput": {
+        "bytes": 1570
+      }
+    },
+    {
+      "id": "stack/reader=logos,env=smallvec/rep/closures",
+      "component": "stack",
+      "implementation": "reader=logos,env=smallvec",
+      "workload": "rep/closures",
+      "mean_ns": 20656.410947449345,
+      "median_ns": 20131.93888206388,
+      "std_dev_ns": 1456.8885544465184,
+      "throughput": {
+        "bytes": 154
+      }
+    },
+    {
+      "id": "stack/reader=logos,env=smallvec/rep/fib",
+      "component": "stack",
+      "implementation": "reader=logos,env=smallvec",
+      "workload": "rep/fib",
+      "mean_ns": 202778.3873163494,
+      "median_ns": 199545.0665909091,
+      "std_dev_ns": 11206.072560182036,
+      "throughput": {
+        "bytes": 81
+      }
+    },
+    {
+      "id": "stack/reader=logos,env=smallvec/rep/sum-to",
+      "component": "stack",
+      "implementation": "reader=logos,env=smallvec",
+      "workload": "rep/sum-to",
+      "mean_ns": 537142.0347654213,
+      "median_ns": 512077.4796348314,
+      "std_dev_ns": 51303.91141148386,
+      "throughput": {
+        "bytes": 92
+      }
+    },
+    {
+      "id": "stack/reader=logos,env=smallvec/repl-session",
+      "component": "stack",
+      "implementation": "reader=logos,env=smallvec",
+      "workload": "repl-session",
+      "mean_ns": 54315.226832375105,
+      "median_ns": 51166.33549075392,
+      "std_dev_ns": 9111.448267503692,
+      "throughput": {
+        "bytes": 1570
+      }
+    },
+    {
+      "id": "stack/reader=logos,printer=itoa,env=imbl/rep/closures",
+      "component": "stack",
+      "implementation": "reader=logos,printer=itoa,env=imbl",
+      "workload": "rep/closures",
+      "mean_ns": 29911.7710387991,
+      "median_ns": 29619.213533674338,
+      "std_dev_ns": 2055.0133814730007,
+      "throughput": {
+        "bytes": 154
+      }
+    },
+    {
+      "id": "stack/reader=logos,printer=itoa,env=imbl/rep/fib",
+      "component": "stack",
+      "implementation": "reader=logos,printer=itoa,env=imbl",
+      "workload": "rep/fib",
+      "mean_ns": 271844.49584037944,
+      "median_ns": 266716.02847873105,
+      "std_dev_ns": 20913.137502521036,
+      "throughput": {
+        "bytes": 81
+      }
+    },
+    {
+      "id": "stack/reader=logos,printer=itoa,env=imbl/rep/sum-to",
+      "component": "stack",
+      "implementation": "reader=logos,printer=itoa,env=imbl",
+      "workload": "rep/sum-to",
+      "mean_ns": 691415.6785919208,
+      "median_ns": 678984.580479452,
+      "std_dev_ns": 45818.82146178641,
+      "throughput": {
+        "bytes": 92
+      }
+    },
+    {
+      "id": "stack/reader=logos,printer=itoa,env=imbl/repl-session",
+      "component": "stack",
+      "implementation": "reader=logos,printer=itoa,env=imbl",
+      "workload": "repl-session",
+      "mean_ns": 57236.8649307017,
+      "median_ns": 55988.60552742616,
+      "std_dev_ns": 3650.1567200212207,
+      "throughput": {
+        "bytes": 1570
+      }
+    },
+    {
+      "id": "stack/reader=logos,printer=itoa,env=rustc-hash/rep/closures",
+      "component": "stack",
+      "implementation": "reader=logos,printer=itoa,env=rustc-hash",
+      "workload": "rep/closures",
+      "mean_ns": 20694.519455404145,
+      "median_ns": 20155.782263209974,
+      "std_dev_ns": 1476.2865595600472,
+      "throughput": {
+        "bytes": 154
+      }
+    },
+    {
+      "id": "stack/reader=logos,printer=itoa,env=rustc-hash/rep/fib",
+      "component": "stack",
+      "implementation": "reader=logos,printer=itoa,env=rustc-hash",
+      "workload": "rep/fib",
+      "mean_ns": 196517.04787508177,
+      "median_ns": 190688.3782894737,
+      "std_dev_ns": 16629.543319248445,
+      "throughput": {
+        "bytes": 81
+      }
+    },
+    {
+      "id": "stack/reader=logos,printer=itoa,env=rustc-hash/rep/sum-to",
+      "component": "stack",
+      "implementation": "reader=logos,printer=itoa,env=rustc-hash",
+      "workload": "rep/sum-to",
+      "mean_ns": 454609.0424709423,
+      "median_ns": 442862.1569444444,
+      "std_dev_ns": 34823.82182547471,
+      "throughput": {
+        "bytes": 92
+      }
+    },
+    {
+      "id": "stack/reader=logos,printer=itoa,env=rustc-hash/repl-session",
+      "component": "stack",
+      "implementation": "reader=logos,printer=itoa,env=rustc-hash",
+      "workload": "repl-session",
+      "mean_ns": 50723.9401126208,
+      "median_ns": 49364.92175943396,
+      "std_dev_ns": 3828.740795411267,
+      "throughput": {
+        "bytes": 1570
+      }
+    },
+    {
+      "id": "stack/reader=logos,printer=itoa,env=smallvec/rep/closures",
+      "component": "stack",
+      "implementation": "reader=logos,printer=itoa,env=smallvec",
+      "workload": "rep/closures",
+      "mean_ns": 21104.88207557067,
+      "median_ns": 20564.76371587596,
+      "std_dev_ns": 1358.7502975678933,
+      "throughput": {
+        "bytes": 154
+      }
+    },
+    {
+      "id": "stack/reader=logos,printer=itoa,env=smallvec/rep/fib",
+      "component": "stack",
+      "implementation": "reader=logos,printer=itoa,env=smallvec",
+      "workload": "rep/fib",
+      "mean_ns": 213013.89675462135,
+      "median_ns": 202493.3877584781,
+      "std_dev_ns": 26815.14587780797,
+      "throughput": {
+        "bytes": 81
+      }
+    },
+    {
+      "id": "stack/reader=logos,printer=itoa,env=smallvec/rep/sum-to",
+      "component": "stack",
+      "implementation": "reader=logos,printer=itoa,env=smallvec",
+      "workload": "rep/sum-to",
+      "mean_ns": 529345.8150407692,
+      "median_ns": 515517.164078675,
+      "std_dev_ns": 43591.33435445391,
+      "throughput": {
+        "bytes": 92
+      }
+    },
+    {
+      "id": "stack/reader=logos,printer=itoa,env=smallvec/repl-session",
+      "component": "stack",
+      "implementation": "reader=logos,printer=itoa,env=smallvec",
+      "workload": "repl-session",
+      "mean_ns": 53787.80396084113,
+      "median_ns": 51830.79733709273,
+      "std_dev_ns": 6584.361958350192,
+      "throughput": {
+        "bytes": 1570
+      }
+    },
+    {
+      "id": "stack/reader=logos,printer=itoa/rep/closures",
+      "component": "stack",
+      "implementation": "reader=logos,printer=itoa",
+      "workload": "rep/closures",
+      "mean_ns": 25576.71167933285,
+      "median_ns": 24706.923970588236,
+      "std_dev_ns": 2602.1916240752244,
+      "throughput": {
+        "bytes": 154
+      }
+    },
+    {
+      "id": "stack/reader=logos,printer=itoa/rep/fib",
+      "component": "stack",
+      "implementation": "reader=logos,printer=itoa",
+      "workload": "rep/fib",
+      "mean_ns": 220798.61381332553,
+      "median_ns": 215895.42352941175,
+      "std_dev_ns": 16534.976071113328,
+      "throughput": {
+        "bytes": 81
+      }
+    },
+    {
+      "id": "stack/reader=logos,printer=itoa/rep/sum-to",
+      "component": "stack",
+      "implementation": "reader=logos,printer=itoa",
+      "workload": "rep/sum-to",
+      "mean_ns": 597189.034197933,
+      "median_ns": 571069.7111111111,
+      "std_dev_ns": 60096.81705991014,
+      "throughput": {
+        "bytes": 92
+      }
+    },
+    {
+      "id": "stack/reader=logos,printer=itoa/repl-session",
+      "component": "stack",
+      "implementation": "reader=logos,printer=itoa",
+      "workload": "repl-session",
+      "mean_ns": 53777.294435470976,
+      "median_ns": 51788.442242547426,
+      "std_dev_ns": 5013.208306027149,
+      "throughput": {
+        "bytes": 1570
+      }
+    },
+    {
+      "id": "stack/reader=logos/rep/closures",
+      "component": "stack",
+      "implementation": "reader=logos",
+      "workload": "rep/closures",
+      "mean_ns": 26378.006186601484,
+      "median_ns": 25010.372496947497,
+      "std_dev_ns": 3134.4988140746236,
+      "throughput": {
+        "bytes": 154
+      }
+    },
+    {
+      "id": "stack/reader=logos/rep/fib",
+      "component": "stack",
+      "implementation": "reader=logos",
+      "workload": "rep/fib",
+      "mean_ns": 221174.14576979895,
+      "median_ns": 216446.8478219697,
+      "std_dev_ns": 13505.811520375257,
+      "throughput": {
+        "bytes": 81
+      }
+    },
+    {
+      "id": "stack/reader=logos/rep/sum-to",
+      "component": "stack",
+      "implementation": "reader=logos",
+      "workload": "rep/sum-to",
+      "mean_ns": 561791.5697674204,
+      "median_ns": 552187.090625,
+      "std_dev_ns": 36749.21787116953,
+      "throughput": {
+        "bytes": 92
+      }
+    },
+    {
+      "id": "stack/reader=logos/repl-session",
+      "component": "stack",
+      "implementation": "reader=logos",
+      "workload": "repl-session",
+      "mean_ns": 52000.509728080986,
+      "median_ns": 51260.98641765705,
+      "std_dev_ns": 2721.523051153365,
+      "throughput": {
+        "bytes": 1570
+      }
+    },
+    {
+      "id": "stack/reader=nom,env=imbl/rep/closures",
+      "component": "stack",
+      "implementation": "reader=nom,env=imbl",
+      "workload": "rep/closures",
+      "mean_ns": 38622.8870611577,
+      "median_ns": 37825.49018218624,
+      "std_dev_ns": 2348.4031266470174,
+      "throughput": {
+        "bytes": 154
+      }
+    },
+    {
+      "id": "stack/reader=nom,env=imbl/rep/fib",
+      "component": "stack",
+      "implementation": "reader=nom,env=imbl",
+      "workload": "rep/fib",
+      "mean_ns": 269015.4573149537,
+      "median_ns": 262349.865632151,
+      "std_dev_ns": 22057.198860943055,
+      "throughput": {
+        "bytes": 81
+      }
+    },
+    {
+      "id": "stack/reader=nom,env=imbl/rep/sum-to",
+      "component": "stack",
+      "implementation": "reader=nom,env=imbl",
+      "workload": "rep/sum-to",
+      "mean_ns": 685383.7121516846,
+      "median_ns": 671263.0833333333,
+      "std_dev_ns": 55490.66620130538,
+      "throughput": {
+        "bytes": 92
+      }
+    },
+    {
+      "id": "stack/reader=nom,env=imbl/repl-session",
+      "component": "stack",
+      "implementation": "reader=nom,env=imbl",
+      "workload": "repl-session",
+      "mean_ns": 116651.10210938474,
+      "median_ns": 115031.17062747553,
+      "std_dev_ns": 5886.61285222164,
+      "throughput": {
+        "bytes": 1570
+      }
+    },
+    {
+      "id": "stack/reader=nom,env=rustc-hash/rep/closures",
+      "component": "stack",
+      "implementation": "reader=nom,env=rustc-hash",
+      "workload": "rep/closures",
+      "mean_ns": 28861.24043884507,
+      "median_ns": 28551.80182072829,
+      "std_dev_ns": 1404.1839118106475,
+      "throughput": {
+        "bytes": 154
+      }
+    },
+    {
+      "id": "stack/reader=nom,env=rustc-hash/rep/fib",
+      "component": "stack",
+      "implementation": "reader=nom,env=rustc-hash",
+      "workload": "rep/fib",
+      "mean_ns": 194748.43495828155,
+      "median_ns": 188887.55206494412,
+      "std_dev_ns": 18212.132084068227,
+      "throughput": {
+        "bytes": 81
+      }
+    },
+    {
+      "id": "stack/reader=nom,env=rustc-hash/rep/sum-to",
+      "component": "stack",
+      "implementation": "reader=nom,env=rustc-hash",
+      "workload": "rep/sum-to",
+      "mean_ns": 458940.5209577756,
+      "median_ns": 452457.4969806763,
+      "std_dev_ns": 26804.704389642833,
+      "throughput": {
+        "bytes": 92
+      }
+    },
+    {
+      "id": "stack/reader=nom,env=rustc-hash/repl-session",
+      "component": "stack",
+      "implementation": "reader=nom,env=rustc-hash",
+      "workload": "repl-session",
+      "mean_ns": 109625.60683564622,
+      "median_ns": 108773.90597484275,
+      "std_dev_ns": 4579.976184671462,
+      "throughput": {
+        "bytes": 1570
+      }
+    },
+    {
+      "id": "stack/reader=nom,env=smallvec/rep/closures",
+      "component": "stack",
+      "implementation": "reader=nom,env=smallvec",
+      "workload": "rep/closures",
+      "mean_ns": 29523.477112605487,
+      "median_ns": 28850.150635930047,
+      "std_dev_ns": 1834.366131321515,
+      "throughput": {
+        "bytes": 154
+      }
+    },
+    {
+      "id": "stack/reader=nom,env=smallvec/rep/fib",
+      "component": "stack",
+      "implementation": "reader=nom,env=smallvec",
+      "workload": "rep/fib",
+      "mean_ns": 213615.4472110313,
+      "median_ns": 207915.51875,
+      "std_dev_ns": 14696.535009404965,
+      "throughput": {
+        "bytes": 81
+      }
+    },
+    {
+      "id": "stack/reader=nom,env=smallvec/rep/sum-to",
+      "component": "stack",
+      "implementation": "reader=nom,env=smallvec",
+      "workload": "rep/sum-to",
+      "mean_ns": 523155.9939451026,
+      "median_ns": 510609.3515232975,
+      "std_dev_ns": 38609.01345683706,
+      "throughput": {
+        "bytes": 92
+      }
+    },
+    {
+      "id": "stack/reader=nom,env=smallvec/repl-session",
+      "component": "stack",
+      "implementation": "reader=nom,env=smallvec",
+      "workload": "repl-session",
+      "mean_ns": 111702.72715582208,
+      "median_ns": 110078.87811447812,
+      "std_dev_ns": 6040.293390115576,
+      "throughput": {
+        "bytes": 1570
+      }
+    },
+    {
+      "id": "stack/reader=nom,printer=itoa,env=imbl/rep/closures",
+      "component": "stack",
+      "implementation": "reader=nom,printer=itoa,env=imbl",
+      "workload": "rep/closures",
+      "mean_ns": 38348.39841515562,
+      "median_ns": 37928.1714021164,
+      "std_dev_ns": 1791.6145107750738,
+      "throughput": {
+        "bytes": 154
+      }
+    },
+    {
+      "id": "stack/reader=nom,printer=itoa,env=imbl/rep/fib",
+      "component": "stack",
+      "implementation": "reader=nom,printer=itoa,env=imbl",
+      "workload": "rep/fib",
+      "mean_ns": 278561.63423228555,
+      "median_ns": 272113.5911029412,
+      "std_dev_ns": 22231.87963991623,
+      "throughput": {
+        "bytes": 81
+      }
+    },
+    {
+      "id": "stack/reader=nom,printer=itoa,env=imbl/rep/sum-to",
+      "component": "stack",
+      "implementation": "reader=nom,printer=itoa,env=imbl",
+      "workload": "rep/sum-to",
+      "mean_ns": 687575.5648708299,
+      "median_ns": 679027.1701116655,
+      "std_dev_ns": 57149.82670436457,
+      "throughput": {
+        "bytes": 92
+      }
+    },
+    {
+      "id": "stack/reader=nom,printer=itoa,env=imbl/repl-session",
+      "component": "stack",
+      "implementation": "reader=nom,printer=itoa,env=imbl",
+      "workload": "repl-session",
+      "mean_ns": 121233.67489298116,
+      "median_ns": 119074.0947459087,
+      "std_dev_ns": 7575.02327272693,
+      "throughput": {
+        "bytes": 1570
+      }
+    },
+    {
+      "id": "stack/reader=nom,printer=itoa,env=rustc-hash/rep/closures",
+      "component": "stack",
+      "implementation": "reader=nom,printer=itoa,env=rustc-hash",
+      "workload": "rep/closures",
+      "mean_ns": 29391.06829083514,
+      "median_ns": 28635.060079689145,
+      "std_dev_ns": 2188.9826150721433,
+      "throughput": {
+        "bytes": 154
+      }
+    },
+    {
+      "id": "stack/reader=nom,printer=itoa,env=rustc-hash/rep/fib",
+      "component": "stack",
+      "implementation": "reader=nom,printer=itoa,env=rustc-hash",
+      "workload": "rep/fib",
+      "mean_ns": 191172.36975537028,
+      "median_ns": 187293.8036019536,
+      "std_dev_ns": 13839.080810037927,
+      "throughput": {
+        "bytes": 81
+      }
+    },
+    {
+      "id": "stack/reader=nom,printer=itoa,env=rustc-hash/rep/sum-to",
+      "component": "stack",
+      "implementation": "reader=nom,printer=itoa,env=rustc-hash",
+      "workload": "rep/sum-to",
+      "mean_ns": 481258.1907839618,
+      "median_ns": 464604.0,
+      "std_dev_ns": 45992.43126525429,
+      "throughput": {
+        "bytes": 92
+      }
+    },
+    {
+      "id": "stack/reader=nom,printer=itoa,env=rustc-hash/repl-session",
+      "component": "stack",
+      "implementation": "reader=nom,printer=itoa,env=rustc-hash",
+      "workload": "repl-session",
+      "mean_ns": 114040.9903601993,
+      "median_ns": 111443.98360708536,
+      "std_dev_ns": 7305.595899297361,
+      "throughput": {
+        "bytes": 1570
+      }
+    },
+    {
+      "id": "stack/reader=nom,printer=itoa,env=smallvec/rep/closures",
+      "component": "stack",
+      "implementation": "reader=nom,printer=itoa,env=smallvec",
+      "workload": "rep/closures",
+      "mean_ns": 29466.66909428475,
+      "median_ns": 28846.634367007675,
+      "std_dev_ns": 1496.374821737915,
+      "throughput": {
+        "bytes": 154
+      }
+    },
+    {
+      "id": "stack/reader=nom,printer=itoa,env=smallvec/rep/fib",
+      "component": "stack",
+      "implementation": "reader=nom,printer=itoa,env=smallvec",
+      "workload": "rep/fib",
+      "mean_ns": 204824.11910067176,
+      "median_ns": 205069.62797941497,
+      "std_dev_ns": 6710.888462808006,
+      "throughput": {
+        "bytes": 81
+      }
+    },
+    {
+      "id": "stack/reader=nom,printer=itoa,env=smallvec/rep/sum-to",
+      "component": "stack",
+      "implementation": "reader=nom,printer=itoa,env=smallvec",
+      "workload": "rep/sum-to",
+      "mean_ns": 529285.9214600653,
+      "median_ns": 519381.7937252965,
+      "std_dev_ns": 33579.18474410825,
+      "throughput": {
+        "bytes": 92
+      }
+    },
+    {
+      "id": "stack/reader=nom,printer=itoa,env=smallvec/repl-session",
+      "component": "stack",
+      "implementation": "reader=nom,printer=itoa,env=smallvec",
+      "workload": "repl-session",
+      "mean_ns": 113496.4134346761,
+      "median_ns": 112547.25482656414,
+      "std_dev_ns": 2758.3266479121557,
+      "throughput": {
+        "bytes": 1570
+      }
+    },
+    {
+      "id": "stack/reader=nom,printer=itoa/rep/closures",
+      "component": "stack",
+      "implementation": "reader=nom,printer=itoa",
+      "workload": "rep/closures",
+      "mean_ns": 33652.0364678093,
+      "median_ns": 33271.20868664028,
+      "std_dev_ns": 1021.45592433022,
+      "throughput": {
+        "bytes": 154
+      }
+    },
+    {
+      "id": "stack/reader=nom,printer=itoa/rep/fib",
+      "component": "stack",
+      "implementation": "reader=nom,printer=itoa",
+      "workload": "rep/fib",
+      "mean_ns": 241073.28509523103,
+      "median_ns": 226085.24444444443,
+      "std_dev_ns": 35033.69954983744,
+      "throughput": {
+        "bytes": 81
+      }
+    },
+    {
+      "id": "stack/reader=nom,printer=itoa/rep/sum-to",
+      "component": "stack",
+      "implementation": "reader=nom,printer=itoa",
+      "workload": "rep/sum-to",
+      "mean_ns": 597515.5813315673,
+      "median_ns": 572171.6562121212,
+      "std_dev_ns": 49993.37473956019,
+      "throughput": {
+        "bytes": 92
+      }
+    },
+    {
+      "id": "stack/reader=nom,printer=itoa/repl-session",
+      "component": "stack",
+      "implementation": "reader=nom,printer=itoa",
+      "workload": "repl-session",
+      "mean_ns": 117208.31092597054,
+      "median_ns": 113897.2971704624,
+      "std_dev_ns": 9369.068459684067,
+      "throughput": {
+        "bytes": 1570
+      }
+    },
+    {
+      "id": "stack/reader=nom/rep/closures",
+      "component": "stack",
+      "implementation": "reader=nom",
+      "workload": "rep/closures",
+      "mean_ns": 34914.7780512332,
+      "median_ns": 33061.46028520499,
+      "std_dev_ns": 4350.8261137447325,
+      "throughput": {
+        "bytes": 154
+      }
+    },
+    {
+      "id": "stack/reader=nom/rep/fib",
+      "component": "stack",
+      "implementation": "reader=nom",
+      "workload": "rep/fib",
+      "mean_ns": 225666.41087623636,
+      "median_ns": 220875.7437137331,
+      "std_dev_ns": 15171.919968237004,
+      "throughput": {
+        "bytes": 81
+      }
+    },
+    {
+      "id": "stack/reader=nom/rep/sum-to",
+      "component": "stack",
+      "implementation": "reader=nom",
+      "workload": "rep/sum-to",
+      "mean_ns": 609552.8542026076,
+      "median_ns": 580215.0375,
+      "std_dev_ns": 68411.37503427356,
+      "throughput": {
+        "bytes": 92
+      }
+    },
+    {
+      "id": "stack/reader=nom/repl-session",
+      "component": "stack",
+      "implementation": "reader=nom",
+      "workload": "repl-session",
+      "mean_ns": 112593.94994480154,
+      "median_ns": 111212.77083333334,
+      "std_dev_ns": 3747.768094895769,
+      "throughput": {
+        "bytes": 1570
+      }
+    },
+    {
+      "id": "stack/std/rep/closures",
+      "component": "stack",
+      "implementation": "std",
+      "workload": "rep/closures",
+      "mean_ns": 25253.929676655076,
+      "median_ns": 24693.658974358976,
+      "std_dev_ns": 1802.8141142403492,
+      "throughput": {
+        "bytes": 154
+      }
+    },
+    {
+      "id": "stack/std/rep/fib",
+      "component": "stack",
+      "implementation": "std",
+      "workload": "rep/fib",
+      "mean_ns": 219403.15944520495,
+      "median_ns": 213896.4465034965,
+      "std_dev_ns": 21510.60011044348,
+      "throughput": {
+        "bytes": 81
+      }
+    },
+    {
+      "id": "stack/std/rep/sum-to",
+      "component": "stack",
+      "implementation": "std",
+      "workload": "rep/sum-to",
+      "mean_ns": 565847.2137076609,
+      "median_ns": 552216.6769230769,
+      "std_dev_ns": 50687.93660861001,
+      "throughput": {
+        "bytes": 92
+      }
+    },
+    {
+      "id": "stack/std/repl-session",
+      "component": "stack",
+      "implementation": "std",
+      "workload": "repl-session",
+      "mean_ns": 54786.920960102434,
+      "median_ns": 54288.85613075196,
+      "std_dev_ns": 2970.011687605634,
+      "throughput": {
+        "bytes": 1570
+      }
+    }
+  ]
+}
