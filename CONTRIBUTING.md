@@ -56,9 +56,11 @@ contribution is a new row: another crate doing one of the component jobs.
 
 5. **Register it** by adding it as a dependency of `crates/mal` and its
    type to the row list for its component in `crates/mal/src/stack.rs`
-   (line editors: `LINE_EDITORS` in `crates/mal/src/registry.rs`). That one
-   line makes it selectable (`mal --reader nom`), listed (`mal --list` and
-   the results page), benchmarked, and combinable with every other row.
+   That one line makes it selectable (`mal --reader nom`), listed
+   (`mal --list` and the results page), benchmarked, and combinable with
+   every other row. Line editors are not part of a stack: list them in
+   `LINE_EDITORS` in `crates/mal/src/registry.rs` and add their constructor
+   to the `--line-editor` match in `crates/mal/src/main.rs`.
    `cargo test -p mal --test conformance` then runs the mal test suite
    against it and fails unless it reaches exactly the step it claims;
    `MAL_CONFORMANCE=reader/nom` runs just that row. `cargo test -p mal

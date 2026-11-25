@@ -13,7 +13,7 @@ the same way, with the results in a table.
 This repository holds the shared traits, the runner, the comparison
 implementations and the published results.
 
-> **Status:** 12 readers, 6 printers, 12 environments, the `std` evaluator
+> **Status:** 12 readers, 6 printers, 13 environments, the `std` evaluator
 > and core namespace, and 4 line editors, each checked against the upstream
 > mal test suite and benchmarked (except `lexpr`, which cannot read the
 > corpus). Where the traits forced crates away from their idioms, and which
@@ -29,7 +29,7 @@ implementations and the published results.
 | [`crates/mal-testkit`](https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/tree/main/crates/mal-testkit) | Unit checks every reader, printer and environment row runs (dev-dependency only). |
 | [`crates/mal`](https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/tree/main/crates/mal) | The `mal` binary: a stepA interpreter assembled from rows, `--<component> <name>` to swap one in, and `mal --list`. Its `benches/components.rs` is the list of what gets benchmarked, and `tests/conformance.rs` runs the mal test suite against every row. |
 | [`crates/mal-bench`](https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/tree/main/crates/mal-bench) | The benchmark harness: fixed workloads and one generic [Criterion] benchmark per component trait. |
-| [`xtask/`](https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/tree/main/xtask) | `cargo xtask bench` records a run under `runs/`; `cargo xtask report` renders the newest run into the results page. |
+| [`xtask/`](https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/tree/main/xtask) | `cargo xtask bench` records a run under `runs/`; `cargo xtask report` renders the newest runs into the results page. |
 | [`comparisons/`](https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/tree/main/comparisons) | One crate per `<component>/<crate>` pair. Each exports an `Implementation` record and depends only on `mal-traits`, `mal-types` and the crate it compares. |
 | [`docs/`](https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/tree/main/docs) | The [mdBook] behind the documentation site: methodology, per-component pages, results. |
 | [`oranda.json`](https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/blob/main/oranda.json) | [oranda] configuration for the site, built and published from `main` by `.github/workflows/web.yml`. |
@@ -116,7 +116,7 @@ site have the candidates not yet implemented.
 Every implementation is timed with Criterion on the same fixed workloads.
 `cargo xtask bench` records a run as `runs/<id>/results.json`, and the
 [results page][results] on the documentation site is generated from the
-newest run together with the implementation registry, so it always shows
+newest runs (components and [stacks]) together with the implementation registry, so it always shows
 every registered row, measured or not. Above each table, charts drawn from
 the same numbers show each implementation's time relative to `std`, overall
 and per workload. CI fails if the page is stale. The
@@ -155,5 +155,6 @@ Licensed under the [Mozilla Public License 2.0](https://github.com/AJayClauGerma
 [Criterion]: https://github.com/bheisler/criterion.rs
 [site]: https://ajayclaugermany.github.io/make-a-lisp-in-rust-rosetta/
 [results]: https://ajayclaugermany.github.io/make-a-lisp-in-rust-rosetta/book/results.html
+[stacks]: https://ajayclaugermany.github.io/make-a-lisp-in-rust-rosetta/book/stacks.html
 [benchmarking]: https://ajayclaugermany.github.io/make-a-lisp-in-rust-rosetta/book/benchmarking.html
 [trait-notes]: https://ajayclaugermany.github.io/make-a-lisp-in-rust-rosetta/book/trait-notes.html

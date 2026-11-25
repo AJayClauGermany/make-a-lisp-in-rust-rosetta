@@ -3,7 +3,9 @@
 Every implementation is timed on the same fixed inputs with
 [Criterion](https://github.com/bheisler/criterion.rs), each run is committed
 as data under `runs/`, and the [Results](results.md) page is generated from
-the newest run. Nothing on that page is typed by hand.
+the newest run that measured components (and, for its Stacks section, the
+newest run that measured [stacks](stacks.md)). Nothing on that page is
+typed by hand.
 
 ## The pieces
 

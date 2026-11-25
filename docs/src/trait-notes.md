@@ -330,7 +330,6 @@ suite rather than of the traits.
 | [sexp] | reader | Same kind of crate as lexpr (ready-made S-expression parser), less configurable. |
 | [compact_str], [smol_str] | printer | Blocked by `&mut String` output, refinement 7. |
 | [ryu] | printer | `Value` has no floats. |
-| [rapidhash] | env | Another hasher; would add a number, not a finding. |
 | [elsa] | env | `FrozenMap` never replaces a value (references into it must stay valid), and `Env::set` must replace an existing binding (rebinding with `def!`), so it cannot be a scope's map. |
 | [string-interner], [ustr] | env | Same finding as lasso. |
 | [num-bigint], [rug] | core | Need a number type other than `Value::Int(i64)`, refinement 10. |
@@ -344,7 +343,6 @@ suite rather than of the traits.
 [compact_str]: https://github.com/ParkMyCar/compact_str
 [smol_str]: https://github.com/rust-analyzer/smol_str
 [ryu]: https://github.com/dtolnay/ryu
-[rapidhash]: https://github.com/hoxxep/rapidhash
 [elsa]: https://github.com/Manishearth/elsa
 [string-interner]: https://github.com/robbepop/string-interner
 [ustr]: https://github.com/anderslanglands/ustr

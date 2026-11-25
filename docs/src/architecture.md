@@ -101,7 +101,7 @@ never reach the binary.
 benchmark per component trait, each recording under the group
 `<component>/<implementation>` so results can be joined back to the registry.
 `xtask` is the runner: `cargo xtask bench` records a run as
-`runs/<id>/results.json`, `cargo xtask report` renders the newest run and the
+`runs/<id>/results.json`, `cargo xtask report` renders the newest runs and the
 registry into `docs/src/results.md`, and `cargo xtask compare` diffs two
 runs. Their third-party dependencies (Criterion, serde) never reach the
 `mal` binary. See [Benchmarking](benchmarking.md).
