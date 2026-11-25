@@ -55,7 +55,7 @@ contribution is a new row: another crate doing one of the component jobs.
    from a test: `mal_testkit::check_reader(NomReader::default)`.
 
 5. **Register it** by adding it as a dependency of `crates/mal` and its
-   type to the row list for its component in `crates/mal/src/stack.rs`
+   type to the row list for its component in `crates/mal/src/stack.rs`.
    That one line makes it selectable (`mal --reader nom`), listed
    (`mal --list` and the results page), benchmarked, and combinable with
    every other row. Line editors are not part of a stack: list them in
@@ -104,7 +104,7 @@ cargo clippy --workspace --all-targets -- -D warnings
 cargo test --workspace
 cargo test -p mal --benches        # runs every benchmark once, as a smoke test
 cargo test -p mal --features matrix --test stacks   # every combination of rows vs std
-cargo xtask report --check         # docs/src/results.md matches the newest run
+cargo xtask report --check         # docs/src/results.md matches the newest runs
 RUSTDOCFLAGS="-D warnings" cargo doc --workspace --no-deps
 cargo deny check
 ```

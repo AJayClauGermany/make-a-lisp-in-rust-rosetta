@@ -16,7 +16,7 @@ implementations and the published results.
 > **Status:** 12 readers, 6 printers, 13 environments, the `std` evaluator
 > and core namespace, and 4 line editors, each checked against the upstream
 > mal test suite and benchmarked (except `lexpr`, which cannot read the
-> corpus). Where the traits forced crates away from their idioms, and which
+> corpus; `rapidhash` is new and not yet in a recorded component run). Where the traits forced crates away from their idioms, and which
 > parts of them no row needed, is recorded in [Trait notes][trait-notes],
 > ahead of refining the traits.
 
@@ -27,7 +27,7 @@ implementations and the published results.
 | [`crates/mal-traits`](https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/tree/main/crates/mal-traits) | The component traits every implementation is written against. No dependencies. |
 | [`crates/mal-types`](https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/tree/main/crates/mal-types) | The shared `Rc`-based `Value` and `MalError` that rows of different components agree on. No dependencies. |
 | [`crates/mal-testkit`](https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/tree/main/crates/mal-testkit) | Unit checks every reader, printer and environment row runs (dev-dependency only). |
-| [`crates/mal`](https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/tree/main/crates/mal) | The `mal` binary: a stepA interpreter assembled from rows, `--<component> <name>` to swap one in, and `mal --list`. Its `benches/components.rs` is the list of what gets benchmarked, and `tests/conformance.rs` runs the mal test suite against every row. |
+| [`crates/mal`](https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/tree/main/crates/mal) | The `mal` binary: a stepA interpreter assembled from rows, `--<component> <name>` to swap one in, and `mal --list`. Its `src/stack.rs` is the single list of rows (what gets selected, listed and benchmarked, and how rows combine into stacks), and `tests/conformance.rs` runs the mal test suite against every row. |
 | [`crates/mal-bench`](https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/tree/main/crates/mal-bench) | The benchmark harness: fixed workloads and one generic [Criterion] benchmark per component trait. |
 | [`xtask/`](https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/tree/main/xtask) | `cargo xtask bench` records a run under `runs/`; `cargo xtask report` renders the newest runs into the results page. |
 | [`comparisons/`](https://github.com/AJayClauGermany/make-a-lisp-in-rust-rosetta/tree/main/comparisons) | One crate per `<component>/<crate>` pair. Each exports an `Implementation` record and depends only on `mal-traits`, `mal-types` and the crate it compares. |
@@ -133,7 +133,7 @@ cargo run -p mal -- --list            # list the implementations available to co
 cargo test --workspace                # includes the mal test suite for every row
 cargo xtask bench                     # benchmark, record under runs/, regenerate docs/src/results.md
 cargo xtask bench --stacks 'reader=* env=*'   # benchmark whole interpreters built from combinations of rows
-cargo xtask report --check            # verify the results page matches the newest run
+cargo xtask report --check            # verify the results page matches the newest runs
 ```
 
 To preview the documentation site locally, install [oranda] and run

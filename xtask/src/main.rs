@@ -3,8 +3,8 @@
 //!
 //! * `bench`: run the Criterion benchmarks, store the results as one run
 //!   under `runs/`, and regenerate the results page.
-//! * `report`: regenerate `docs/src/results.md` from the newest run (or
-//!   check that it is current, for CI).
+//! * `report`: regenerate `docs/src/results.md` from the newest component
+//!   run and the newest stack run (or check that it is current, for CI).
 //! * `compare`: print two recorded runs side by side.
 //!
 //! The binary and library crates of the comparison are kept dependency-free;
@@ -35,7 +35,8 @@ Commands:
           components: SPEC is `sweep` (each row swapped into std alone),
           `all`, or e.g. 'reader=nom,winnow env=*' (see docs/src/stacks.md)
   report [--check]
-          Regenerate docs/src/results.md from the newest run under runs/.
+          Regenerate docs/src/results.md from the newest component run and
+          the newest stack run under runs/.
           With --check, exit 1 instead if the page would change
   compare <RUN> <RUN>
           Print the benchmarks two runs have in common, with the change

@@ -12,7 +12,11 @@ One crate per `<component>/<crate>` pair, for example `reader/nom`,
   once in the row lists of `crates/mal/src/stack.rs`. That one entry makes
   it selectable (`mal --env <name>`), registered (`mal --list`, the results
   page), benchmarked, run against the mal test suite, and combinable with
-  every other row (see `docs/src/stacks.md`).
+  every other row (see `docs/src/stacks.md`). Evaluator and core rows also
+  need a family marker next to `StdEvalRow` / `StdCoreRow` there. Line
+  editors are not part of a stack: they are listed in `LINE_EDITORS` in
+  `crates/mal/src/registry.rs` and constructed in the `--line-editor` match
+  in `crates/mal/src/main.rs`, and are not benchmarked.
 
 See [CONTRIBUTING.md](../CONTRIBUTING.md) for the step-by-step version.
 

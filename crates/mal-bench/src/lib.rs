@@ -1,11 +1,11 @@
 //! Benchmark harness for the Make-a-Lisp rosetta comparison.
 //!
-//! One function per component trait, each generic over the implementation,
-//! so that benchmarking a new row is a single line in
-//! `crates/mal/benches/components.rs`:
+//! One function per component trait, each generic over the implementation.
+//! `crates/mal/benches/components.rs` calls them for every row listed in
+//! `crates/mal/src/stack.rs`, with the row's type:
 //!
 //! ```ignore
-//! mal_bench::reader(c, &reader_nom::IMPLEMENTATION, reader_nom::NomReader::default);
+//! mal_bench::reader(c, R::IMPLEMENTATION, R::default);
 //! ```
 //!
 //! Every function records its measurements under the Criterion group

@@ -14,7 +14,7 @@ typed by hand.
 | workloads | `crates/mal-bench/src/corpus.rs` | the fixed mal forms, the evaluation `PROGRAMS`, the REPL session and symbol lists every row is measured on |
 | harness | `crates/mal-bench/src/lib.rs` | one generic Criterion bench per component trait: `reader`, `printer`, `env`, `evaluator`, `core_namespace`, `interpreter` |
 | bench lists | `crates/mal/benches/components.rs`, `stacks.rs` | every row listed in `crates/mal/src/stack.rs`, per component; and whole stacks (see [Stacks](stacks.md)) |
-| runner | `xtask/` | `cargo xtask bench` records a run; `cargo xtask report` renders it; `cargo xtask compare` diffs two runs |
+| runner | `xtask/` | `cargo xtask bench` records a run; `cargo xtask report` renders the newest component and stack runs; `cargo xtask compare` diffs two runs |
 | data | `runs/<id>/results.json` | one file per run: host, toolchain, commit, command and every benchmark's statistics |
 | page | `docs/src/results.md` | generated; CI fails if it is stale |
 | charts | `xtask/src/chart.rs` | inline SVG drawn from the same rows as each table: geometric-mean ratio to `std`, and a per-workload heatmap |

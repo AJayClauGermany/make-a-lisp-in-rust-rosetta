@@ -40,7 +40,9 @@ and how the crate integrates (library, build script, proc macro).
 ### Measured
 
 Produced by `cargo xtask bench` and committed under `runs/`, one directory
-per run; the [Results](results.md) page is generated from the newest run.
+per run; the [Results](results.md) page is generated from the newest run
+that measured components and, for its Stacks section, the newest that
+measured stacks.
 See [Benchmarking](benchmarking.md) for the mechanics.
 
 | column | how it is measured | status |
