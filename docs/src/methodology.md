@@ -70,7 +70,10 @@ The column is checked, not claimed: `cargo test` runs the upstream test
 files (vendored under `crates/mal/tests/mal/`) against every registered row
 with the same matching rules as mal's `runtest.py`, swapping that one row
 into an otherwise all-`std` interpreter, and fails if the step a row reaches
-differs from the step its `Implementation` states. Failures in the suite's
+differs from the step its `Implementation` states. Combinations of rows
+are checked the same way on request (`MAL_CONFORMANCE_STACKS`), and
+`tests/stacks.rs` checks that every stack prints what the `std` stack
+prints; see [Stacks](stacks.md). Failures in the suite's
 optional (`soft`) sections are reported but do not count, as upstream.
 
 Rows also run shared unit checks for their component (`mal-testkit`), and

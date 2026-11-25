@@ -35,6 +35,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "Reedline::create(); Emacs keymap, built-in history; std::io fallback when piped",
 };
 
+impl mal_traits::Row for ReedlineEditor {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// Reads lines with reedline on a terminal, or plainly when piped.
 pub struct ReedlineEditor {
     editor: Option<Reedline>,

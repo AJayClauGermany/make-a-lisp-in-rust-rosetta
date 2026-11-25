@@ -1,11 +1,10 @@
-//! The benchmark list.
+//! The component benchmarks.
 //!
-//! One function per component; each line in a function benchmarks one
-//! registered implementation on the shared workloads in `mal_bench::corpus`.
-//! To benchmark a new row, add one line to the function for its component,
-//! passing its `IMPLEMENTATION` constant and a constructor (plus fixtures for
-//! the components whose value type belongs to the implementation). Then run
-//! `cargo xtask bench` to record a run and regenerate the results page.
+//! One function per component; each benchmarks every row of that component
+//! listed in `mal::stack` on the shared workloads in `mal_bench::corpus`,
+//! with `std` rows for anything else it needs. A new row is benchmarked as
+//! soon as it is listed there. Then run `cargo xtask bench` to record a run
+//! and regenerate the results page. Whole stacks are in `benches/stacks.rs`.
 //!
 //! Line editors are not timed; see `mal_bench` for why.
 
@@ -15,15 +14,16 @@
 use criterion::{Criterion, criterion_group, criterion_main};
 use mal::baseline;
 use mal::interpreter::Mal;
+use mal::stack::{
+    self, EnvRow, PickEnv, PickPrinter, PickReader, PrinterRow, ReaderRow, StdEnv, StdPrinter,
+    StdReader,
+};
 use mal_bench::corpus::{self, Form};
-use mal_traits::{CoreNamespace, Env, Interpreter, ReadOutcome, Reader};
+use mal_traits::{CoreNamespace, Interpreter, ReadOutcome, Reader, Step};
 use mal_types::Value;
 
 use core_std::StdCore;
-use env_std::StdEnv;
 use eval_std::StdEvaluator;
-use printer_std::StdPrinter;
-use reader_std::StdReader;
 
 /// `forms` read with the `std` reader, for the components that take values.
 fn parse(forms: &[Form]) -> Vec<(&'static str, Value)> {
@@ -39,112 +39,84 @@ fn parse(forms: &[Form]) -> Vec<(&'static str, Value)> {
 /// The `std` evaluator and an environment of type `E` with the `std` core
 /// namespace installed: what the evaluator and environment rows run
 /// programs in.
-fn setup<E: Env<Value = Value> + Default + 'static>() -> (StdEvaluator<E>, E) {
+fn setup<E: EnvRow>() -> (StdEvaluator<E>, E) {
     let env = E::default();
     StdCore::<E, StdReader, StdPrinter>::new(StdPrinter).install(&env);
     (StdEvaluator::new(), env)
 }
 
+struct BenchReader<'a>(&'a mut Criterion);
+
+impl PickReader for BenchReader<'_> {
+    type Output = ();
+    fn reader<R: ReaderRow>(self) {
+        mal_bench::reader(self.0, R::IMPLEMENTATION, R::default);
+    }
+}
+
 fn readers(c: &mut Criterion) {
-    mal_bench::reader(c, &reader_std::IMPLEMENTATION, || StdReader);
-    mal_bench::reader(c, &reader_nom::IMPLEMENTATION, || reader_nom::NomReader);
-    mal_bench::reader(c, &reader_winnow::IMPLEMENTATION, || {
-        reader_winnow::WinnowReader
-    });
-    mal_bench::reader(c, &reader_chumsky::IMPLEMENTATION, || {
-        reader_chumsky::ChumskyReader
-    });
-    mal_bench::reader(c, &reader_pest::IMPLEMENTATION, || reader_pest::PestReader);
-    mal_bench::reader(c, &reader_peg::IMPLEMENTATION, || reader_peg::PegReader);
-    mal_bench::reader(
-        c,
-        &reader_lalrpop::IMPLEMENTATION,
-        reader_lalrpop::LalrpopReader::default,
-    );
-    mal_bench::reader(c, &reader_logos::IMPLEMENTATION, || {
-        reader_logos::LogosReader
-    });
-    mal_bench::reader(c, &reader_regex::IMPLEMENTATION, || {
-        reader_regex::RegexReader
-    });
-    mal_bench::reader(c, &reader_stacker::IMPLEMENTATION, || {
-        reader_stacker::StackerReader
-    });
-    mal_bench::reader(c, &reader_combine::IMPLEMENTATION, || {
-        reader_combine::CombineReader
-    });
+    for imp in stack::READERS {
+        // The corpus is mal syntax; a row that cannot read mal (lexpr) would
+        // only time its error path.
+        if imp.supports(Step::ReadPrint) {
+            stack::pick_reader(imp.name, BenchReader(c));
+        }
+    }
+}
+
+struct BenchPrinter<'a> {
+    c: &'a mut Criterion,
+    values: &'a [(&'static str, Value)],
+}
+
+impl PickPrinter for BenchPrinter<'_> {
+    type Output = ();
+    fn printer<P: PrinterRow>(self) {
+        mal_bench::printer(self.c, P::IMPLEMENTATION, &P::default(), self.values);
+    }
 }
 
 fn printers(c: &mut Criterion) {
     let values = parse(corpus::FORMS);
-    mal_bench::printer(c, &printer_std::IMPLEMENTATION, &StdPrinter, &values);
-    mal_bench::printer(
-        c,
-        &printer_itoa::IMPLEMENTATION,
-        &printer_itoa::ItoaPrinter,
-        &values,
-    );
-    mal_bench::printer(
-        c,
-        &printer_memchr::IMPLEMENTATION,
-        &printer_memchr::MemchrPrinter,
-        &values,
-    );
-    mal_bench::printer(
-        c,
-        &printer_ufmt::IMPLEMENTATION,
-        &printer_ufmt::UfmtPrinter,
-        &values,
-    );
-    mal_bench::printer(
-        c,
-        &printer_pretty::IMPLEMENTATION,
-        &printer_pretty::PrettyPrinter::default(),
-        &values,
-    );
-    mal_bench::printer(
-        c,
-        &printer_lexical::IMPLEMENTATION,
-        &printer_lexical::LexicalPrinter,
-        &values,
-    );
+    for imp in stack::PRINTERS {
+        stack::pick_printer(imp.name, BenchPrinter { c, values: &values });
+    }
+}
+
+struct BenchEnv<'a> {
+    c: &'a mut Criterion,
+    programs: &'a [(&'static str, Value)],
+}
+
+impl PickEnv for BenchEnv<'_> {
+    type Output = ();
+    fn env<E: EnvRow>(self) {
+        #[allow(clippy::cast_possible_wrap)] // Indices are below ENV_BINDINGS.
+        let value = |i: usize| Value::Int(i as i64);
+        // Each row twice: the trait methods on their own, then the `std`
+        // evaluator running whole programs on that environment.
+        mal_bench::env(self.c, E::IMPLEMENTATION, E::default, value);
+        mal_bench::evaluator(self.c, E::IMPLEMENTATION, setup::<E>, self.programs);
+    }
 }
 
 fn envs(c: &mut Criterion) {
-    // Each row twice: the trait methods on their own, then the `std`
-    // evaluator running whole programs on that environment.
-    #[allow(clippy::cast_possible_wrap)] // Indices are below ENV_BINDINGS.
-    let value = |i: usize| Value::Int(i as i64);
     let programs = parse(corpus::PROGRAMS);
-    macro_rules! env_row {
-        ($row:ident, $env:ty) => {
-            mal_bench::env(c, &$row::IMPLEMENTATION, <$env>::new, value);
-            mal_bench::evaluator(c, &$row::IMPLEMENTATION, setup::<$env>, &programs);
-        };
+    for imp in stack::ENVS {
+        stack::pick_env(
+            imp.name,
+            BenchEnv {
+                c,
+                programs: &programs,
+            },
+        );
     }
-    env_row!(env_std, StdEnv<Value>);
-    env_row!(env_hashbrown, env_hashbrown::HashbrownEnv<Value>);
-    env_row!(env_indexmap, env_indexmap::IndexMapEnv<Value>);
-    env_row!(env_rustc_hash, env_rustc_hash::FxEnv<Value>);
-    env_row!(env_ahash, env_ahash::AHashEnv<Value>);
-    env_row!(env_foldhash, env_foldhash::FoldHashEnv<Value>);
-    env_row!(env_imbl, env_imbl::ImblEnv<Value>);
-    env_row!(env_rpds, env_rpds::RpdsEnv<Value>);
-    env_row!(env_fnv, env_fnv::FnvEnv<Value>);
-    env_row!(env_smallvec, env_smallvec::SmallVecEnv<Value>);
-    env_row!(env_lasso, env_lasso::LassoEnv<Value>);
-    env_row!(env_slotmap, env_slotmap::SlotMapEnv<Value>);
 }
 
 fn evaluators(c: &mut Criterion) {
     mal_bench::interpreter(c, &baseline::ECHO, || baseline::EchoInterpreter);
     let programs = parse(corpus::PROGRAMS);
-    mal_bench::evaluator(
-        c,
-        &eval_std::IMPLEMENTATION,
-        setup::<StdEnv<Value>>,
-        &programs,
-    );
+    mal_bench::evaluator(c, &eval_std::IMPLEMENTATION, setup::<StdEnv>, &programs);
     // The whole std stack, read-eval-print, as the REPL runs it, with the
     // corpus's free symbols bound so every form evaluates.
     mal_bench::interpreter(c, &eval_std::IMPLEMENTATION, || {
@@ -169,7 +141,7 @@ fn cores(c: &mut Criterion) {
     mal_bench::core_namespace(
         c,
         &core_std::IMPLEMENTATION,
-        || StdCore::<StdEnv<Value>, StdReader, StdPrinter>::new(StdPrinter),
+        || StdCore::<StdEnv, StdReader, StdPrinter>::new(StdPrinter),
         StdEnv::new,
     );
 }

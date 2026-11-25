@@ -11,7 +11,7 @@ the newest run. Nothing on that page is typed by hand.
 |-------|-------|-----|
 | workloads | `crates/mal-bench/src/corpus.rs` | the fixed mal forms, the evaluation `PROGRAMS`, the REPL session and symbol lists every row is measured on |
 | harness | `crates/mal-bench/src/lib.rs` | one generic Criterion bench per component trait: `reader`, `printer`, `env`, `evaluator`, `core_namespace`, `interpreter` |
-| bench list | `crates/mal/benches/components.rs` | one line per implementation: which rows get measured |
+| bench lists | `crates/mal/benches/components.rs`, `stacks.rs` | every row listed in `crates/mal/src/stack.rs`, per component; and whole stacks (see [Stacks](stacks.md)) |
 | runner | `xtask/` | `cargo xtask bench` records a run; `cargo xtask report` renders it; `cargo xtask compare` diffs two runs |
 | data | `runs/<id>/results.json` | one file per run: host, toolchain, commit, command and every benchmark's statistics |
 | page | `docs/src/results.md` | generated; CI fails if it is stale |
@@ -31,13 +31,17 @@ defines the free symbols the forms mention (`a`, `counter`,
 
 ## Adding an implementation to the benchmarks
 
-After the row exists and is registered (see [Contributing](contributing.md)),
-add one line to the function for its component in
-`crates/mal/benches/components.rs`:
+A row is benchmarked as soon as it is listed in `crates/mal/src/stack.rs`
+(see [Contributing](contributing.md)): the functions in
+`crates/mal/benches/components.rs` visit every row of their component with
+its type, and call the harness:
 
 ```rust
-fn readers(c: &mut Criterion) {
-    mal_bench::reader(c, &reader_nom::IMPLEMENTATION, reader_nom::NomReader::default);
+impl PickReader for BenchReader<'_> {
+    type Output = ();
+    fn reader<R: ReaderRow>(self) {
+        mal_bench::reader(self.0, R::IMPLEMENTATION, R::default);
+    }
 }
 ```
 
@@ -73,6 +77,7 @@ implementation.
 cargo xtask bench                       # record under runs/, regenerate the page
 cargo xtask bench -- eval/              # pass a Criterion filter through
 cargo xtask bench --host desk --no-report
+cargo xtask bench --stacks sweep        # whole stacks instead; see the Stacks page
 cargo xtask report                      # regenerate docs/src/results.md
 cargo xtask report --check              # what CI runs
 cargo xtask compare <run-a> <run-b>     # side-by-side change in mean

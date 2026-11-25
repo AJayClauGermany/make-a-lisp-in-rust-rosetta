@@ -41,6 +41,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "PEG; grammar in a .pest file via derive macro, actions walk an untyped pair tree in Rust",
 };
 
+impl mal_traits::Row for PestReader {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// The parser `pest_derive` generates from `src/mal.pest`.
 mod grammar {
     // The generated `Rule` enum has a variant per grammar rule, including

@@ -26,6 +26,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "checked i64 arithmetic; Vec-backed sequences; static fn table plus printer/reader closures",
 };
 
+impl<E, R, P> mal_traits::Row for StdCore<E, R, P> {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// The core namespace, generic over the environment it installs into, the
 /// reader `read-string` uses and the printer the printing functions use.
 pub struct StdCore<E, R, P> {

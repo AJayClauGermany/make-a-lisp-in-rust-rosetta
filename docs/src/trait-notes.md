@@ -207,8 +207,16 @@ Ordered roughly by how many rows they would simplify.
 ### Interpreter and wiring
 
 26. **Run-time selection multiplies code.** Every row is generic, so every
-    combination the binary can run is a monomorphised copy. The binary allows
-    one row to differ from `std` at a time, which keeps the copies linear.
+    combination the binary can run is a monomorphised copy. A default build
+    allows one row to differ from `std` at a time, which keeps the copies
+    linear; the `matrix` feature compiles the product, about 900 copies,
+    which costs seconds in a debug build and minutes under the release
+    profile's fat LTO. The copies are the point: each is optimised as a
+    whole, which is what [stack benchmarks](stacks.md) measure. Evaluators
+    and core namespaces are generic over other rows, so they are plugged in
+    as families (a generic associated type picks the member for the rest of
+    the stack). That needed no trait change, only a marker type per row in
+    the wiring.
 27. **Rendered errors.** `run_repl` prints `Error: {e}` with `Display`, which
     cannot print a thrown mal value with the printer row, so the wiring's
     error type is a pre-rendered `String`. Refinement 9.

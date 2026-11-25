@@ -17,6 +17,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "write! for integers, char-by-char escaping, recursion for collections",
 };
 
+impl mal_traits::Row for StdPrinter {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// Prints values with `std::fmt` only.
 #[derive(Debug, Default, Clone)]
 pub struct StdPrinter;

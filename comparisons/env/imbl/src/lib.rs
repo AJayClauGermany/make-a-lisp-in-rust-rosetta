@@ -32,6 +32,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "imbl::HashMap (persistent HAMT, maintained fork of im) per scope; RefCell forced by Env::set(&self)",
 };
 
+impl<V> mal_traits::Row for ImblEnv<V> {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// A shared handle to one scope of bindings.
 pub struct ImblEnv<V>(Rc<Scope<V>>);
 

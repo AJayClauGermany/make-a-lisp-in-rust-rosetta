@@ -32,6 +32,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "DefaultEditor; Emacs/vi keymaps, in-memory history; prompt written by the row when piped",
 };
 
+impl mal_traits::Row for RustylineEditor {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// Reads lines with rustyline.
 #[derive(Debug)]
 pub struct RustylineEditor {

@@ -1,24 +1,16 @@
 //! Choosing rows at run time: `mal --reader nom` runs the full interpreter
 //! with the `nom` reader row and `std` everywhere else.
 //!
-//! Every row is generic code, so every combination the binary can run is a
-//! separate monomorphised copy of the interpreter. Allowing any combination
-//! would multiply those copies (readers × printers × environments); allowing
-//! one row to differ from `std` at a time adds them instead, which is all the
-//! comparison needs: each row is measured against the baseline with
-//! everything else held fixed.
+//! The names are turned into types by [`crate::stack`], which also decides
+//! which combinations this build can run: by default, stacks with at most
+//! one non-`std` row (each row measured against the baseline with
+//! everything else held fixed); with the `matrix` feature, any combination.
 
-use mal_traits::{Component, Env, Implementation, Interpreter, Printer, Reader};
-use mal_types::Value;
-
-use core_std::StdCore;
-use env_std::StdEnv;
-use eval_std::StdEvaluator;
-use printer_std::StdPrinter;
-use reader_std::StdReader;
+use mal_traits::{Component, Implementation, Interpreter};
 
 use crate::baseline::EchoInterpreter;
-use crate::interpreter::{Mal, ReadPrint, ReplError};
+use crate::interpreter::{ReadPrint, ReplError};
+use crate::stack::{self, CoreRow, EnvRow, EvalRow, PrinterRow, ReaderRow, StackVisitor};
 
 /// An interpreter chosen at run time.
 pub type DynInterpreter = Box<dyn Interpreter<Error = ReplError>>;
@@ -95,138 +87,59 @@ fn index(component: Component) -> usize {
 /// Build the interpreter for `selection`, with `argv` as `*ARGV*`. The line
 /// editor is not part of the interpreter; see the binary.
 pub fn build(selection: &Selection, argv: &[String]) -> Result<DynInterpreter, String> {
-    let changed: Vec<Component> = Component::ALL
-        .into_iter()
-        .filter(|c| *c != Component::LineEditor && selection.get(*c) != "std")
-        .collect();
-    if selection.read_print && selection.get(Component::Evaluator) != "std" {
+    let evaluator = selection.get(Component::Evaluator);
+    if evaluator == "echo" {
+        let others: Vec<String> = stack::changed(selection)
+            .into_iter()
+            .filter(|c| *c != Component::Evaluator)
+            .map(|c| format!("--{} {}", c.slug(), selection.get(c)))
+            .collect();
+        if !others.is_empty() || selection.read_print {
+            return Err(format!(
+                "the echo evaluator reads, evaluates and prints nothing, so it takes no other rows; got {}",
+                others.join(" ")
+                    + if selection.read_print {
+                        " --read-print"
+                    } else {
+                        ""
+                    }
+            ));
+        }
+        return Ok(Box::new(Echo));
+    }
+    if selection.read_print && evaluator != "std" {
         return Err(format!(
-            "--read-print replaces the evaluator, so it cannot be combined with --eval {}",
-            selection.get(Component::Evaluator)
+            "--read-print replaces the evaluator, so it cannot be combined with --eval {evaluator}"
         ));
     }
-    let component = match changed.as_slice() {
-        [] => {
-            return Ok(assemble(
-                selection,
-                StdReader,
-                StdPrinter,
-                StdEnv::new(),
-                argv,
-            ));
-        }
-        [one] => *one,
-        _ => {
-            return Err(format!(
-                "only one of reader, printer, env, eval and core may differ from std at a time; got {}",
-                changed
-                    .iter()
-                    .map(|c| format!("--{} {}", c.slug(), selection.get(*c)))
-                    .collect::<Vec<_>>()
-                    .join(" ")
-            ));
-        }
-    };
-    let name = selection.get(component);
-    // One row swapped in, `std` for the rest.
-    macro_rules! with {
-        (reader: $reader:expr) => {
-            Some(assemble(
-                selection,
-                $reader,
-                StdPrinter,
-                StdEnv::new(),
-                argv,
-            ))
-        };
-        (printer: $printer:expr) => {
-            Some(assemble(
-                selection,
-                StdReader,
-                $printer,
-                StdEnv::new(),
-                argv,
-            ))
-        };
-        (env: $env:expr) => {
-            Some(assemble(selection, StdReader, StdPrinter, $env, argv))
-        };
-    }
-    let built = match (component, name) {
-        (Component::Reader, "nom") => with!(reader: reader_nom::NomReader),
-        (Component::Reader, "winnow") => with!(reader: reader_winnow::WinnowReader),
-        (Component::Reader, "chumsky") => with!(reader: reader_chumsky::ChumskyReader),
-        (Component::Reader, "pest") => with!(reader: reader_pest::PestReader),
-        (Component::Reader, "peg") => with!(reader: reader_peg::PegReader),
-        (Component::Reader, "lalrpop") => with!(reader: reader_lalrpop::LalrpopReader::default()),
-        (Component::Reader, "logos") => with!(reader: reader_logos::LogosReader),
-        (Component::Reader, "regex") => with!(reader: reader_regex::RegexReader),
-        (Component::Reader, "stacker") => with!(reader: reader_stacker::StackerReader),
-        (Component::Reader, "combine") => with!(reader: reader_combine::CombineReader),
-        (Component::Reader, "lexpr") => with!(reader: reader_lexpr::LexprReader::default()),
-        (Component::Printer, "itoa") => with!(printer: printer_itoa::ItoaPrinter),
-        (Component::Printer, "memchr") => with!(printer: printer_memchr::MemchrPrinter),
-        (Component::Printer, "ufmt") => with!(printer: printer_ufmt::UfmtPrinter),
-        (Component::Printer, "pretty") => with!(printer: printer_pretty::PrettyPrinter::default()),
-        (Component::Printer, "lexical") => with!(printer: printer_lexical::LexicalPrinter),
-        (Component::Env, "hashbrown") => with!(env: env_hashbrown::HashbrownEnv::new()),
-        (Component::Env, "indexmap") => with!(env: env_indexmap::IndexMapEnv::new()),
-        (Component::Env, "rustc-hash") => with!(env: env_rustc_hash::FxEnv::new()),
-        (Component::Env, "ahash") => with!(env: env_ahash::AHashEnv::new()),
-        (Component::Env, "foldhash") => with!(env: env_foldhash::FoldHashEnv::new()),
-        (Component::Env, "imbl") => with!(env: env_imbl::ImblEnv::new()),
-        (Component::Env, "rpds") => with!(env: env_rpds::RpdsEnv::new()),
-        (Component::Env, "fnv") => with!(env: env_fnv::FnvEnv::new()),
-        (Component::Env, "smallvec") => with!(env: env_smallvec::SmallVecEnv::new()),
-        (Component::Env, "lasso") => with!(env: env_lasso::LassoEnv::new()),
-        (Component::Env, "slotmap") => with!(env: env_slotmap::SlotMapEnv::new()),
-        (Component::Evaluator, "echo") => Some(Box::new(Echo) as DynInterpreter),
-        _ => None,
-    };
-    built.ok_or_else(|| {
-        format!("unknown {component} implementation `{name}`; `mal --list` shows what is available")
-    })
+    stack::visit(
+        selection,
+        Build {
+            argv,
+            read_print: selection.read_print,
+        },
+    )
+    .map_err(|e| e.to_string())
 }
 
-/// The interpreter over the given reader, printer and environment rows:
-/// the read-print interpreter when the selection asks for it, otherwise the
-/// `std` evaluator and core namespace.
-fn assemble<R, P, E>(
-    selection: &Selection,
-    reader: R,
-    printer: P,
-    env: E,
-    argv: &[String],
-) -> DynInterpreter
-where
-    R: Reader<Value = Value> + Default + 'static,
-    P: Printer<Value = Value> + Clone + 'static,
-    E: Env<Value = Value> + 'static,
-{
-    if selection.read_print {
-        Box::new(ReadPrint::new(reader, printer))
-    } else {
-        stack(reader, printer, env, argv)
-    }
+/// Builds the interpreter for the rows it is visited with.
+struct Build<'a> {
+    argv: &'a [String],
+    read_print: bool,
 }
 
-/// The `std` evaluator and core namespace over the given reader, printer and
-/// environment rows.
-fn stack<R, P, E>(reader: R, printer: P, env: E, argv: &[String]) -> DynInterpreter
-where
-    R: Reader<Value = Value> + Default + 'static,
-    P: Printer<Value = Value> + Clone + 'static,
-    E: Env<Value = Value> + 'static,
-{
-    let core = StdCore::<E, R, P>::new(printer.clone());
-    Box::new(Mal::new(
-        reader,
-        printer,
-        StdEvaluator::<E>::new(),
-        env,
-        &core,
-        argv,
-    ))
+impl StackVisitor for Build<'_> {
+    type Output = DynInterpreter;
+
+    fn visit<R: ReaderRow, P: PrinterRow, E: EnvRow, Ev: EvalRow, C: CoreRow>(
+        self,
+    ) -> DynInterpreter {
+        if self.read_print {
+            Box::new(ReadPrint::new(R::default(), P::default()))
+        } else {
+            Box::new(stack::build::<R, P, E, Ev, C>(self.argv))
+        }
+    }
 }
 
 /// [`EchoInterpreter`] with the error type the other interpreters share.
@@ -264,13 +177,27 @@ mod tests {
     }
 
     #[test]
-    fn only_one_row_may_differ_from_std() {
+    fn combinations_need_the_matrix_feature() {
         let mut selection = Selection::default();
         selection.set(Component::Reader, "nom");
-        selection.set(Component::Env, "im");
+        selection.set(Component::Env, "fnv");
+        assert_eq!(selection.to_args(), ["--reader", "nom", "--env", "fnv"]);
+        let built = build(&selection, &[]);
+        assert_eq!(built.is_ok(), stack::MATRIX);
+        match built {
+            Ok(mut mal) => assert_eq!(mal.rep("(+ 1 2)").unwrap().as_deref(), Some("3")),
+            Err(err) => assert!(err.contains("--reader nom --env fnv"), "{err}"),
+        }
+    }
+
+    #[test]
+    fn echo_takes_no_other_rows() {
+        let mut selection = Selection::default();
+        selection.set(Component::Evaluator, "echo");
+        assert!(build(&selection, &[]).is_ok());
+        selection.set(Component::Reader, "nom");
         let err = build(&selection, &[]).err().unwrap();
-        assert!(err.contains("--reader nom --env im"), "{err}");
-        assert_eq!(selection.to_args(), ["--reader", "nom", "--env", "im"]);
+        assert!(err.contains("--reader nom"), "{err}");
     }
 
     #[test]

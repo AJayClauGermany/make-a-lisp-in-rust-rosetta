@@ -12,6 +12,7 @@ use mal_traits::{Component, Implementation};
 
 use crate::chart;
 use crate::run::{Benchmark, Run, Throughput};
+use crate::stacks;
 use crate::{Result, workspace_root};
 
 /// Where the generated page lives, relative to the workspace root.
@@ -88,11 +89,25 @@ pub fn compare(args: &[String]) -> Result<()> {
     Ok(())
 }
 
+/// The component a stack benchmark is recorded under (`stack/<label>`).
+pub const STACK: &str = "stack";
+
+/// Whether `run` measured any component rows (as opposed to only stacks).
+fn has_components(run: &Run) -> bool {
+    run.benchmarks.iter().any(|b| b.component != STACK)
+}
+
 /// Render the results page from `runs` (newest first) and the registry.
+///
+/// The component tables come from the newest run that measured components
+/// and the stacks section from the newest run that measured stacks, so a
+/// run of only stacks (`cargo xtask bench --stacks ...`) does not hide the
+/// component numbers, and the other way round.
 pub fn render(runs: &[Run], registry: &[&Implementation]) -> String {
     let mut out = String::new();
-    let latest = runs.first();
-    let previous = runs.get(1);
+    let component_runs: Vec<&Run> = runs.iter().filter(|r| has_components(r)).collect();
+    let latest = component_runs.first().copied();
+    let previous = component_runs.get(1).copied();
 
     out.push_str("# Results\n\n");
     out.push_str(
@@ -113,6 +128,11 @@ pub fn render(runs: &[Run], registry: &[&Implementation]) -> String {
     for component in Component::ALL {
         render_component(&mut out, component, registry, latest, previous);
     }
+
+    let stack_run = runs
+        .iter()
+        .find(|r| r.benchmarks.iter().any(|b| b.component == STACK));
+    stacks::render(&mut out, stack_run);
 
     render_runs_index(&mut out, runs);
     out

@@ -26,6 +26,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "indexmap::IndexMap (insertion-ordered, SipHash) per scope",
 };
 
+impl<V> mal_traits::Row for IndexMapEnv<V> {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// A shared handle to one scope of bindings.
 pub struct IndexMapEnv<V>(Rc<Scope<V>>);
 

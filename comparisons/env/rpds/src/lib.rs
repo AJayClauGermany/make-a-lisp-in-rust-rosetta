@@ -29,6 +29,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "rpds::HashTrieMap (persistent HAMT, Rc-shared) per scope; RefCell forced by Env::set(&self)",
 };
 
+impl<V> mal_traits::Row for RpdsEnv<V> {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// A shared handle to one scope of bindings.
 pub struct RpdsEnv<V>(Rc<Scope<V>>);
 

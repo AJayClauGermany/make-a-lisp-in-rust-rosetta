@@ -37,6 +37,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "symbols interned in one shared Rodeo; scopes keyed by u32 Spur, but &str lookups still hash the text",
 };
 
+impl<V> mal_traits::Row for LassoEnv<V> {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// A shared handle to one scope of bindings.
 pub struct LassoEnv<V>(Rc<Scope<V>>);
 

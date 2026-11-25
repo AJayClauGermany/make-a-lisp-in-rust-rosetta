@@ -23,6 +23,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "std printer with integers through ufmt::uwrite! (no core::fmt)",
 };
 
+impl mal_traits::Row for UfmtPrinter {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// Prints values; see the crate documentation for what differs from `std`.
 #[derive(Debug, Default, Clone)]
 pub struct UfmtPrinter;

@@ -3,8 +3,9 @@
 //! path, and the printer and evaluator fixtures (read with `std`) are what
 //! every reader would have produced.
 
+use mal::stack::{self, PickReader, ReaderRow};
 use mal_bench::corpus;
-use mal_traits::{ReadOutcome, Reader};
+use mal_traits::{ReadOutcome, Reader, Step};
 use mal_types::Value;
 
 fn read_all<R: Reader<Value = Value>>(mut reader: R) -> Vec<Value> {
@@ -19,29 +20,34 @@ fn read_all<R: Reader<Value = Value>>(mut reader: R) -> Vec<Value> {
         .collect()
 }
 
+struct ReadAll;
+
+impl PickReader for ReadAll {
+    type Output = Vec<Value>;
+    fn reader<R: ReaderRow>(self) -> Vec<Value> {
+        read_all(R::default())
+    }
+}
+
 #[test]
 fn readers_agree_on_the_corpus() {
     let expected = read_all(reader_std::StdReader);
-    let rows = [
-        ("nom", read_all(reader_nom::NomReader)),
-        ("winnow", read_all(reader_winnow::WinnowReader)),
-        ("chumsky", read_all(reader_chumsky::ChumskyReader)),
-        ("pest", read_all(reader_pest::PestReader)),
-        ("peg", read_all(reader_peg::PegReader)),
-        (
-            "lalrpop",
-            read_all(reader_lalrpop::LalrpopReader::default()),
-        ),
-        ("logos", read_all(reader_logos::LogosReader)),
-        ("regex", read_all(reader_regex::RegexReader)),
-    ];
-    for (name, values) in rows {
+    let mut checked = 0;
+    for imp in stack::READERS {
+        // lexpr cannot read mal syntax; its step column says so.
+        if imp.name == "std" || !imp.supports(Step::ReadPrint) {
+            continue;
+        }
+        let values = stack::pick_reader(imp.name, ReadAll).expect("listed rows can be picked");
+        checked += 1;
         // `Value`'s `PartialEq` is mal's `=`, which ignores list/vector and
         // metadata differences; compare the debug form to be exact.
         assert_eq!(
             format!("{values:?}"),
             format!("{expected:?}"),
-            "reader {name} disagrees with std"
+            "reader {} disagrees with std",
+            imp.name
         );
     }
+    assert!(checked >= 10, "only {checked} readers checked");
 }

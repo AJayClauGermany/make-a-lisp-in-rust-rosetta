@@ -7,7 +7,7 @@
 use std::convert::Infallible;
 use std::io::{self, BufRead, Write};
 
-use mal_traits::{Component, Implementation, Interpreter, LineEditor, Step};
+use mal_traits::{Component, Implementation, Interpreter, LineEditor, Row, Step};
 
 /// Reads lines from standard input with no editing or history.
 #[derive(Debug, Default)]
@@ -64,6 +64,14 @@ pub const ECHO: Implementation = Implementation {
     highest_step: Step::Repl,
     notes: "step0: prints each line back unchanged",
 };
+
+impl Row for StdinLineEditor {
+    const IMPLEMENTATION: &'static Implementation = &STDIN_LINE_EDITOR;
+}
+
+impl Row for EchoInterpreter {
+    const IMPLEMENTATION: &'static Implementation = &ECHO;
+}
 
 /// Table entries for the baselines.
 pub const IMPLEMENTATIONS: &[Implementation] = &[STDIN_LINE_EDITOR, ECHO];

@@ -1,62 +1,42 @@
 //! Every implementation the binary knows about, and a plain-text table of
 //! them for `mal --list`.
 //!
-//! Comparison crates register themselves here by adding their
-//! `Implementation` constant to [`all`]. The Markdown tables in the docs are
+//! Rows are registered by listing their type in [`crate::stack`] (or, for
+//! line editors, in `LINE_EDITORS`); the table entry comes from the type's
+//! [`Row`] implementation. The Markdown tables in the docs are
 //! generated from the same data by the benchmark harness.
 
 use std::fmt::Write;
 
-use mal_traits::{Component, Implementation};
+use mal_traits::{Component, Implementation, Row};
 
-use crate::baseline;
+use crate::{baseline, stack};
 
-/// Every comparison row, grouped by component with the `std` baseline
-/// first. The binary's `--<component> <name>` flags select from these (see
-/// [`crate::select`]).
-const ROWS: &[&Implementation] = &[
-    &reader_std::IMPLEMENTATION,
-    &reader_nom::IMPLEMENTATION,
-    &reader_winnow::IMPLEMENTATION,
-    &reader_chumsky::IMPLEMENTATION,
-    &reader_pest::IMPLEMENTATION,
-    &reader_peg::IMPLEMENTATION,
-    &reader_lalrpop::IMPLEMENTATION,
-    &reader_logos::IMPLEMENTATION,
-    &reader_regex::IMPLEMENTATION,
-    &reader_stacker::IMPLEMENTATION,
-    &reader_combine::IMPLEMENTATION,
-    &reader_lexpr::IMPLEMENTATION,
-    &printer_std::IMPLEMENTATION,
-    &printer_itoa::IMPLEMENTATION,
-    &printer_memchr::IMPLEMENTATION,
-    &printer_ufmt::IMPLEMENTATION,
-    &printer_pretty::IMPLEMENTATION,
-    &printer_lexical::IMPLEMENTATION,
-    &env_std::IMPLEMENTATION,
-    &env_hashbrown::IMPLEMENTATION,
-    &env_indexmap::IMPLEMENTATION,
-    &env_rustc_hash::IMPLEMENTATION,
-    &env_ahash::IMPLEMENTATION,
-    &env_foldhash::IMPLEMENTATION,
-    &env_imbl::IMPLEMENTATION,
-    &env_rpds::IMPLEMENTATION,
-    &env_fnv::IMPLEMENTATION,
-    &env_smallvec::IMPLEMENTATION,
-    &env_lasso::IMPLEMENTATION,
-    &env_slotmap::IMPLEMENTATION,
-    &eval_std::IMPLEMENTATION,
-    &core_std::IMPLEMENTATION,
-    &line_editor_rustyline::IMPLEMENTATION,
-    &line_editor_reedline::IMPLEMENTATION,
-    &line_editor_dialoguer::IMPLEMENTATION,
+/// The line-editor rows. The rows of every other component are listed in
+/// [`crate::stack`], since those are what an interpreter is built from.
+const LINE_EDITORS: &[&Implementation] = &[
+    <line_editor_rustyline::RustylineEditor as Row>::IMPLEMENTATION,
+    <line_editor_reedline::ReedlineEditor as Row>::IMPLEMENTATION,
+    <line_editor_dialoguer::DialoguerEditor as Row>::IMPLEMENTATION,
 ];
 
-/// All known implementations, the binary's own baselines first.
+/// All known implementations, grouped by component with the `std` baseline
+/// first: the binary's own baselines, then the rows of [`crate::stack`],
+/// then the line editors. The binary's `--<component> <name>` flags select
+/// from these (see [`crate::select`]).
 pub fn all() -> Vec<&'static Implementation> {
     baseline::IMPLEMENTATIONS
         .iter()
-        .chain(ROWS.iter().copied())
+        .chain(
+            stack::READERS
+                .iter()
+                .chain(stack::PRINTERS)
+                .chain(stack::ENVS)
+                .chain(stack::EVALS)
+                .chain(stack::CORES)
+                .chain(LINE_EDITORS)
+                .copied(),
+        )
         .collect()
 }
 

@@ -53,8 +53,13 @@ behind this trait is reference counting again. See
 | [smallvec] | linear scan, 8 pairs inline | `Rc<RefCell<_>>` | stepA_mal | 1.16.5 |
 | [lasso] | `HashMap<Spur, V>`, symbols interned in a shared `Rodeo` | `Rc<RefCell<_>>` | stepA_mal | 0.7.3 |
 | [slotmap] | every scope in one `SlotMap` arena | arena key + hand-written refcount | stepA_mal | 1.1.1 |
-| [rapidhash] | std `HashMap` with rapidhash | `Rc<RefCell<_>>` | | |
+| [rapidhash] | std `HashMap` with rapidhash's `GlobalState` (one seed per process, as its docs advise for many maps) | `Rc<RefCell<_>>` | stepA_mal | 4.5.1 |
 | [elsa] | append-only `FrozenMap` | `Rc` without `RefCell` | | |
+| [micromap] / [litemap] | linear scan / sorted `Vec` per scope | `Rc<RefCell<_>>` | | |
+| [phf] / [frozen-collections] | a static root scope for the built-ins, hashed at build time | `Rc<RefCell<_>>` | | |
+| [patricia_tree] | radix trie on symbol text, no hashing | `Rc<RefCell<_>>` | | |
+| [string-interner] / [ustr] + [nohash-hasher] | interned keys with no hashing at lookup; pays off only with an owned symbol type (refinement 5) | `Rc<RefCell<_>>` | | |
+| [papaya] / [dashmap] | concurrent maps: the cost of thread safety in a single-threaded interpreter | `Arc` | | |
 
 [hashbrown]: https://github.com/rust-lang/hashbrown
 [indexmap]: https://github.com/indexmap-rs/indexmap
@@ -69,3 +74,13 @@ behind this trait is reference counting again. See
 [slotmap]: https://github.com/orlp/slotmap
 [rapidhash]: https://github.com/hoxxep/rapidhash
 [elsa]: https://github.com/Manishearth/elsa
+[micromap]: https://crates.io/crates/micromap
+[litemap]: https://crates.io/crates/litemap
+[phf]: https://crates.io/crates/phf
+[frozen-collections]: https://crates.io/crates/frozen-collections
+[patricia_tree]: https://crates.io/crates/patricia_tree
+[string-interner]: https://crates.io/crates/string-interner
+[ustr]: https://crates.io/crates/ustr
+[nohash-hasher]: https://crates.io/crates/nohash-hasher
+[papaya]: https://crates.io/crates/papaya
+[dashmap]: https://crates.io/crates/dashmap

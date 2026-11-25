@@ -10,6 +10,14 @@ homepage.workspace = true
 authors.workspace = true
 publish.workspace = true
 
+[features]
+# Compile every combination of reader, printer, environment, evaluator and
+# core rows, so `mal --reader nom --env rustc-hash` and the stack benchmarks
+# and tests can run any of them. Off by default: the number of interpreter
+# copies is the product of the row counts instead of their sum, which costs
+# build time. See docs/src/stacks.md.
+matrix = []
+
 [[bin]]
 name = "mal"
 path = "src/main.rs"
@@ -48,6 +56,7 @@ env-fnv = { path = "../../comparisons/env/fnv" }
 env-smallvec = { path = "../../comparisons/env/smallvec" }
 env-lasso = { path = "../../comparisons/env/lasso" }
 env-slotmap = { path = "../../comparisons/env/slotmap" }
+env-rapidhash = { path = "../../comparisons/env/rapidhash" }
 eval-std = { path = "../../comparisons/eval/std" }
 core-std = { path = "../../comparisons/core/std" }
 line-editor-rustyline = { path = "../../comparisons/line-editor/rustyline" }
@@ -64,6 +73,10 @@ fancy-regex = "0.14"
 
 [[bench]]
 name = "components"
+harness = false
+
+[[bench]]
+name = "stacks"
 harness = false
 
 [lints]

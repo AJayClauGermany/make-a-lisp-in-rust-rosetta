@@ -87,6 +87,7 @@ site have the candidates not yet implemented.
 | smallvec   | linear scan, 8 pairs inline | `Rc<RefCell<_>>` | stepA_mal | 1.16.5 |
 | lasso      | interned symbols, `HashMap<Spur, V>` | `Rc<RefCell<_>>` | stepA_mal | 0.7.3 |
 | slotmap    | all scopes in one arena | arena key + refcount | stepA_mal | 1.1.1 |
+| rapidhash  | `HashMap` with rapidhash (`GlobalState`) | `Rc<RefCell<_>>` | stepA_mal | 4.5.1 |
 
 ### Evaluator (`comparisons/eval/`)
 
@@ -127,9 +128,11 @@ measured yet; see the [benchmarking page][benchmarking].
 ```bash
 cargo run -p mal                      # start the REPL (all std rows)
 cargo run -p mal -- --reader nom      # the same with one row swapped in
+cargo run -p mal --features matrix -- --reader nom --env rapidhash   # any combination
 cargo run -p mal -- --list            # list the implementations available to compare
 cargo test --workspace                # includes the mal test suite for every row
 cargo xtask bench                     # benchmark, record under runs/, regenerate docs/src/results.md
+cargo xtask bench --stacks 'reader=* env=*'   # benchmark whole interpreters built from combinations of rows
 cargo xtask report --check            # verify the results page matches the newest run
 ```
 

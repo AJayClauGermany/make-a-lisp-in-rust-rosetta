@@ -41,13 +41,17 @@ falls back to `std::io` when piped.
 | [rustyline] | Emacs/vi keymaps | in-memory | stepA_mal | 17.0.2 |
 | [reedline] | Emacs keymap, menus | built-in, in-memory | stepA_mal (piped input falls back to `std::io`) | 0.49.0 |
 | [dialoguer] | basic cursor movement | caller-owned `BasicHistory` | stepA_mal (piped input falls back to `std::io`; no Ctrl-D) | 0.12.0 |
-| [linefeed] | Emacs keymap | in-memory | | |
+| [linefeed] (last release 2019) | Emacs keymap | in-memory | | |
+| [termwiz] (`lineedit`) | Emacs keymap | in-memory | | |
+| [console] (`Term::read_line`) | none | none | | |
 | [inquire] | basic cursor movement | none | | |
 | [crossterm] (hand-rolled editor) | custom | custom | | |
 
 [rustyline]: https://github.com/kkawakam/rustyline
 [reedline]: https://github.com/nushell/reedline
 [linefeed]: https://github.com/murarth/linefeed
+[termwiz]: https://crates.io/crates/termwiz
+[console]: https://crates.io/crates/console
 [dialoguer]: https://github.com/console-rs/dialoguer
 [inquire]: https://github.com/mikaelmello/inquire
 [crossterm]: https://github.com/crossterm-rs/crossterm

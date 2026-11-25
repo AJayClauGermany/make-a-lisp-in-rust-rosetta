@@ -25,6 +25,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "std HashMap with aHash (AES-NI where available, resistant to hash flooding) per scope",
 };
 
+impl<V> mal_traits::Row for AHashEnv<V> {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// A shared handle to one scope of bindings.
 pub struct AHashEnv<V>(Rc<Scope<V>>);
 

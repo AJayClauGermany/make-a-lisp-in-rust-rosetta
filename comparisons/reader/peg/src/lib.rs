@@ -30,6 +30,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "PEG; grammar and actions in a peg::parser! proc-macro block, builds values directly",
 };
 
+impl mal_traits::Row for PegReader {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// What a `{? }` action reports when an integer literal overflows `i64`.
 const INTEGER: &str = "an integer that fits in 64 bits";
 /// What a `{? }` action reports for a malformed hash-map literal.

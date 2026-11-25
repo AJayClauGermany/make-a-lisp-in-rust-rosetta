@@ -29,6 +29,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "chumsky combinator grammar with recursive(); Rich errors, rebuilt per read_str call",
 };
 
+impl mal_traits::Row for ChumskyReader {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// Reads mal source with a chumsky grammar.
 #[derive(Debug, Default, Clone, Copy)]
 pub struct ChumskyReader;

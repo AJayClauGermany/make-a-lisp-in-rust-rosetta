@@ -27,6 +27,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "Rc values, loop-based TCO, closures capture a type-erased env; Rc cycles leak",
 };
 
+impl<E> mal_traits::Row for StdEvaluator<E> {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// The evaluator. It has no state of its own: everything lives in the
 /// environment, which is what lets closures call back into it from the core
 /// namespace.

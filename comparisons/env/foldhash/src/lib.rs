@@ -25,6 +25,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "std HashMap with foldhash (fast, minimally resistant to hash flooding) per scope",
 };
 
+impl<V> mal_traits::Row for FoldHashEnv<V> {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// A shared handle to one scope of bindings.
 pub struct FoldHashEnv<V>(Rc<Scope<V>>);
 

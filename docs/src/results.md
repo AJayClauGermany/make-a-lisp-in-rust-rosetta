@@ -338,6 +338,7 @@ heatmap of that ratio per workload. The tables remain the reference.
 - **smallvec**: reaches `stepA_mal`; [smallvec 1.16.5](https://github.com/servo/rust-smallvec). linear scan over up to 8 inline (symbol, value) pairs per scope, no hashing
 - **lasso**: reaches `stepA_mal`; [lasso 0.7.3](https://github.com/Kixiron/lasso). symbols interned in one shared Rodeo; scopes keyed by u32 Spur, but &str lookups still hash the text
 - **slotmap**: reaches `stepA_mal`; [slotmap 1.1.1](https://github.com/orlp/slotmap). all scopes in one SlotMap arena, handles are keys; Clone handles force hand-written refcounts
+- **rapidhash**: reaches `stepA_mal`; [rapidhash 4.5.1](https://github.com/hoxxep/rapidhash). std HashMap with rapidhash's GlobalState (one seed per process) per scope
 
 <figure class="malc"><svg viewBox="0 0 680 348" style="max-width:680px;min-width:544px" role="img" xmlns="http://www.w3.org/2000/svg"><title>Environment: geometric mean time relative to std, one bar per implementation</title>
 <line class="grid" x1="166.0" y1="8.0" x2="166.0" y2="324.0"/><text class="m" x="166.0" y="340.0" text-anchor="middle">1/2×</text><line class="axis" x1="397.0" y1="8.0" x2="397.0" y2="324.0"/><text class="m" x="397.0" y="340.0" text-anchor="middle">1×</text><line class="grid" x1="628.0" y1="8.0" x2="628.0" y2="324.0"/><text class="m" x="628.0" y="340.0" text-anchor="middle">2×</text>
@@ -466,6 +467,7 @@ heatmap of that ratio per workload. The tables remain the reference.
 | slotmap | `get-miss/8` | 26.9 ns | 1.96 ns | - | new |
 | slotmap | `get-outer/8` | 1.96 µs | 605 ns | - | new |
 | slotmap | `set/64` | 4.70 µs | 603 ns | - | new |
+| rapidhash | *not measured in this run* | | | | |
 
 ## Evaluator
 
@@ -540,6 +542,23 @@ heatmap of that ratio per workload. The tables remain the reference.
 | rustyline | *not measured in this run* | | | | |
 | reedline | *not measured in this run* | | | | |
 | dialoguer | *not measured in this run* | | | | |
+
+## Stacks
+
+A stack is a whole interpreter built from one row of each component and
+compiled as one unit, so these numbers include what the compiler made of
+the combination. Each stack is timed on the evaluation programs and the
+REPL session, and compared with the all-`std` stack. *Ratio* is the
+geometric mean of its time over the `std` stack's; for a stack of several
+non-`std` rows, *predicted* multiplies the ratios of the stacks that swap
+in each row alone, and *interaction* is ratio over predicted: below 1×
+the rows do better together than apart, above 1× worse. Interactions
+within 5% are marked as noise. See [Stacks](stacks.md) for how to run
+other combinations.
+
+No stack run has been recorded yet. `cargo xtask bench --stacks sweep`
+records the `std` stack and every row swapped into it alone;
+`cargo xtask bench --stacks 'reader=* env=*'` records combinations.
 
 ## Recorded runs
 

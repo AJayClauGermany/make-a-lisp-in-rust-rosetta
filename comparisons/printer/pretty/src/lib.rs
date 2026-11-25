@@ -29,6 +29,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "Wadler-style RcDoc with soft line breaks, rendered at an unbounded width (the trait has none)",
 };
 
+impl mal_traits::Row for PrettyPrinter {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// The width used when nothing asks for wrapping: wide enough that no group
 /// ever breaks, small enough that the renderer's column arithmetic cannot
 /// overflow.

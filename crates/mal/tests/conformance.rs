@@ -19,6 +19,12 @@
 //!
 //! Set `MAL_CONFORMANCE=reader/nom,env/imbl` to run only some rows, and run
 //! with `--nocapture` to see the per-row report even when everything passes.
+//!
+//! Set `MAL_CONFORMANCE_STACKS` to a stack spec (see `mal::stack::StackSet`,
+//! e.g. `reader=nom,winnow env=rustc-hash`) to run the suite against those
+//! combinations of rows instead; each must reach the lowest step any of its
+//! rows claims. Combinations need the binary built with the `matrix`
+//! feature: `cargo test -p mal --features matrix --test conformance`.
 
 use std::fmt::Write as _;
 use std::io::{Read, Write};
@@ -31,7 +37,8 @@ use std::time::{Duration, Instant};
 use fancy_regex::Regex;
 use mal::registry;
 use mal::select::Selection;
-use mal_traits::{Component, Implementation, Step};
+use mal::stack::{self, StackSet};
+use mal_traits::{Component, Step};
 
 /// How long one form may take before the step is abandoned.
 const TEST_TIMEOUT: Duration = Duration::from_secs(20);
@@ -241,8 +248,16 @@ fn run_step(args: &[String], dir: &Path, step: Step) -> StepResult {
     result
 }
 
+/// What one report line is about: a registered row (with `std` for the
+/// rest), or a stack of rows.
+struct Subject {
+    label: String,
+    selection: Selection,
+    expected: Step,
+}
+
 struct RowReport {
-    imp: &'static Implementation,
+    subject: Subject,
     steps: Vec<(Step, StepResult)>,
 }
 
@@ -269,12 +284,33 @@ impl RowReport {
 ///
 /// If the filter names a row that is not registered, so a typo cannot pass
 /// by running nothing.
-fn selected_rows() -> Vec<&'static Implementation> {
+fn selected_rows() -> Vec<Subject> {
+    if let Ok(spec) = std::env::var("MAL_CONFORMANCE_STACKS") {
+        let set = StackSet::parse(&spec).unwrap_or_else(|e| panic!("MAL_CONFORMANCE_STACKS: {e}"));
+        assert!(
+            !set.needs_matrix() || stack::MATRIX,
+            "MAL_CONFORMANCE_STACKS names combinations; run with `--features matrix`"
+        );
+        return set
+            .stacks()
+            .iter()
+            .map(|selection| Subject {
+                label: format!("stack {}", stack::label(selection)),
+                selection: selection.clone(),
+                expected: stack::highest_step(selection).expect("parsed stacks name known rows"),
+            })
+            .collect();
+    }
     let all = registry::all();
-    let Ok(filter) = std::env::var("MAL_CONFORMANCE") else {
-        return all;
+    let subject = |imp: &&mal_traits::Implementation| Subject {
+        label: format!("{:<12} {:<8}", imp.component.to_string(), imp.name),
+        selection: Selection::for_implementation(imp),
+        expected: imp.highest_step,
     };
-    let id = |imp: &Implementation| format!("{}/{}", imp.component, imp.name);
+    let Ok(filter) = std::env::var("MAL_CONFORMANCE") else {
+        return all.iter().map(subject).collect();
+    };
+    let id = |imp: &mal_traits::Implementation| format!("{}/{}", imp.component, imp.name);
     let wanted: Vec<&str> = filter
         .split(',')
         .map(str::trim)
@@ -294,8 +330,9 @@ fn selected_rows() -> Vec<&'static Implementation> {
         "MAL_CONFORMANCE names unregistered rows {unknown:?}; registered rows are {:?}",
         all.iter().map(|imp| id(imp)).collect::<Vec<_>>()
     );
-    all.into_iter()
+    all.iter()
         .filter(|imp| wanted.contains(&id(imp).as_str()))
+        .map(subject)
         .collect()
 }
 
@@ -308,8 +345,8 @@ fn every_row_reaches_its_claimed_step() {
     let jobs: Vec<(usize, Step)> = rows
         .iter()
         .enumerate()
-        .flat_map(|(row, imp)| {
-            let echo = Selection::for_implementation(imp).get(Component::Evaluator) == "echo";
+        .flat_map(|(row, subject)| {
+            let echo = subject.selection.get(Component::Evaluator) == "echo";
             Step::ALL
                 .into_iter()
                 .filter(move |step| echo || *step != Step::Repl)
@@ -327,7 +364,7 @@ fn every_row_reaches_its_claimed_step() {
                     let Some((row, step)) = jobs.lock().unwrap().next() else {
                         break;
                     };
-                    let mut selection = Selection::for_implementation(rows[row]);
+                    let mut selection = rows[row].selection.clone();
                     // step1 checks reading and printing alone (see the module docs).
                     selection.set_read_print(step == Step::ReadPrint);
                     let args = selection.to_args();
@@ -341,9 +378,9 @@ fn every_row_reaches_its_claimed_step() {
     let mut results = Arc::try_unwrap(results).unwrap().into_inner().unwrap();
     results.sort_by_key(|(row, step, _)| (*row, *step));
     let mut reports: Vec<RowReport> = rows
-        .iter()
-        .map(|imp| RowReport {
-            imp,
+        .into_iter()
+        .map(|subject| RowReport {
+            subject,
             steps: Vec::new(),
         })
         .collect();
@@ -353,7 +390,7 @@ fn every_row_reaches_its_claimed_step() {
 
     let mut mismatches = Vec::new();
     for report in &reports {
-        let imp = report.imp;
+        let subject = &report.subject;
         let reached = report.highest();
         let summary: Vec<String> = report
             .steps
@@ -364,19 +401,21 @@ fn every_row_reaches_its_claimed_step() {
             })
             .collect();
         eprintln!(
-            "{:<12} {:<8} claims {:<16} reaches {:<16} {}",
-            imp.component.to_string(),
-            imp.name,
-            imp.highest_step.name(),
+            "{:<21} claims {:<16} reaches {:<16} {}",
+            subject.label,
+            subject.expected.name(),
             reached.map_or("nothing", Step::name),
             summary.join(" ")
         );
-        if reached != Some(imp.highest_step) {
+        if reached != Some(subject.expected) {
             let mut detail = format!(
-                "{}/{} claims {} but reaches {}",
-                imp.component,
-                imp.name,
-                imp.highest_step,
+                "{} claims {} but reaches {}",
+                subject
+                    .label
+                    .split_whitespace()
+                    .collect::<Vec<_>>()
+                    .join(" "),
+                subject.expected,
                 reached.map_or("nothing", Step::name)
             );
             if let Some((step, r)) = report.steps.iter().find(|(_, r)| !r.failures.is_empty()) {

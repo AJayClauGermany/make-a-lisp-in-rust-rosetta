@@ -39,6 +39,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "Input::interact_text with BasicHistory and a verbatim-prompt Theme; no Ctrl-D; std::io fallback when piped",
 };
 
+impl mal_traits::Row for DialoguerEditor {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// Reads lines with a dialoguer text prompt on a terminal, or plainly when
 /// piped.
 pub struct DialoguerEditor {

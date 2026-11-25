@@ -25,6 +25,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "std HashMap with rustc's FxHasher (not resistant to hash flooding) per scope",
 };
 
+impl<V> mal_traits::Row for FxEnv<V> {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// A shared handle to one scope of bindings.
 pub struct FxEnv<V>(Rc<Scope<V>>);
 

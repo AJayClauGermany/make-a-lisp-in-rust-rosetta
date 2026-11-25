@@ -19,6 +19,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "hand-written recursive descent over byte offsets; no token pass",
 };
 
+impl mal_traits::Row for StdReader {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// Reads mal source with nothing but the standard library.
 #[derive(Debug, Default, Clone, Copy)]
 pub struct StdReader;

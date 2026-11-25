@@ -42,15 +42,30 @@ contribution is a new row: another crate doing one of the component jobs.
    `pub const IMPLEMENTATION: mal_traits::Implementation` describing it: the
    crates used with exact versions (a test checks them against
    `Cargo.lock`), the highest mal step it passes, and one line of notes for
-   the table. Readers, printers and environments call the shared checks
+   the table. Attach it to the type with `mal_traits::Row`:
+
+   ```rust
+   impl mal_traits::Row for NomReader {
+       const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+   }
+   ```
+
+   The type must also be `Default` (and printers `Clone`) so a stack can
+   build it. Readers, printers and environments call the shared checks
    from a test: `mal_testkit::check_reader(NomReader::default)`.
 
-5. **Register it** in `crates/mal/src/registry.rs` so `mal --list` and the
-   generated tables see it, add it as a dependency of `crates/mal`, and add
-   a line to `build` in `crates/mal/src/select.rs` so `mal --reader nom`
-   runs it. `cargo test -p mal --test conformance` then runs the mal test
-   suite against it and fails unless it reaches exactly the step it claims;
-   `MAL_CONFORMANCE=reader/nom` runs just that row.
+5. **Register it** by adding it as a dependency of `crates/mal` and its
+   type to the row list for its component in `crates/mal/src/stack.rs`
+   (line editors: `LINE_EDITORS` in `crates/mal/src/registry.rs`). That one
+   line makes it selectable (`mal --reader nom`), listed (`mal --list` and
+   the results page), benchmarked, and combinable with every other row.
+   `cargo test -p mal --test conformance` then runs the mal test suite
+   against it and fails unless it reaches exactly the step it claims;
+   `MAL_CONFORMANCE=reader/nom` runs just that row. `cargo test -p mal
+   --test stacks` checks it prints what `std` prints. An evaluator or core
+   row is generic over the other rows, so it also needs a family marker
+   next to `StdEvalRow` / `StdCoreRow`; see
+   [Stacks](https://ajayclaugermany.github.io/make-a-lisp-in-rust-rosetta/book/stacks.html).
 
    If the trait made you write something a user of the crate would not,
    keep it and add a note to `docs/src/trait-notes.md`.
@@ -58,14 +73,9 @@ contribution is a new row: another crate doing one of the component jobs.
 6. **Add a page** at `docs/src/components/<component>.md` if the component
    does not have one yet, and a row in that component's table.
 
-7. **Benchmark it** with one line in `crates/mal/benches/components.rs`, in
-   the function for its component:
-
-   ```rust
-   mal_bench::reader(c, &reader_nom::IMPLEMENTATION, reader_nom::NomReader::default);
-   ```
-
-   Then `cargo xtask bench` records a run under `runs/` and regenerates
+7. **Benchmark it.** Listing it in `stack.rs` already adds it to the
+   component benchmarks in `crates/mal/benches/components.rs`.
+   `cargo xtask bench` records a run under `runs/` and regenerates
    `docs/src/results.md`; commit both. See the
    [benchmarking page](https://ajayclaugermany.github.io/make-a-lisp-in-rust-rosetta/book/benchmarking.html)
    for the components that also take fixtures, and for recording runs.
@@ -91,6 +101,7 @@ cargo fmt --all -- --check
 cargo clippy --workspace --all-targets -- -D warnings
 cargo test --workspace
 cargo test -p mal --benches        # runs every benchmark once, as a smoke test
+cargo test -p mal --features matrix --test stacks   # every combination of rows vs std
 cargo xtask report --check         # docs/src/results.md matches the newest run
 RUSTDOCFLAGS="-D warnings" cargo doc --workspace --no-deps
 cargo deny check

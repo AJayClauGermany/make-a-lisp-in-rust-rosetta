@@ -22,6 +22,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "std printer with integers through itoa::Buffer (no core::fmt)",
 };
 
+impl mal_traits::Row for ItoaPrinter {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// Prints values; see the crate documentation for what differs from `std`.
 #[derive(Debug, Default, Clone)]
 pub struct ItoaPrinter;

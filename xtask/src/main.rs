@@ -14,6 +14,7 @@ mod bench;
 mod chart;
 mod report;
 mod run;
+mod stacks;
 
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
@@ -27,9 +28,12 @@ const USAGE: &str = "\
 Usage: cargo xtask <COMMAND>
 
 Commands:
-  bench [--host NAME] [--no-report] [-- <criterion args>]
+  bench [--host NAME] [--no-report] [--stacks SPEC] [-- <criterion args>]
           Run `cargo bench -p mal`, record the results under runs/<id>/,
-          and regenerate docs/src/results.md
+          and regenerate docs/src/results.md. With --stacks, benchmark whole
+          interpreters built from combinations of rows instead of the
+          components: SPEC is `sweep` (each row swapped into std alone),
+          `all`, or e.g. 'reader=nom,winnow env=*' (see docs/src/stacks.md)
   report [--check]
           Regenerate docs/src/results.md from the newest run under runs/.
           With --check, exit 1 instead if the page would change

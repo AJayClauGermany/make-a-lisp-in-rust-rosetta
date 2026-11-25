@@ -24,6 +24,10 @@ pub const IMPLEMENTATION: Implementation = Implementation {
     notes: "std printer with integers through lexical's ToLexical (bytes, UTF-8 checked)",
 };
 
+impl mal_traits::Row for LexicalPrinter {
+    const IMPLEMENTATION: &'static Implementation = &IMPLEMENTATION;
+}
+
 /// Prints values; see the crate documentation for what differs from `std`.
 #[derive(Debug, Default, Clone)]
 pub struct LexicalPrinter;
